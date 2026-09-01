@@ -1,0 +1,21 @@
+/* Indigo and Inter, matching console-docs, so the two sites read as siblings. */
+:root {
+  --vp-c-brand-1: var(--vp-c-indigo-1);
+  --vp-c-brand-2: var(--vp-c-indigo-2);
+  --vp-c-brand-3: var(--vp-c-indigo-3);
+  --vp-c-brand-soft: var(--vp-c-indigo-soft);
+  --vp-font-family-base: Inter, ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* A screenshot is evidence, so it gets a frame and a caption rather than
+   floating in the prose. */
+.shot { margin: 20px 0; }
+.shot img { border: 1px solid var(--vp-c-divider); border-radius: 8px; display: block; width: 100%; }
+.shot figcaption { font-size: 13px; color: var(--vp-c-text-2); margin-top: 7px; }
+.shot .pending {
+  border: 1px dashed var(--vp-c-divider); border-radius: 8px; background: var(--vp-c-bg-soft);
+  padding: 34px 16px; text-align: center; font-size: 13px; color: var(--vp-c-text-3);
+}
+.shot .pending code { font-size: 12px; }
+.perm { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 5px;
+        padding: 1px 7px; background: var(--vp-c-green-soft); color: var(--vp-c-green-1); }
