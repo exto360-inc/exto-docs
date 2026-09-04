@@ -10,16 +10,15 @@ no shared "components" dumping ground.
 
 ## The layout
 
-```
-src/
-├── features/        one folder per product area — the bulk of the code
-├── components/      genuinely shared UI, plus the canvas grid
-├── services/        HTTP clients, one per domain
-├── store/           global client state
-├── routes/          the route table and its guards
-├── contexts/        cross-cutting React context
-└── hooks/           shared hooks, including permission hooks
-```
+<DTree mono root="src/" :nodes="[
+  { label: 'features/', note: 'one folder per product area — the bulk of the code' },
+  { label: 'components/', note: 'genuinely shared UI, plus the canvas grid' },
+  { label: 'services/', note: 'HTTP clients, one per domain' },
+  { label: 'store/', note: 'global client state' },
+  { label: 'routes/', note: 'the route table and its guards' },
+  { label: 'contexts/', note: 'cross-cutting React context' },
+  { label: 'hooks/', note: 'shared hooks, including permission hooks' },
+]" />
 
 A feature folder owns everything it needs — its pages, components, hooks, API
 calls, types and tests. Code moves *into* `components/` or `services/` only once

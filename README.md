@@ -51,4 +51,31 @@ survives a UI change.
   application roles, and named group permissions as spelled in the source.
 - Every page carries a one-line `description` in its frontmatter.
 - Diagrams are drawn in the page rather than embedded as images, so they diff in
-  review.
+  review — but as components, not as box-drawing characters in a code fence. A
+  fence tells the browser the content is code: monospace, code chrome, a copy
+  button, and a fixed column count that runs off the side of a phone.
+
+## Diagrams
+
+Eight globally-registered components, authored inline in the markdown. Each
+covers a shape the docs kept redrawing by hand:
+
+| Component | For | Key props |
+| --- | --- | --- |
+| `DStack` | Layers read top to bottom | `layers[{n, title, body, note}]`, `inLabel`, `outLabel` |
+| `DFlow` | A chain of steps | `steps[{title, body, note, edge}]`, `dir`, `numbered`, `loop`, `loopTo` |
+| `DTree` | A containment hierarchy | `root`, `nodes[{label, note, children}]`, `mono` |
+| `DBranch` | One thing splitting, or several converging | `source`, `branches[]`, `then[]`, `result`, `dir` |
+| `DSplit` | Two or three things contrasted | `columns[{title, sub, via, items, foot}]` |
+| `DMatrix` | The commissioning matrix | `groups`, `columns`, `rows`, `xLabel`, `yLabel`, `caption` |
+| `DScreen` | A screen's regions | `title`, `panes[{head, label, flex}]`, `rail[]` |
+| `DDecision` | The one branch that rejoins | the workflow's labels |
+
+`note` is the aside on the right — what a layer *is*, not what it does
+("model call", "deterministic"). `DFlow dir="right"` folds to a column under
+720px; every other diagram wraps or scrolls inside its own box, so no page
+scrolls sideways.
+
+Colours come from VitePress theme tokens only, so all eight follow light and
+dark without a second definition. Adding a diagram means picking one of the
+eight — reach for a new component only when none of them fits.

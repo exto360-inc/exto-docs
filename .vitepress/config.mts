@@ -38,6 +38,7 @@ export default defineConfig({
           { text: 'Module designer', link: '/architecture/module-designer' },
           { text: 'CX designer', link: '/architecture/cx-designer' },
           { text: 'CX execution', link: '/architecture/cx-execution' },
+          { text: 'The AI platform', link: '/architecture/ai-platform' },
         ] },
       ],
       '/': [
@@ -136,9 +137,21 @@ export default defineConfig({
       ] },
       { text: 'AI', collapsed: true, items: [
         { text: 'Overview', link: '/ai/' },
-        { text: 'Assistant', link: '/ai/assistant' },
-        { text: 'Record insights', link: '/ai/insights' },
-        { text: 'AI form builder', link: '/ai/form-builder' },
+        { text: 'Using AI', items: [
+          { text: 'Assistant', link: '/ai/assistant' },
+          { text: 'Context & scope', link: '/ai/context' },
+          { text: 'Attachments & documents', link: '/ai/attachments' },
+          { text: 'Memory', link: '/ai/memory' },
+          { text: 'CX workbench AI', link: '/ai/cx' },
+          { text: 'Insights', link: '/ai/insights' },
+          { text: 'AI form builder', link: '/ai/form-builder' },
+        ] },
+        { text: 'How it works', items: [
+          { text: 'The reasoning loop', link: '/ai/reasoning-loop' },
+          { text: 'Grounding & retrieval', link: '/ai/grounding' },
+          { text: 'Guardrails & permissions', link: '/ai/guardrails' },
+          { text: 'Limits, tracing & failure states', link: '/ai/operations' },
+        ] },
       ] },
       { text: 'Account', collapsed: true, items: [
         { text: 'Signing in', link: '/account/signing-in' },

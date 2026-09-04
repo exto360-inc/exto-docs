@@ -35,13 +35,18 @@ and the reviewer sees everything at once.
 
 **Workflows → Create.** Draw:
 
-```
-Start → Request ──submit──→ [amount ≥ limit?] ──yes──→ Review ──approve──→ End
-                                   │                      │
-                                   no                   reject
-                                   │                      │
-                                   └──────────→ End ←─────┘
-```
+<DDecision
+  start="Start"
+  step="Request"
+  stepEdge="submit"
+  question="amount ≥ limit?"
+  yesEdge="yes"
+  review="Review"
+  reviewEdge="approve"
+  end="End"
+  noEdge="no"
+  rejectEdge="reject"
+  joinEnd="End" />
 
 - **Request** — attach the Request form.
 - The **condition** — expression on the amount field. Draw both branches.

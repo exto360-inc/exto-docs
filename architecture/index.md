@@ -16,17 +16,17 @@ hosting or deployment.
 
 ## The shape of the system
 
-```
-┌──────────────────────────────────────────────────────┐
-│  Web client                                          │
-│  feature modules · services · stores · route guards  │
-└───────────────────────┬──────────────────────────────┘
-                        │  HTTP
-┌───────────────────────▼──────────────────────────────┐
-│  API server                                          │
-│  routes → controller → service → repository → model  │
-└──────────────────────────────────────────────────────┘
-```
+<DFlow :steps="[
+  {
+    title: 'Web client',
+    body: 'Feature modules · services · stores · route guards',
+  },
+  {
+    title: 'API server',
+    body: 'Routes → controller → service → repository → model',
+    edge: 'HTTP',
+  },
+]" />
 
 Two applications, one contract. Nearly everything interesting happens in the
 **service** layer of the API and in the **feature modules** of the client.
@@ -49,6 +49,7 @@ Two applications, one contract. Nearly everything interesting happens in the
 | [Module designer](/architecture/module-designer) | The tab shell, the save contract, and the canvas editors. |
 | [CX designer](/architecture/cx-designer) | Workbench, levels, stages, templates, and provisioning. |
 | [CX execution](/architecture/cx-execution) | The matrix renderer, the date engine, gates and rollup. |
+| [The AI platform](/architecture/ai-platform) | The knowledge base, the reasoning loop, and the guard layer. |
 
 ## Reading these
 

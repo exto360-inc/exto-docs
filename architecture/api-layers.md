@@ -7,17 +7,13 @@ description: "Routes to controller to service to repository, and what belongs wh
 The server is layered, and the layers are strict about what they know. Reading
 an unfamiliar endpoint means walking the same four steps every time.
 
-```
-routes       registers the URL, attaches middleware
-   │
-controller   parses the request, resolves context, shapes the response
-   │
-service      the business logic — the thick layer
-   │
-repository   database access, one per collection
-   │
-model        the shapes everything above agrees on
-```
+<DFlow :steps="[
+  { title: 'routes', body: 'Registers the URL, attaches middleware' },
+  { title: 'controller', body: 'Parses the request, resolves context, shapes the response' },
+  { title: 'service', body: 'The business logic — the thick layer' },
+  { title: 'repository', body: 'Database access, one per collection' },
+  { title: 'model', body: 'The shapes everything above agrees on' },
+]" />
 
 Roughly: ninety route files, a handful of controllers, **two hundred and fifty
 service files**, ninety repositories and a hundred and twenty models. The

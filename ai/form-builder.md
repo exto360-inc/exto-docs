@@ -88,3 +88,9 @@ The form builder is part of the module designer, so it requires
 
 The organisation-wide AI switch under **Settings → AI personalization** also
 applies.
+
+## Related
+
+- [Module builder](/build/module-builder) — the same reading, one step larger.
+- [Insights](/ai/insights) — what a good module description improves next.
+- [AI overview](/ai/) — every AI surface, and the switches over them.

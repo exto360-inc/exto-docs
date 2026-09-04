@@ -89,12 +89,10 @@ be held in the **same context** — all at tenant level, or all at project level
 
 For example, changing who is in a project group needs all four of:
 
-```
-Project setting
-  + View Project groups
-  + Edit project groups
-  + Edit project group users
-```
+- `Project setting`
+- `View Project groups`
+- `Edit project groups`
+- `Edit project group users`
 
 ::: warning Split across contexts, nothing works
 `Project setting` at tenant level and `View Project groups` at project level

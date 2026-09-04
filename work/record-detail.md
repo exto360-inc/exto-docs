@@ -13,14 +13,13 @@ is not a field.
 
 ## The layout
 
-```
-┌──────────────────────────────────┬────────────────────┬────┐
-│ ←  EXPENSES › EXP-1042        ⟳  │  ⚡ Actions     ✕  │ ⚡ │
-│                                  │                    │ 💬 │
-│  the current step's form         │  widget content    │ 📎 │
-│                                  │                    │ 🕘 │
-└──────────────────────────────────┴────────────────────┴────┘
-```
+<DScreen
+  title="←  EXPENSES › EXP-1042"
+  :panes="[
+    { label: 'The current step’s form', flex: 3 },
+    { head: '⚡ Actions', label: 'Widget content', flex: 2 },
+  ]"
+  :rail="['⚡', '💬', '📎', '🕘']" />
 
 The toolbar carries a **back** control, a **breadcrumb** naming the module and
 record, and **refresh**. The rail on the far right switches widgets; the panel

@@ -19,3 +19,253 @@
 .shot .pending code { font-size: 12px; }
 .perm { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 5px;
         padding: 1px 7px; background: var(--vp-c-green-soft); color: var(--vp-c-green-1); }
+
+/* ── Diagrams ──────────────────────────────────────────────────────────────
+   These used to be box-drawing characters in bare code fences, so the browser
+   was told they were code: monospace, code chrome, a copy button, and eighty
+   fixed columns that ran off the side of a phone. They are pictures, so they
+   are drawn as elements now — body font, brand colour, real theme tokens, and
+   a layout that folds instead of scrolling. Everything below is one visual
+   language shared by the eight diagram components, which is the part thirty-four
+   hand-drawn boxes could never guarantee. */
+
+.dg {
+  --dg-rail: var(--vp-c-brand-3);
+  --dg-edge: var(--vp-c-divider);
+  margin: 24px 0;
+  font-family: var(--vp-font-family-base);
+}
+.dg .dg-title { font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--vp-c-text-1); }
+.dg .dg-body { font-size: 13.5px; line-height: 1.55; color: var(--vp-c-text-2); }
+.dg .dg-main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; flex: 1; min-width: 0; }
+.dg .dg-main .dg-title { flex: 0 0 auto; min-width: 128px; }
+.dg .dg-main .dg-body { flex: 1 1 200px; }
+
+/* A step number, and the aside that names *how* a layer works. */
+.dg .dg-n {
+  flex: 0 0 auto; width: 21px; height: 21px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+  background: var(--vp-c-brand-soft); color: var(--vp-c-brand-1);
+}
+.dg .dg-note {
+  flex: 0 0 auto; align-self: center; white-space: nowrap;
+  font-size: 11.5px; color: var(--vp-c-text-3);
+  padding: 2px 9px; border-radius: 999px;
+  background: var(--vp-c-bg); border: 1px solid var(--vp-c-divider);
+}
+
+/* The connector. One element, rotated by the layout that owns it. */
+.dg .dg-arrow { position: relative; flex: 0 0 auto; background: var(--dg-rail); }
+.dg .dg-arrow::after { content: ''; position: absolute; border: 5px solid transparent; }
+
+/* ── DStack — layers read top to bottom ── */
+.dg-stack .dg-card {
+  border: 1px solid var(--vp-c-divider); border-left: 3px solid var(--vp-c-brand-2);
+  border-radius: 10px; overflow: hidden; background: var(--vp-c-bg-soft);
+}
+.dg-stack .dg-layer {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 12px 16px; border-top: 1px solid var(--vp-c-divider);
+}
+.dg-stack .dg-layer:first-child { border-top: 0; }
+.dg-stack .dg-cap { position: relative; font-size: 13.5px; font-weight: 600; color: var(--vp-c-text-2); padding-left: 4px; }
+.dg-stack .dg-cap-in { margin-bottom: 26px; }
+.dg-stack .dg-cap-out { margin-top: 26px; }
+.dg-stack .dg-cap::after {
+  content: ''; position: absolute; left: 22px; width: 2px; height: 26px; background: var(--dg-rail);
+}
+.dg-stack .dg-cap-in::after { top: 100%; }
+.dg-stack .dg-cap-out::after { bottom: 100%; }
+.dg-stack .dg-cap::before {
+  content: ''; position: absolute; left: 18px; border: 5px solid transparent; border-top-color: var(--dg-rail);
+}
+.dg-stack .dg-cap-in::before { top: calc(100% + 22px); }
+.dg-stack .dg-cap-out::before { top: -6px; }
+
+/* ── DFlow — a chain of steps ── */
+.dg-flow .dg-step {
+  display: flex; align-items: baseline; gap: 12px; min-width: 0;
+  padding: 12px 16px; background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider); border-left: 3px solid var(--vp-c-brand-2); border-radius: 8px;
+}
+.dg-flow.dg-down .dg-arrow { width: 2px; height: 22px; margin-left: 27px; }
+.dg-flow.dg-down .dg-arrow::after { left: -4px; bottom: -5px; border-top-color: var(--dg-rail); }
+.dg-flow.dg-right .dg-step { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: flex-start; gap: 3px; }
+.dg-flow.dg-right .dg-main { flex-direction: column; }
+/* In a column track a flex-basis is a *height*, so the row bases inherited from
+   .dg-main have to be cleared — otherwise every step grows 200px tall. */
+.dg-flow.dg-right .dg-main > * { flex: 0 0 auto; min-width: 0; }
+.dg-flow.dg-right .dg-arrow { align-self: center; width: 22px; height: 2px; }
+.dg-flow.dg-right .dg-arrow::after { top: -4px; right: -5px; border-left-color: var(--dg-rail); }
+@media (max-width: 720px) {
+  .dg-flow.dg-right .dg-track { flex-direction: column; overflow-x: visible; }
+  .dg-flow.dg-right .dg-loop { margin-left: 27px !important; margin-right: 0; }
+  .dg-flow.dg-right .dg-arrow { width: 2px; height: 22px; align-self: flex-start; margin-left: 27px; }
+  .dg-flow.dg-right .dg-arrow::after { top: auto; right: auto; left: -4px; bottom: -5px;
+    border-left-color: transparent; border-top-color: var(--dg-rail); }
+}
+
+/* ── DTree / DBranch — indent guides drawn, not typed ── */
+.dg .dg-branch { list-style: none; padding: 0 0 0 8px; margin: 0; }
+.dg .dg-branch .dg-branch { padding-left: 22px; }
+.dg .dg-branch > li { position: relative; padding-left: 22px; margin: 0; list-style: none; }
+.dg .dg-branch > li::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--dg-edge);
+}
+.dg .dg-branch > li:last-child::before { bottom: auto; height: 18px; }
+.dg .dg-branch > li::after {
+  content: ''; position: absolute; left: 0; top: 17px; width: 15px; height: 2px; background: var(--dg-edge);
+}
+.dg .dg-node { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1px 12px; padding: 7px 0; }
+.dg .dg-node .dg-title { min-width: 118px; }
+.dg .dg-root {
+  display: inline-block; font-size: 14px; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--vp-c-brand-soft); color: var(--vp-c-brand-1);
+}
+.dg-tree .dg-root + .dg-branch { padding-top: 4px; }
+
+.dg-branchfig .dg-source {
+  display: inline-block; font-size: 14px; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--vp-c-brand-soft); color: var(--vp-c-brand-1);
+}
+.dg-branchfig .dg-fan { padding-top: 4px; }
+.dg-branchfig .dg-fan > li::before,
+.dg-branchfig .dg-fan > li::after { background: var(--dg-rail); }
+.dg-branchfig .dg-arrow { width: 2px; height: 22px; margin: 4px 0 4px 7px; }
+.dg-branchfig .dg-arrow::after { left: -4px; bottom: -5px; border-top-color: var(--dg-rail); }
+.dg-branchfig .dg-merge {
+  font-size: 13.5px; color: var(--vp-c-text-2); padding: 10px 16px;
+  border: 1px solid var(--vp-c-divider); border-left: 3px solid var(--vp-c-brand-2);
+  border-radius: 8px; background: var(--vp-c-bg-soft);
+}
+.dg-branchfig .dg-result { background: var(--vp-c-green-soft); color: var(--vp-c-green-1); }
+
+/* ── DSplit — the contrast is the content ── */
+.dg-split { display: grid; grid-template-columns: repeat(var(--dg-cols), minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 700px) { .dg-split { grid-template-columns: 1fr; } }
+.dg-split .dg-col {
+  padding: 14px 16px; border: 1px solid var(--vp-c-divider);
+  border-top: 3px solid var(--vp-c-brand-2); border-radius: 10px; background: var(--vp-c-bg-soft);
+}
+.dg-split .dg-col-head .dg-title,
+.dg-split .dg-col-head .dg-body { display: block; }
+.dg-split .dg-via {
+  margin: 12px 0 10px; padding-left: 20px; position: relative;
+  font-size: 13px; line-height: 1.5; color: var(--vp-c-text-2);
+}
+.dg-split .dg-via::before {
+  content: ''; position: absolute; left: 5px; top: 3px; width: 2px; height: calc(100% - 12px);
+  background: var(--dg-rail);
+}
+.dg-split .dg-via::after {
+  content: ''; position: absolute; left: 1px; bottom: 1px;
+  border: 5px solid transparent; border-top-color: var(--dg-rail);
+}
+.dg-split .dg-items { list-style: none; padding: 0; margin: 10px 0 0; }
+.dg-split .dg-items li { position: relative; margin: 0; padding: 4px 0 4px 15px; font-size: 13.5px; color: var(--vp-c-text-2); }
+.dg-split .dg-items li::before {
+  content: ''; position: absolute; left: 0; top: 12px; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--vp-c-brand-2);
+}
+.dg-split .dg-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--vp-c-divider);
+  font-size: 12.5px; color: var(--vp-c-text-3); }
+
+/* ── DMatrix — a grid, rendered as a grid ── */
+.dg-matrix .dg-matrix-body { display: flex; align-items: stretch; gap: 8px; }
+.dg-matrix .dg-scroll { flex: 1; min-width: 0; overflow-x: auto; }
+.dg-matrix .dg-axis { font-size: 11.5px; color: var(--vp-c-text-3); }
+.dg-matrix .dg-axis-x { margin: 0 0 7px 4px; }
+.dg-matrix .dg-axis-y { writing-mode: vertical-lr; padding-top: 62px; }
+.dg-matrix table { display: table; width: 100%; margin: 0; border-collapse: separate; border-spacing: 0; }
+.dg-matrix tr { background: transparent !important; border: 0; }
+.dg-matrix th,
+.dg-matrix td {
+  border: 0; border-top: 1px solid var(--vp-c-divider); border-left: 1px solid var(--vp-c-divider);
+  padding: 7px 12px; font-size: 13px; text-align: center; background: var(--vp-c-bg);
+}
+.dg-matrix tr > :last-child { border-right: 1px solid var(--vp-c-divider); }
+.dg-matrix tbody tr:last-child > * { border-bottom: 1px solid var(--vp-c-divider); }
+.dg-matrix thead th { background: var(--vp-c-bg-soft); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+.dg-matrix thead tr:first-child th { border-top-color: var(--vp-c-divider); }
+.dg-matrix tbody th { text-align: left; font-weight: 500; white-space: nowrap; }
+.dg-matrix .dg-corner { border: 0 !important; background: transparent !important; }
+.dg-matrix .dg-d1 { padding-left: 26px; color: var(--vp-c-text-2); }
+.dg-matrix .dg-d2 { padding-left: 40px; color: var(--vp-c-text-2); }
+.dg-matrix .dg-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: -1px; }
+.dg-matrix .dg-done { background: var(--vp-c-green-2); }
+.dg-matrix .dg-part {
+  background: linear-gradient(90deg, var(--vp-c-yellow-2) 0 50%, transparent 50% 100%);
+  box-shadow: inset 0 0 0 1.5px var(--vp-c-yellow-2);
+}
+.dg-matrix .dg-todo { box-shadow: inset 0 0 0 1.5px var(--vp-c-text-3); }
+.dg-matrix figcaption { margin-top: 9px; font-size: 13px; color: var(--vp-c-text-2); }
+
+/* ── DScreen — regions, not a screenshot ── */
+.dg-screen .dg-chrome {
+  border: 1px solid var(--vp-c-divider); border-radius: 10px; overflow: hidden; background: var(--vp-c-bg-soft);
+}
+.dg-screen .dg-panes { display: flex; min-height: 148px; }
+.dg-screen .dg-pane { display: flex; flex-direction: column; min-width: 0; border-left: 1px solid var(--vp-c-divider); }
+.dg-screen .dg-pane:first-child { border-left: 0; }
+.dg-screen .dg-pane-head {
+  padding: 9px 14px; font-size: 12.5px; font-weight: 600; color: var(--vp-c-text-1);
+  background: var(--vp-c-bg); border-bottom: 1px solid var(--vp-c-divider);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 37px;
+}
+.dg-screen .dg-pane-body {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 22px 14px; font-size: 13px; color: var(--vp-c-text-3); text-align: center;
+}
+.dg-screen .dg-rail {
+  display: flex; flex-direction: column; gap: 13px; padding: 12px 11px; font-size: 14px; line-height: 1;
+  background: var(--vp-c-bg); border-left: 1px solid var(--vp-c-divider);
+}
+
+/* ── DDecision — the one branch that rejoins ── */
+.dg-decision svg { display: block; width: 100%; height: auto; }
+.dg-decision .dg-svg-box { fill: var(--vp-c-bg-soft); stroke: var(--vp-c-divider); stroke-width: 1.5; }
+.dg-decision .dg-svg-term { fill: var(--vp-c-brand-soft); }
+.dg-decision .dg-svg-dec { fill: var(--vp-c-bg-soft); stroke: var(--vp-c-brand-2); stroke-width: 1.5; }
+.dg-decision .dg-svg-line { fill: none; stroke: var(--dg-rail); stroke-width: 2; }
+.dg-decision .dg-svg-head { fill: var(--dg-rail); }
+.dg-decision .dg-svg-t { fill: var(--vp-c-text-1); font-size: 17px; font-weight: 600; text-anchor: middle; }
+.dg-decision .dg-svg-e { fill: var(--vp-c-text-3); font-size: 15px; text-anchor: middle; }
+.dg-branchfig .dg-merge { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1px 12px; }
+.dg-branchfig .dg-merge .dg-title { min-width: 0; font-weight: 500; }
+.dg-fan-in .dg-fan { padding-bottom: 2px; }
+.dg-fan-in .dg-fan > li:last-child::before { height: auto; bottom: 0; }
+@media (max-width: 640px) { .dg .dg-note { white-space: normal; } }
+
+/* DFlow additions: a labelled edge, and a lifecycle that can go back. */
+.dg-flow .dg-track { display: flex; }
+.dg-flow.dg-down .dg-track { flex-direction: column; }
+.dg-flow.dg-right .dg-track { flex-wrap: nowrap; align-items: stretch; overflow-x: auto; padding-bottom: 2px; }
+.dg-flow .dg-edge {
+  position: absolute; white-space: nowrap; font-size: 11.5px; color: var(--vp-c-text-3);
+}
+.dg-flow.dg-down .dg-edge { left: 10px; top: 50%; transform: translateY(-50%); }
+.dg-flow.dg-right .dg-edge { left: 50%; bottom: 10px; transform: translateX(-50%); }
+.dg-flow.dg-right:has(.dg-edge) .dg-arrow { width: 64px; }
+.dg-loop {
+  position: relative; margin: 0 20px 0 27px; height: 34px;
+  border: 2px solid var(--dg-edge); border-top: 0; border-radius: 0 0 8px 8px;
+}
+.dg-loop span {
+  position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%);
+  padding: 0 10px; white-space: nowrap;
+  font-size: 11.5px; color: var(--vp-c-text-3); background: var(--vp-c-bg);
+}
+.dg-loop::after {
+  content: ''; position: absolute; left: -6px; top: -1px;
+  border: 5px solid transparent; border-bottom-color: var(--dg-edge);
+}
+
+/* One tree really is a directory listing. */
+.dg-mono .dg-title { font-family: var(--vp-font-family-mono); font-size: 12.5px; font-weight: 500; }
+.dg-matrix .dg-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; padding-left: 4px;
+  font-size: 12px; color: var(--vp-c-text-3); }
+.dg-matrix .dg-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.dg-matrix .dg-legend i { flex: 0 0 auto; }

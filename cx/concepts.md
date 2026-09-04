@@ -9,20 +9,18 @@ minutes and makes everything else in this lane obvious.
 
 ## The matrix
 
-```
-                    ── X: levels and stages ──▶
-             ┌───────── Level 1 ─────────┬──── Level 2 ────┐
-             │  Design  │  Approve  │ …  │  Install  │  …  │
-  ┌──────────┼──────────┼───────────┼────┼───────────┼─────┤
-  │ Pump A   │    ●     │     ●     │    │     ○     │     │
-│ │  ├ Seal  │    ●     │     ●     │    │     ◐     │     │   Y: assets
-▼ │  └ Motor │    ●     │     ◐     │    │     ○     │     │
-  │ Pump B   │    ●     │     ○     │    │     ○     │     │
-  └──────────┴──────────┴───────────┴────┴───────────┴─────┘
-
-           every intersection = one stage instance
-           carrying status, dates, a checklist and evidence
-```
+<DMatrix
+  xLabel="X: levels and stages"
+  yLabel="Y: assets"
+  :groups="[{ label: 'Level 1', span: 3 }, { label: 'Level 2', span: 2 }]"
+  :columns="['Design', 'Approve', '…', 'Install', '…']"
+  :rows="[
+    { label: 'Pump A', cells: ['done', 'done', '', 'todo', ''] },
+    { label: 'Seal', depth: 1, cells: ['done', 'done', '', 'part', ''] },
+    { label: 'Motor', depth: 1, cells: ['done', 'part', '', 'todo', ''] },
+    { label: 'Pump B', cells: ['done', 'todo', '', 'todo', ''] },
+  ]"
+  caption="Every intersection is one stage instance, carrying status, dates, a checklist and evidence." />
 
 ## The objects
 

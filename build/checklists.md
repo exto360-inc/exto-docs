@@ -17,9 +17,11 @@ Checklists live at tenant level, not inside a module. Every version of a
 checklist shares one logical **ID**, and each version carries its own number
 and status.
 
-```
-Draft → Under review → Approved
-```
+<DFlow dir="right" :steps="[
+  { title: 'Draft' },
+  { title: 'Under review' },
+  { title: 'Approved' },
+]" />
 
 A record always resolves the **highest approved version**. A new version can
 only be created from an approved one.

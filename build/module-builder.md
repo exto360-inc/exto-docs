@@ -25,11 +25,13 @@ complete one — build here, refine there.
 
 ## The five steps
 
-```
-Module  →  Form  →  Preview  →  Workflow  →  Done
-             │
-        (Checklist, when the form has checklist fields)
-```
+<DFlow numbered :steps="[
+  { title: 'Module' },
+  { title: 'Form' },
+  { title: 'Checklist', note: 'only when the form has checklist fields' },
+  { title: 'Preview' },
+  { title: 'Workflow' },
+]" />
 
 ### 1. Module
 

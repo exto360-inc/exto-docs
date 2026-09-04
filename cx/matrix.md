@@ -85,7 +85,7 @@ become startable.
 
 A fifth card, **Visual insights**, appears only when AI is enabled for the
 tenant. It opens a panel of charts — status, delays, upcoming work — rather than
-filtering the matrix. See [CX intelligence](/ai/).
+filtering the matrix. See [CX workbench AI](/ai/cx).
 
 The cards can be collapsed out of the way when you want the full height for the
 matrix.

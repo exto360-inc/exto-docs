@@ -13,17 +13,17 @@ commissioning at every intersection.**
 
 ## The idea in one picture
 
-```
-                    ── X: levels and stages ──▶
-             ┌───────── Level 1 ─────────┬──── Level 2 ────┐
-             │  Design  │  Approve  │ …  │  Install  │  …  │
-  ┌──────────┼──────────┼───────────┼────┼───────────┼─────┤
-  │ Pump A   │    ●     │     ●     │    │     ○     │     │
-│ │  ├ Seal  │    ●     │     ●     │    │     ◐     │     │   Y: assets
-▼ │  └ Motor │    ●     │     ◐     │    │     ○     │     │
-  │ Pump B   │    ●     │     ○     │    │     ○     │     │
-  └──────────┴──────────┴───────────┴────┴───────────┴─────┘
-```
+<DMatrix
+  xLabel="X: levels and stages"
+  yLabel="Y: assets"
+  :groups="[{ label: 'Level 1', span: 3 }, { label: 'Level 2', span: 2 }]"
+  :columns="['Design', 'Approve', '…', 'Install', '…']"
+  :rows="[
+    { label: 'Pump A', cells: ['done', 'done', '', 'todo', ''] },
+    { label: 'Seal', depth: 1, cells: ['done', 'done', '', 'part', ''] },
+    { label: 'Motor', depth: 1, cells: ['done', 'part', '', 'todo', ''] },
+    { label: 'Pump B', cells: ['done', 'todo', '', 'todo', ''] },
+  ]" />
 
 Each cell carries its own status, dates, checklist and evidence. Progress rolls
 up the asset tree; gates decide what may proceed; and when an asset's cells are

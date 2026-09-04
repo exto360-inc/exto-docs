@@ -17,21 +17,24 @@ of the product stops needing explanation.
 
 ## How they fit together
 
-```
-Tenant
-└─ Workspace
-   └─ Project
-      └─ Space
+<DTree root="Tenant" :nodes="[
+  { label: 'Workspace', children: [
+    { label: 'Project', children: [
+      { label: 'Space' },
+    ] },
+  ] },
+]" />
 
-      Module  (deployed at tenant, workspace or project level)
-      ├─ Form       — what you fill in
-      ├─ Workflow   — where it goes, versioned
-      └─ Records    — the actual data
-                      ├─ field values
-                      ├─ workflow instance (where it has been)
-                      ├─ documents, comments, linked records
-                      └─ history
-```
+<DTree root="Module" :nodes="[
+  { label: 'Form', note: 'what you fill in' },
+  { label: 'Workflow', note: 'where it goes, versioned' },
+  { label: 'Records', note: 'the actual data', children: [
+    { label: 'Field values' },
+    { label: 'Workflow instance', note: 'where it has been' },
+    { label: 'Documents, comments, linked records' },
+    { label: 'History' },
+  ] },
+]" />
 
 A **module** is deployed into a **context** — tenant, workspace or project —
 and that single choice decides where its records live, who can see them, and

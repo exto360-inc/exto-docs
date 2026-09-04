@@ -49,11 +49,12 @@ A record is one entry in a module. Beyond its field values it carries:
 
 ### The lifecycle
 
-```
-New → Draft → in workflow → Completed
-                   ↑              │
-                   └── Reopened ──┘   (when the module allows it)
-```
+<DFlow dir="right" loop="Reopened, when the module allows it" :loopTo="2" :steps="[
+  { title: 'New' },
+  { title: 'Draft' },
+  { title: 'In workflow' },
+  { title: 'Completed' },
+]" />
 
 - **Draft** — saved, not submitted. Nothing has moved.
 - **Submit** takes a workflow action, advances the record, and notifies whoever

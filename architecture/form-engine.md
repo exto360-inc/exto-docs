@@ -13,12 +13,12 @@ express has to be interpreted here.
 
 ## The pieces
 
-```
-definition  ──▶  runtime  ──▶  dependency graph  ──▶  change pipeline
-  fields          rules            what depends            ordered
-  rules           formulas          on what                operations
-  formulas        engines
-```
+<DFlow dir="right" :steps="[
+  { title: 'Definition', body: 'Fields · rules · formulas' },
+  { title: 'Runtime', body: 'Rules · formulas · engines' },
+  { title: 'Dependency graph', body: 'What depends on what' },
+  { title: 'Change pipeline', body: 'Ordered operations' },
+]" />
 
 | Piece | Responsibility |
 | --- | --- |

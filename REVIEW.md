@@ -36,6 +36,26 @@ consequences. If any of these is wrong, it is wrong in a way that misleads.
 
 ---
 
+## Tier 1b — the AI lane, written from source in one pass
+
+The whole `ai/` lane plus `architecture/ai-platform.md` was written by reading
+`exto-go` and `exto-web` and never exercised against a running tenant. It makes
+more falsifiable claims than any other lane, and several of them have
+consequences if wrong.
+
+| Page | Claim to check |
+| --- | --- |
+| `ai/index.md` | Four switches, in that precedence order — organisation AI access, per-user entitlement, per-user insights, per-user memory. |
+| `ai/context.md` | The page hint **never** restricts or grants; a named module always beats the page. |
+| `ai/attachments.md` | Attaching a file **skips the reasoning loop entirely** — no tenant data is queried on that turn. Three files, 10 MB, and the accepted type list. |
+| `ai/memory.md` | The four capture triggers, and that deleting a session extracts from it first. Off ≠ purge. |
+| `ai/cx.md` | The three commissioning abilities appear only with exactly one workbench resolvable. The setup copilot is the only AI surface that writes. |
+| `ai/insights.md` | Module insights aggregate over **permitted records only**, so two people can see different totals. |
+| `ai/operations.md` | Every listed turn outcome is a real, distinguishable state in the UI. |
+
+::: Ask of each: would an administrator sizing risk, or a user trusting a
+number, be misled?
+
 ## Tier 2 — written from source, never clicked
 
 I read `exto-web` and `exto-go` for these but never used the feature. Most

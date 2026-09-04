@@ -51,18 +51,12 @@ running its stages continues exactly as before.
 
 ## How a template reaches an asset
 
-```
-Asset added to the registry
-        │
-        ▼
-Published template, effective today
-        │
-        ▼
-One stage instance per stage, on that asset
-        │
-        ▼
-Progress rolls up the asset hierarchy
-```
+<DFlow :steps="[
+  { title: 'Asset added to the registry' },
+  { title: 'Published template, effective today' },
+  { title: 'One stage instance per stage, on that asset' },
+  { title: 'Progress rolls up the asset hierarchy' },
+]" />
 
 A **stage instance** is that asset's own copy of a stage: its status, its
 dates, its checklist answers and its progress. The template is the definition;

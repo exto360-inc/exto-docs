@@ -91,12 +91,10 @@ header. Refresh re-reads it.
 Curating a field does not take effect immediately. A **schema sync** rebuilds
 what the AI uses, in two stages:
 
-```
-Graph  ──→  Vectors
-```
-
-- **Graph** — the structural picture: collections, fields, references.
-- **Vectors** — the searchable embedding of your descriptions and synonyms.
+<DFlow dir="right" :steps="[
+  { title: 'Graph', body: 'The structural picture: collections, fields, references' },
+  { title: 'Vectors', body: 'The searchable embedding of your descriptions and synonyms' },
+]" />
 
 Each stage reports its own status, and the sync detail shows which
 **collections** and **fields** were re-embedded. A sync reporting *"vectors

@@ -45,7 +45,7 @@ features:
     link: /integrations/
   - icon: ✨
     title: AI
-    details: Ask questions of your data, and read what it makes of a record.
+    details: Ask questions of your data, attach documents, and read what it makes of a record.
     link: /ai/
   - icon: 👤
     title: Account

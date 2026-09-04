@@ -10,18 +10,16 @@ but written off it.**
 
 ## The save path
 
-```
-save request
-   │
-   ├─ persist the record
-   ├─ capture the sub-table payload before it is stripped
-   ├─ compute what changed
-   │     main fields · sub-table rows · checklist items
-   ├─ write ONE small ticket alongside the record
-   └─ respond
-                    ⋮  later, separately
-              a worker turns tickets into history
-```
+<DBranch
+  source="Save request"
+  :branches="[
+    { label: 'Persist the record' },
+    { label: 'Capture the sub-table payload', note: 'before it is stripped' },
+    { label: 'Compute what changed', note: 'main fields · sub-table rows · checklist items' },
+    { label: 'Write ONE small ticket', note: 'alongside the record' },
+    { label: 'Respond' },
+  ]"
+  :then="[{ label: 'Later, and separately', note: 'a worker turns tickets into history' }]" />
 
 The save writes the record and a **ticket**. It never writes the audit record
 itself. A worker drains the tickets afterwards.

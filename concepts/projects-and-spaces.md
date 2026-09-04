@@ -8,12 +8,13 @@ Exto organises everything into a four-level hierarchy. It decides where records
 live, who can see them, and which masters they can reach — so it is worth
 getting right before you build anything.
 
-```
-Company (Tenant)
-└─ Workspace          top-level container; can nest
-   └─ Project         a body of work; can be a program of sub-projects
-      └─ Space        a collaboration area within a workspace or project
-```
+<DTree root="Company (Tenant)" :nodes="[
+  { label: 'Workspace', note: 'top-level container; can nest', children: [
+    { label: 'Project', note: 'a body of work; can be a program of sub-projects', children: [
+      { label: 'Space', note: 'a collaboration area within a workspace or project' },
+    ] },
+  ] },
+]" />
 
 ## Tenant
 

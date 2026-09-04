@@ -9,18 +9,21 @@ provisioning step that turns them into work on real assets.
 
 ## The definition chain
 
-```
-Workbench
-  ├─ Levels             groupings — become column groups
-  ├─ Stages             units of work — become columns
-  │    ├─ scheduling    depends-on · type · duration · lag
-  │    ├─ gates         blocking rules
-  │    └─ checklist     what completing it means
-  └─ Stage templates    versioned sequences of stages
-             │
-             ▼  provisioning
-        Asset  ──▶  stage instances (the cells)
-```
+<DTree root="Workbench" :nodes="[
+  { label: 'Levels', note: 'groupings — become column groups' },
+  { label: 'Stages', note: 'units of work — become columns', children: [
+    { label: 'Scheduling', note: 'depends-on · type · duration · lag' },
+    { label: 'Gates', note: 'blocking rules' },
+    { label: 'Checklist', note: 'what completing it means' },
+  ] },
+  { label: 'Stage templates', note: 'versioned sequences of stages' },
+]" />
+
+<DFlow dir="right" :steps="[
+  { title: 'Stage template' },
+  { title: 'Asset', edge: 'provisioning' },
+  { title: 'Stage instances', body: 'the cells' },
+]" />
 
 Everything above the instance is definition. The **instance** is the only thing
 users work on, and it is created by provisioning, not by editing.

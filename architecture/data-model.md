@@ -10,17 +10,17 @@ new screens, because every screen is already generic.
 
 ## The chain
 
-```
-Module          what kind of thing this is
-  ├─ Table      the columns its records store
-  ├─ Form(s)    what a person fills in
-  ├─ Workflow   where records go
-  └─ Record(s)  the actual data
-        ├─ field values
-        ├─ workflow instance
-        ├─ documents · comments · linked records
-        └─ history
-```
+<DTree root="Module" :nodes="[
+  { label: 'Table', note: 'the columns its records store' },
+  { label: 'Form(s)', note: 'what a person fills in' },
+  { label: 'Workflow', note: 'where records go' },
+  { label: 'Record(s)', note: 'the actual data', children: [
+    { label: 'Field values' },
+    { label: 'Workflow instance' },
+    { label: 'Documents · comments · linked records' },
+    { label: 'History' },
+  ] },
+]" />
 
 Everything above the record is **definition**; the record is **data**. That
 split is why one designer screen can produce any module, and why a module's
@@ -47,12 +47,13 @@ one is fixed at creation precisely because so much refers to it.
 
 Every record belongs to a context:
 
-```
-Tenant
-└─ Workspace
-   └─ Project
-      └─ Space
-```
+<DTree root="Tenant" :nodes="[
+  { label: 'Workspace', children: [
+    { label: 'Project', children: [
+      { label: 'Space' },
+    ] },
+  ] },
+]" />
 
 A module is **deployed** at tenant, workspace or project level, and that
 decides where its records live and who can reach them. Scope is applied at the
