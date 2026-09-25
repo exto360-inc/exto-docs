@@ -16,6 +16,9 @@ and configure one.
 
 **Create → Project** asks for:
 
+<Shot src="projects/create" alt="The Create New project form"
+  caption="Create → Project. Id is generated; name, workspace, description, calendar and dates are required." />
+
 | Group | Fields |
 | --- | --- |
 | **Basics** | Project ID (generated), name, description, and the **workspace** it belongs to. |
@@ -45,6 +48,9 @@ that also aggregates its children.
 
 ## The tabs
 
+<Shot src="projects/edit" alt="A project's General tab"
+  caption="An existing project — General, Users, Groups and Space across the top." />
+
 | Tab | You manage |
 | --- | --- |
 | **General** | Every project field, and deleting the project. |
@@ -52,6 +58,9 @@ that also aggregates its children.
 | **Groups** | Project [groups](/admin/groups). |
 | **Space** | Project [spaces](/admin/spaces). |
 | **Dashboard** | The project's dashboard configuration. |
+
+<Shot src="projects/groups" alt="The Project Groups tab"
+  caption="Project Groups — which groups are granted on this project, and what each one carries." />
 
 ## What each action requires
 

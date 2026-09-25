@@ -1,4 +1,5 @@
 import DefaultTheme from 'vitepress/theme';
+import Layout from './Layout.vue';
 import Shot from './components/Shot.vue';
 import Clip from './components/Clip.vue';
 import Perm from './components/Perm.vue';
@@ -28,6 +29,8 @@ import './custom.css';
  */
 export default {
   extends: DefaultTheme,
+  // Fills the hero's eyebrow and image slots — see Layout.vue.
+  Layout,
   enhanceApp({ app }) {
     app.component('Shot', Shot);
     app.component('Clip', Clip);

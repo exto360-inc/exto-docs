@@ -14,12 +14,18 @@ working its checklist and setting its status is what a commissioning engineer
 does all day, and everything else in the workbench exists to make it possible.
 
 <Shot src="cx/cell-panel" alt="A stage cell open in the detail panel"
-  caption="A cell open — its checklist on the left, the asset's tabs down the side." />
+  caption="A cell open — the matrix stays on the left, the cell's form and checklist fill the panel on the right." />
 
 ## Opening one
 
 Click a cell in the [matrix](/cx/matrix). A permission check runs first, then
 the panel opens on the right.
+
+::: tip Two panels, two clicks
+Clicking a **stage cell** opens the cell's record, described here. Clicking the
+**asset's name** in the left column opens
+[the asset property panel](/cx/asset-panel) instead.
+:::
 
 - If a record already exists for the cell, it opens.
 - If not, you are prompted to **create** one. The new record is stamped with its
@@ -34,8 +40,27 @@ stage's grants.
 Where the stage has a [checklist](/build/checklists) attached, it renders inside
 the cell as a tab strip, a status bar and a table of items.
 
+<Shot src="cx/checklist" alt="A checklist being worked inside a cell"
+  caption="The checklist table — one numbered item per row, its result in the Results column, and who filled it recorded underneath." />
+
 Each item is answered **Pass**, **Fail** or **N/A**, and can carry notes,
 attachments and linked records depending on how the checklist was configured.
+
+### Filling one in
+
+1. Scroll to the **Checklist** section of the open cell.
+2. Expand the checklist by its name — a cell can carry more than one.
+3. Answer each numbered item in the **Results** column.
+4. Add an observation or attach evidence where the item asks for it.
+5. Record the **Overall result** and any comments beneath the table.
+
+Every answer is stamped with **who filled it and when**, shown under the item.
+That line is the audit trail the handover pack is built from, which is why the
+checklist cannot be edited once the cell is signed off — reopening it takes the
+separate **Reopen** grant.
+
+The status bar above the table counts as you go, and the cell's percentage
+follows it.
 
 ::: tip The checklist decides the percentage
 A stage **with** a checklist takes its percentage from the checklist's pass and

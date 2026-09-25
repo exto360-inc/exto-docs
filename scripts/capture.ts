@@ -81,6 +81,66 @@ const FAKE_ORGS = [
 const KEEP_NAMES = ['ORP Demo', 'Startup', 'Current', 'Tenants', 'Search tenants . . .',
                     'PME', 'User', 'Exto'];
 
+/**
+ * Literal real names seeded into the demo tenant. Replaced everywhere in the
+ * page, whatever element they sit in.
+ *
+ * The per-entry `scrub` is scoped to a selector, which is the right tool when a
+ * whole column is customer names. It is the wrong tool here: these names also
+ * appear in the left sidebar, in breadcrumbs and in "created by" strings, and
+ * widening the scrub selector to cover those would rename the navigation items
+ * next to them. Matching the exact string is precise and cannot misfire.
+ *
+ * Case-insensitive, because the same customer is spelled several ways.
+ */
+const CENSOR: [string, string][] = [
+  ['JE Dunn Admin', 'Northwind Energy Admin'],
+  ['JE Dunn', 'Northwind Energy'],
+  ['sofia wakine', 'Alex Morgan'],
+  ['Bolo Admin', 'Calder Power Admin'],
+  ['Bolo', 'Calder Power'],
+  // Display names from the tenant's user list. These surface far from any
+  // grid — in "Filled by" audit lines on a checklist, in "Created by" on a
+  // record — which is exactly why they are matched literally rather than by
+  // a selector.
+  ['Gmail Irfan', 'Kim Tanaka'],
+  ['Shivam Sharma', 'Sam Patel'],
+  ['Saravanan K', 'Jo Rivera'],
+  ['Sterling Hill', 'Chris Doyle'],
+  ['Marketing User', 'Robin Hale'],
+  ['Crow Super', 'Alex Morgan'],
+  ['Nick Lee', 'Robin Hale'],
+];
+
+const CENSOR_JS = `(function (pairs) {
+  var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), n = 0;
+  while (w.nextNode()) {
+    var t = w.currentNode.nodeValue;
+    if (!t || !t.trim()) continue;
+    var before = t;
+    for (var i = 0; i < pairs.length; i++) {
+      // Case-insensitive literal replace, without a RegExp — the pattern comes
+      // from a name that may contain regex metacharacters, and escaping it
+      // through two levels of template literal is how this broke the first time.
+      var needle = pairs[i][0].toLowerCase(), out = '', rest = t;
+      for (;;) {
+        var at = rest.toLowerCase().indexOf(needle);
+        if (at === -1) { out += rest; break; }
+        out += rest.slice(0, at) + pairs[i][1];
+        rest = rest.slice(at + needle.length);
+      }
+      t = out;
+    }
+    if (t !== before) { w.currentNode.nodeValue = t; n++; }
+  }
+  return n;
+})(PAIRS)`;
+
+/** Replace known real names everywhere on the page. */
+async function censor(page: Page): Promise<number> {
+  return (await page.evaluate(CENSOR_JS.replace('PAIRS', JSON.stringify(CENSOR)))) as number;
+}
+
 const FAKE_PEOPLE = [
   ['alex.morgan', 'Alex Morgan'], ['sam.patel', 'Sam Patel'],
   ['jo.rivera', 'Jo Rivera'],     ['chris.doyle', 'Chris Doyle'],
@@ -263,6 +323,8 @@ async function settle(page: Page, entry: CaptureEntry) {
   if (!NO_REDACT) {
     const n = await redact(page, REDACT_DOMAINS);
     if (n) console.log(`    redacted ${n} identifier${n === 1 ? '' : 's'}`);
+    const c = await censor(page);
+    if (c) console.log(`    censored ${c} real name${c === 1 ? '' : 's'}`);
     if (entry.scrub) {
       const m = await scrub(page, entry.scrub, entry.scrubAs);
       if (m) console.log(`    scrubbed ${m} name${m === 1 ? '' : 's'}`);
@@ -323,7 +385,13 @@ async function film(browser: Browser, entry: CaptureEntry) {
 
 // ── run ────────────────────────────────────────────────────────────────────
 let entries = manifest;
-if (ONLY) entries = entries.filter(e => e.id === ONLY || e.id.startsWith(ONLY));
+// --only takes a comma-separated list, and each item matches an id exactly or
+// as a prefix — so `--only cx/` re-shoots the whole CX section, and
+// `--only build/rules,admin/users` re-shoots exactly those two.
+if (ONLY) {
+  const wanted = ONLY.split(',').map(s => s.trim()).filter(Boolean);
+  entries = entries.filter(e => wanted.some(w => e.id === w || e.id.startsWith(w)));
+}
 if (SKIP_VIDEOS) entries = entries.filter(e => e.kind !== 'video');
 if (!entries.length) { console.error(`  Nothing matches --only ${ONLY}`); process.exit(1); }
 

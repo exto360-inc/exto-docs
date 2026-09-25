@@ -1,9 +1,12 @@
 /* Indigo and Inter, matching console-docs, so the two sites read as siblings. */
 :root {
-  --vp-c-brand-1: var(--vp-c-indigo-1);
-  --vp-c-brand-2: var(--vp-c-indigo-2);
-  --vp-c-brand-3: var(--vp-c-indigo-3);
-  --vp-c-brand-soft: var(--vp-c-indigo-soft);
+  /* Exto's own brand indigo, not VitePress's. #2e3690 is the wordmark as
+     drawn; #8d97e8 is the tint it switches to on a dark ground. The pair is
+     exto-web's --exto-brand token. */
+  --vp-c-brand-1: #2e3690;
+  --vp-c-brand-2: #3d47b5;
+  --vp-c-brand-3: #4f5ad0;
+  --vp-c-brand-soft: rgba(46, 54, 144, 0.14);
   --vp-font-family-base: Inter, ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -269,3 +272,262 @@
   font-size: 12px; color: var(--vp-c-text-3); }
 .dg-matrix .dg-legend span { display: inline-flex; align-items: center; gap: 7px; }
 .dg-matrix .dg-legend i { flex: 0 0 auto; }
+
+/* ── Home page ───────────────────────────────────────────────────────────────
+   The default VitePress home is a hero plus a feature grid and then bare
+   markdown, which reads as a wall of links. Below the fold the page is doing
+   three different jobs — routing by role, teaching five concepts, and listing
+   the remaining sections — so each gets a shape of its own rather than another
+   table. All three collapse to a single column on a phone.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* The body must start at the same left edge as the hero above it, or the page
+   reads as two pages. VitePress puts padding on .VPHero and centres a 1152px
+   .container inside it, so matching means copying BOTH: the same padding at the
+   same breakpoints, plus content-box, so the 1152 applies to the content and
+   the padding sits outside it exactly as the hero's does. */
+.x-home {
+  box-sizing: content-box;
+  max-width: 1152px; margin: 0 auto;
+  padding: 0 24px 72px;
+}
+@media (min-width: 640px) { .x-home { padding: 0 48px 72px; } }
+@media (min-width: 960px) { .x-home { padding: 0 64px 80px; } }
+.x-home h2 {
+  margin: 56px 0 6px; padding-top: 0; border-top: 0;
+  font-size: 22px; font-weight: 650; letter-spacing: -0.01em;
+}
+.x-home h2 + p { margin-top: 0; color: var(--vp-c-text-2); font-size: 14.5px; }
+.x-home > .dg { margin-top: 22px; }
+
+/* Role router — the primary way in. */
+.x-roles {
+  display: grid; gap: 14px; margin-top: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+}
+.x-role {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 18px 18px 16px;
+  border: 1px solid var(--vp-c-divider); border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  text-decoration: none !important; color: inherit;
+  transition: border-color .2s, background .2s, transform .2s;
+}
+.x-role:hover {
+  border-color: var(--vp-c-brand-2); background: var(--vp-c-bg-elv);
+  transform: translateY(-2px);
+}
+.x-role-k {
+  font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--vp-c-brand-1);
+}
+.x-role-t { font-size: 16px; font-weight: 620; line-height: 1.35; color: var(--vp-c-text-1); }
+.x-role-b { font-size: 13.5px; line-height: 1.55; color: var(--vp-c-text-2); flex: 1; }
+.x-role-go { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--vp-c-brand-1); }
+
+/* Five concepts — numbered, denser than the role cards. */
+.x-concepts {
+  display: grid; gap: 10px; margin-top: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+.x-concept {
+  display: grid; grid-template-columns: 30px 1fr; grid-template-rows: auto auto;
+  column-gap: 12px; row-gap: 3px; align-items: start;
+  padding: 15px 16px;
+  border: 1px solid var(--vp-c-divider); border-left: 3px solid var(--vp-c-brand-2);
+  border-radius: 10px; background: var(--vp-c-bg-soft);
+  text-decoration: none !important; color: inherit;
+  transition: border-color .2s, background .2s;
+}
+.x-concept:hover { border-color: var(--vp-c-brand-2); background: var(--vp-c-bg-elv); }
+.x-concept-n {
+  grid-row: 1 / span 2;
+  display: grid; place-items: center; width: 26px; height: 26px;
+  border-radius: 50%; background: var(--vp-c-brand-soft); color: var(--vp-c-brand-1);
+  font-size: 12.5px; font-weight: 700;
+}
+.x-concept-t { font-size: 14.5px; font-weight: 620; line-height: 1.4; color: var(--vp-c-text-1); }
+.x-concept-b { font-size: 13px; line-height: 1.55; color: var(--vp-c-text-2); }
+
+/* Secondary sections — smallest of the three. */
+.x-more {
+  display: grid; gap: 10px; margin-top: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.x-m {
+  display: flex; flex-direction: column; gap: 3px; padding: 13px 15px;
+  border: 1px solid var(--vp-c-divider); border-radius: 10px;
+  text-decoration: none !important; color: inherit;
+  transition: border-color .2s, background .2s;
+}
+.x-m:hover { border-color: var(--vp-c-brand-2); background: var(--vp-c-bg-soft); }
+.x-m strong { font-size: 14px; font-weight: 620; color: var(--vp-c-text-1); }
+.x-m span { font-size: 13px; line-height: 1.5; color: var(--vp-c-text-2); }
+
+@media (max-width: 640px) {
+  .x-home { padding: 0 20px 48px; }
+  .x-home h2 { margin-top: 42px; font-size: 20px; }
+}
+
+/* Shots on the home page sit inside .x-home, which is narrower than a doc page
+   — give them a little breathing room and a heading that reads as a caption. */
+.x-home h3 { margin: 30px 0 4px; font-size: 17px; font-weight: 640; }
+.x-home .shot { margin: 16px 0 6px; }
+
+
+/* Dark ground: the wordmark's lighter tint, so brand text keeps its contrast. */
+.dark {
+  --vp-c-brand-1: #8d97e8;
+  --vp-c-brand-2: #7681e0;
+  --vp-c-brand-3: #5f6bd4;
+  --vp-c-brand-soft: rgba(141, 151, 232, 0.16);
+}
+
+
+
+/* ── Home hero ───────────────────────────────────────────────────────────────
+   The default hero reserves a square on the right and, with no image, leaves it
+   blank — which on a wide screen is half the fold. The glyph fills it, sized up
+   from VitePress's default so it reads as a brand mark rather than an icon, and
+   dropped entirely on narrow screens where the text needs the width.
+   ────────────────────────────────────────────────────────────────────────── */
+
+
+.VPHero .VPImage {
+  max-width: 320px; max-height: 320px;
+  filter: drop-shadow(0 12px 28px rgba(46, 54, 144, 0.16));
+}
+.dark .VPHero .VPImage { filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.4)); }
+@media (min-width: 960px) {
+  .VPHero .VPImage { max-width: 380px; max-height: 380px; }
+}
+
+/* The hero sits directly above the first body section now that the feature
+   grid is gone, so it needs its own bottom rule rather than the cards' gap. */
+.VPHome .VPHero { padding-bottom: 28px; }
+.x-home > h2:first-of-type { margin-top: 8px; }
+
+/* Colour key — a row of chips under the portal, read left to right. */
+.x-keys {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 8px; margin-top: 16px;
+}
+.x-key {
+  display: inline-block; padding: 4px 12px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: .01em;
+}
+.x-key-green { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.x-key-amber { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+.x-key-red   { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+.x-key-grey  { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.dark .x-key-green { background: #14532d33; color: #86efac; border-color: #16653480; }
+.dark .x-key-amber { background: #78350f33; color: #fcd34d; border-color: #92400e80; }
+.dark .x-key-red   { background: #7f1d1d33; color: #fca5a5; border-color: #99182080; }
+.dark .x-key-grey  { background: #33415533; color: #cbd5e1; border-color: #47556980; }
+
+/* Two columns of prose, for the pair of ideas the product rests on. */
+.x-two {
+  display: grid; gap: 20px; margin-top: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.x-two-col {
+  padding: 22px 24px; border: 1px solid var(--vp-c-divider);
+  border-radius: 12px; background: var(--vp-c-bg-soft);
+}
+.x-two-col h3 {
+  margin: 0 0 8px; font-size: 16.5px; font-weight: 640;
+  color: var(--vp-c-text-1); border: 0; padding: 0;
+}
+.x-two-col p { margin: 0; font-size: 14px; line-height: 1.62; color: var(--vp-c-text-2); }
+.x-two-go {
+  display: inline-block; margin-top: 12px;
+  font-size: 13.5px; font-weight: 600; color: var(--vp-c-brand-1);
+  text-decoration: none !important;
+}
+.x-two-go:hover { text-decoration: underline !important; }
+
+/* No hero image any more — the nav wordmark already carries the brand, so the
+   hero is one message, centred, with the product picture doing the rest. */
+.VPHome .VPHero { padding-bottom: 20px; }
+.VPHero .text { max-width: 20ch; }
+.VPHero .tagline { max-width: 62ch; margin-left: auto; margin-right: auto; }
+
+/* ── Nav bar ─────────────────────────────────────────────────────────────────
+   The title is a wordmark followed by a bare <span> reading "Docs". They are
+   flex siblings, so they centre on the box rather than on a shared baseline —
+   and the wordmark's own drawing sits slightly high inside its viewBox. Nudging
+   the qualifier down by a pixel settles the pair optically.
+   ────────────────────────────────────────────────────────────────────────── */
+.VPNavBarTitle .title { display: flex; align-items: center; gap: 9px; }
+.VPNavBarTitle .title .logo { height: 22px; width: auto; display: block; }
+.VPNavBarTitle .title span {
+  position: relative; top: 1px;
+  font-size: 16px; font-weight: 600; line-height: 1;
+  color: var(--vp-c-text-1); letter-spacing: -0.01em;
+}
+
+/* Search had a button's worth of width in a bar with room to spare. */
+@media (min-width: 768px) {
+  .VPNavBarSearch { flex-grow: 1; padding-left: 20px; }
+  .VPNavBarSearch .DocSearch-Button { width: 100%; max-width: 320px; }
+}
+@media (min-width: 1280px) {
+  .VPNavBarSearch .DocSearch-Button { max-width: 420px; }
+}
+.DocSearch-Button { border-radius: 10px; }
+.DocSearch-Button-Placeholder { padding-left: 10px; }
+
+/* ── Hero eyebrow + layered product shot ─────────────────────────────────────
+   A screenshot pair rather than one image: the portal in front, a record's
+   progress showing behind it, so the hero states both halves of the product
+   before a word of the page is read. The back layer is decorative and hidden
+   from assistive tech; the front one carries the alt text.
+   ────────────────────────────────────────────────────────────────────────── */
+.x-eyebrow {
+  margin: 0 0 14px; font-size: 12px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--vp-c-brand-1);
+}
+
+.x-stack { position: relative; width: 100%; padding: 18px 0 30px; }
+.x-stack-glow {
+  position: absolute; inset: -12% -8% 4% -4%;
+  background:
+    radial-gradient(52% 58% at 72% 26%, rgba(141, 151, 232, .34), transparent 70%),
+    radial-gradient(46% 52% at 28% 74%, rgba(46, 54, 144, .16), transparent 72%);
+  filter: blur(22px); pointer-events: none;
+}
+.x-stack img {
+  display: block; border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+}
+.x-stack-back {
+  position: absolute; top: 0; right: 0;
+  width: 78%; opacity: .72;
+  box-shadow: 0 18px 44px -16px rgba(15, 23, 42, .28);
+}
+.x-stack-front {
+  position: relative; width: 94%; margin-top: 46px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 26px 60px -18px rgba(15, 23, 42, .34);
+}
+.dark .x-stack-back  { box-shadow: 0 18px 44px -16px rgba(0, 0, 0, .6); }
+.dark .x-stack-front { box-shadow: 0 26px 60px -18px rgba(0, 0, 0, .72); }
+.x-stack-badge {
+  position: absolute; left: 4%; bottom: 8px; z-index: 2;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--vp-c-text-1); color: var(--vp-c-bg);
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  box-shadow: 0 8px 22px -8px rgba(15, 23, 42, .5);
+}
+
+/* The hero image column is a fixed square by default; a screenshot pair needs
+   the width instead, and none of it is worth the vertical space on a phone. */
+.VPHero .image { max-width: none; margin: 0; }
+.VPHero .image-container { padding: 0; width: 100%; max-width: none; transform: none; }
+.VPHero .image-bg { display: none; }
+@media (min-width: 960px) {
+  .VPHero.has-image .container { align-items: center; }
+  .VPHero .image { flex-grow: 1.35; }
+}
+@media (max-width: 959px) { .x-stack { display: none; } }

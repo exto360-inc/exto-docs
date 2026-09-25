@@ -13,7 +13,28 @@ export default defineConfig({
   description: 'Build modules, forms and workflows — and follow a record through them.',
   cleanUrls: true,
   lastUpdated: true,
+  /**
+   * The tab mark is the product's own favicon, copied from exto-web rather
+   * than redrawn: the SVG is the wordmark's first letterform with no plate, and
+   * carries its own dark-mode fill. The .ico is the fallback for anything that
+   * will not take an SVG.
+   */
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['link', { rel: 'alternate icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    ['meta', { name: 'theme-color', content: '#2e3690' }],
+  ],
   themeConfig: {
+    /**
+     * The wordmark, in the brand's two grounds. The shipped SVG is drawn in
+     * #2e3690, which is correct on a light ground only, so the dark file is the
+     * same drawing in the brand's lighter tint — the pair exto-web keeps as
+     * --exto-brand.
+     */
+    logo: { light: '/exto-logo.svg', dark: '/exto-logo-dark.svg', alt: 'Exto' },
+    // The wordmark already says "exto"; the nav only needs to add what this
+    // site is. Leaving the full title would read "exto Exto Docs".
+    siteTitle: 'Docs',
     search: { provider: 'local' },
     /**
      * Nav mirrors Exto's own areas — commissioning, modules, building, setup,
@@ -98,6 +119,7 @@ export default defineConfig({
         { text: 'Gates & dependencies', link: '/cx/gates' },
         { text: 'Stage templates', link: '/cx/stage-templates' },
         { text: 'The asset registry', link: '/cx/assets' },
+        { text: 'The asset property panel', link: '/cx/asset-panel' },
         { text: 'Dates & scheduling', link: '/cx/dates' },
         { text: 'The commissioning matrix', link: '/cx/matrix' },
         { text: 'Completing a cell', link: '/cx/completing-a-cell' },

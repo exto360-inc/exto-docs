@@ -55,6 +55,9 @@ Rows show when each was created and last modified, formatted to your profile's
 A **data set** is a named list of options — a label and a value per entry —
 that **Select** and **Radio** fields choose from.
 
+<Shot src="build/data-sets" alt="The Data sets tab of the module designer"
+  caption="Data sets — the option lists a module's Select and Radio fields draw from." />
+
 Create one, name it (*Priority levels*, *Rejection reasons*), and add entries.
 Entries can be **reordered**, and an entry can be **disabled** rather than
 deleted — it shows struck through in the editor, stays valid on records that

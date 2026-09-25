@@ -12,8 +12,26 @@ The **Y axis** of the [matrix](/cx/matrix). The registry is the workbench's
 master list of the things being commissioned, arranged as a tree — and adding an
 asset to it is what creates its row of stage instances.
 
-<Shot src="cx/registry" alt="The asset registry"
-  caption="The asset tree, with a child asset being added under its parent." />
+<Shot src="cx/asset-registry" alt="The Asset Registry tab"
+  caption="The Asset Registry — every asset with its ID, type and stage template. Publish pushes new assets into the matrix." />
+
+Open it from the **Settings** icon at the right of the workbench header, then the
+**Registry** tab. **Flat** lists the assets; **Tree** shows the nesting. New
+assets stay **Unpublished** until you **Publish** them, which is what creates
+their row of stage instances in the matrix.
+
+The same hierarchy is drawn as a flow chart on the **SSM** (Site Startup Matrix)
+tab, which is the better view when you care about how assets nest rather than
+about their fields:
+
+<Shot src="cx/registry" alt="The Site Startup Matrix"
+  caption="SSM — the asset hierarchy as a flow chart, with progress on each node. Searching expands the matching branches." />
+
+## The asset property panel
+
+Clicking an asset's **name** in the matrix opens the asset itself — its fields,
+its stages, its predecessors, documents, links and notes. That panel has a page
+of its own: [The asset property panel](/cx/asset-panel).
 
 ## What an asset carries
 

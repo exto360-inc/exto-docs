@@ -84,6 +84,17 @@ not casually changed afterwards.
 
 See [Projects & spaces](/concepts/projects-and-spaces).
 
+## Where the record is in its workflow
+
+The rail's **Workflow** widget answers where the record has got to, who moved it
+at each step, and how long each step took — as a diagram or as a timeline, and
+either one full screen.
+
+It is the first thing to open when a record is read-only and you cannot see why,
+or when someone asks why a record has taken as long as it has.
+
+See [Workflow progress](/work/workflow-progress).
+
 ## Fields with their own history
 
 Where the module has [history](/work/history) enabled and the field's own toggle
@@ -107,7 +118,7 @@ A field can be read-only for four different reasons, and they look identical:
 4. The record is on **someone else's step**, so the whole form is read-only to
    you.
 
-The fourth is the common one. Check the Workflow widget before assuming a
+The fourth is the common one. Check the [Workflow widget](/work/workflow-progress) before assuming a
 configuration problem.
 
 ## Permissions

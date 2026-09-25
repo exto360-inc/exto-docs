@@ -8,8 +8,8 @@ A space is a collaboration area inside a workspace or project, with its own
 members. Spaces let a subset of people work together without opening up the
 whole project.
 
-<Shot src="admin/spaces" alt="Creating a space"
-  caption="A space with its admins, groups and tags." />
+<Shot src="admin/spaces" alt="The Space tab of a project"
+  caption="The Space tab of a project — the spaces defined on it, and Create to add one." />
 
 ## What a space carries
 

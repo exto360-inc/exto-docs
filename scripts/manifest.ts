@@ -49,7 +49,8 @@ const click = (label: string) => async (page: Page) => {
 // ── Fill these in from your tenant, then the routes below resolve ──────────
 const MODULE = 'ISSUE_PROJ';                                   // any module's name
 const WORKBENCH = '6a88d76949f59290671a890d';             // Start up Project
-const PROJECT  = '';                                      // TODO a project id
+const PROJECT  = 'jDC2I6';                                 // Commissioning Project 1
+const WORKSPACE = 'vb6vX-6';                               // the DEFAULT workspace
 const WORKFLOW = '6aaad40f033e3cadb3f4ba5c';               // ISSUE_PROJ v11 (active)
 const RECORD  = '6aac3599113bdcb095c1f45d';                 // an approved System Issue
 
@@ -135,23 +136,59 @@ const openFirstRecord = async (page: Page) => {
   await wait(3000);
 };
 
-/** Open a record, then one of its sidebar widgets by label. */
+/**
+ * Open a record, then one of its sidebar widgets by label.
+ *
+ * The rail's icons carry an `aria-label`, not a `title`. Matching on `title`
+ * silently found nothing, the catch swallowed it, and every widget shot came
+ * out as whatever the panel already showed — the Insights rail.
+ */
 const openRecordWidget = (label: string) => async (page: Page) => {
-  await page.waitForTimeout(2500);   // the widget rail mounts after the form
-
-  // The rail shows four widgets as icons — Attachments, Linked Records,
-  // Comments, Workflow — and folds the other six behind "More widgets".
-  const direct = page.locator(`[title="${label}"]`).first();
+  await page.waitForTimeout(3000);   // the widget rail mounts after the form
+  const direct = page.getByRole('button', { name: label, exact: true }).first();
   if (await direct.count().catch(() => 0)) {
-    await direct.click({ timeout: 4000 }).catch(() => {});
+    await direct.click({ timeout: 5000 }).catch(() => {});
   } else {
-    await page.locator('[title="More widgets"]').first()
+    // Only four icons fit on the rail; the rest fold behind "More widgets".
+    await page.getByRole('button', { name: 'More widgets', exact: true }).first()
       .click({ timeout: 5000 }).catch(() => {});
-    await wait(900);
+    await wait(1000);
     await page.getByText(label, { exact: true }).first()
       .click({ timeout: 5000 }).catch(() => {});
   }
-  await wait(2000);
+  await wait(3000);
+};
+
+/** Open the Workflow widget, then one of its two views. */
+const openProgress = (view?: 'Timeline' | 'Graphical', fullScreen = false) => async (page: Page) => {
+  await openRecordWidget('Workflow')(page);
+  if (view) {
+    await page.getByText(view, { exact: true }).first().click({ timeout: 5000 }).catch(() => {});
+    await wait(2500);
+  }
+  if (fullScreen) await maximizeProgress(page);
+};
+
+/**
+ * Take the progress panel full screen.
+ *
+ * Two different expanders sit near each other and only one is the right one.
+ * The rail's "Expand panel" widens the record sidebar; the progress panel's own
+ * Maximize2 makes it take over the window. The latter has no accessible name,
+ * so it is found as the rightmost narrow icon button in the panel's header
+ * band — narrow enough to exclude the TB / LR direction toggles below it.
+ */
+const maximizeProgress = async (page: Page) => {
+  const btns = page.locator('button');
+  const n = await btns.count();
+  let best = -1, bestX = -1;
+  for (let i = 0; i < n; i++) {
+    const bb = await btns.nth(i).boundingBox().catch(() => null);
+    if (!bb || bb.y < 180 || bb.y > 240 || bb.x < 900 || bb.width > 40) continue;
+    if (bb.x > bestX) { bestX = bb.x; best = i; }
+  }
+  if (best >= 0) await btns.nth(best).click({ timeout: 4000 }).catch(() => {});
+  await wait(3500);
 };
 
 /** Open the CX Visual Insights panel — the fifth KPI card, present only when
@@ -167,6 +204,192 @@ const clickNode = (label: string) => async (page: Page) => {
   await page.getByText(label, { exact: true }).first()
     .click({ timeout: 6000 }).catch(() => {});
   await wait(1500);
+};
+
+/**
+ * The Forms tab is a LIST of forms — one row per form. The designer everyone
+ * means by "form designer" is one level in: click the form, and the Form
+ * Builder opens with the field palette on the left and the canvas on the right.
+ * Capturing the URL alone gets the list, which is not the screen being
+ * documented.
+ */
+const openFormBuilder = (tab?: string) => async (page: Page) => {
+  await page.getByText('Issue Form', { exact: false }).first()
+    .click({ timeout: 8000 }).catch(() => {});
+  await wait(3200);
+  if (tab) {
+    await page.getByRole('tab', { name: tab, exact: false }).first()
+      .click({ timeout: 4000 })
+      .catch(async () => {
+        await page.getByText(tab, { exact: true }).first()
+          .click({ timeout: 3000 }).catch(() => {});
+      });
+    await wait(2000);
+  }
+};
+
+/**
+ * React Flow opens the workflow at its stored viewport, which on a wide canvas
+ * leaves the chain as a thin strip near the bottom of the frame. The fit-view
+ * control centres and scales it to fill the shot.
+ */
+const fitCanvas = async (page: Page) => {
+  await wait(1800);
+  await page.locator('.react-flow__controls-fitview').first()
+    .click({ timeout: 4000 })
+    .catch(async () => {
+      await page.locator('.react-flow__controls button').last()
+        .click({ timeout: 3000 }).catch(() => {});
+    });
+  await wait(1800);
+};
+
+/**
+ * SSM and Gantt both open with a single root asset and everything below it
+ * collapsed, which makes for a picture of one box.
+ *
+ * They expand by different means, because they are different renderers. The
+ * Gantt's rows are DOM, and the shared CX context menu offers "Expand All" on
+ * a right-click of the name column. The SSM flow chart is drawn to a canvas —
+ * its chevrons are hit-tested coordinates, not elements — and it deliberately
+ * clears its persisted expansion on mount, so neither a click nor a seeded
+ * localStorage entry will do. What it does have is an auto-expand when a
+ * search matches: CxFlowView unfolds the matched nodes' parents as long as the
+ * result set is under CX_FLOW_MAX_AUTO_EXPAND. So the SSM shot searches.
+ */
+const expandGantt = async (page: Page) => {
+  await page.getByText('Gantt', { exact: true }).first().click({ timeout: 6000 }).catch(() => {});
+  await wait(4500);
+  await page.locator('span.truncate.cursor-pointer').first()
+    .click({ button: 'right', timeout: 6000 }).catch(() => {});
+  await wait(1000);
+  await page.getByText('Expand All', { exact: true }).first()
+    .click({ timeout: 4000 }).catch(() => {});
+  await wait(5000);
+};
+
+const expandSsm = async (page: Page) => {
+  await page.getByText('SSM', { exact: true }).first().click({ timeout: 6000 }).catch(() => {});
+  await wait(3500);
+  await page.getByPlaceholder('Search assets', { exact: false }).first()
+    .fill('DC').catch(() => {});
+  await wait(5000);
+};
+
+/** The largest canvas on the page — the CX grid. Its index shifts once a side
+ *  panel mounts, so it is found by size rather than by position. */
+const gridCanvas = async (page: Page) => {
+  const n = await page.locator('canvas').count();
+  for (let i = 0; i < n; i++) {
+    const bb = await page.locator('canvas').nth(i).boundingBox().catch(() => null);
+    if (bb && bb.width > 300 && bb.height > 200) return bb;
+  }
+  return null;
+};
+
+/**
+ * The CX grid opens showing the single root asset — "1 rows · 1 visible" —
+ * with the whole hierarchy folded beneath it. Every shot of the matrix was
+ * therefore a picture of one row.
+ *
+ * The grid is drawn to a canvas, so there is no row element to click. What
+ * there is, is the shared CX context menu: right-click the name column and
+ * "Expand All" unfolds the subtree (CxWorkbench routes it to expandChildren).
+ * y+70 lands on the first data row, below the two header bands.
+ */
+const expandMatrix = async (page: Page) => {
+  await wait(2500);
+  const box = await gridCanvas(page);
+  if (!box) return;
+  await page.mouse.click(box.x + 100, box.y + 70, { button: 'right' });
+  await wait(1000);
+  await page.getByText('Expand All', { exact: true }).first()
+    .click({ timeout: 4000 }).catch(() => {});
+  await wait(5000);
+};
+
+/** Expand, then click a stage cell on a leaf asset to open its detail panel. */
+const openCell = async (page: Page) => {
+  await expandMatrix(page);
+  const box = await gridCanvas(page);
+  if (box) await page.mouse.click(box.x + 600, box.y + 350);
+  await wait(3500);
+};
+
+/**
+ * Open the cell panel and scroll it down to the checklist rows.
+ *
+ * Not a click on the "Checklist" heading — that heading is a disclosure
+ * toggle, so clicking it collapses the very table the shot exists to show.
+ */
+const openChecklist = async (page: Page) => {
+  await openCell(page);
+  await page.mouse.move(1040, 600);
+  await page.mouse.wheel(0, 430);
+  await wait(2200);
+};
+
+/**
+ * The CX project settings panel — Stage Configurations, Registry, Dates, Rules.
+ *
+ * Its trigger is the Settings2 icon at the right of the workbench header. That
+ * button carries a tooltip but no accessible name and no title attribute, so
+ * there is nothing to match on: it is found as the last small icon button in
+ * the header band instead.
+ */
+const openWorkbenchSettings = (tab: string) => async (page: Page) => {
+  await wait(2500);
+  const btns = page.locator('button');
+  const n = await btns.count();
+  let last = -1;
+  for (let i = 0; i < n; i++) {
+    const bb = await btns.nth(i).boundingBox().catch(() => null);
+    if (bb && bb.y > 70 && bb.y < 125 && bb.x > 1200 && bb.width < 40) last = i;
+  }
+  if (last >= 0) await btns.nth(last).click({ timeout: 5000 }).catch(() => {});
+  await wait(2500);
+  await page.getByText(tab, { exact: true }).first().click({ timeout: 5000 }).catch(() => {});
+  await wait(3000);
+};
+
+/**
+ * An asset's property panel — a different panel from the stage cell's.
+ *
+ * Clicking a STAGE cell opens that cell's record form. Clicking the asset's
+ * NAME, in the frozen left column, opens the asset itself: General, Stages,
+ * Predecessors, Documents, URLs and Notes, plus a tab per linked or gating
+ * module. x+160 lands inside the name column, clear of the row checkbox.
+ */
+const openAssetPanel = (tab?: string) => async (page: Page) => {
+  await expandMatrix(page);
+  const box = await gridCanvas(page);
+  if (box) await page.mouse.click(box.x + 160, box.y + 250);
+  await wait(3500);
+  if (tab) {
+    await page.getByText(tab, { exact: true }).last().click({ timeout: 5000 }).catch(() => {});
+    await wait(3000);
+  }
+};
+
+/**
+ * A master grid's inline cell editor — the Excel-like part.
+ *
+ * Master rows arrive late: /master-records/<code> paints its chrome, its column
+ * headers and an empty body long before the rows land, which is how the old
+ * shots came out as empty grids at settleMs 1200. Six seconds, then a
+ * double-click on a cell that actually has text in it.
+ */
+const editMasterCell = async (page: Page) => {
+  await wait(6500);
+  // Scan every row, not just the first — a master can carry blank rows, and
+  // double-clicking one of those opens an editor on nothing.
+  const cells = page.locator('.ag-center-cols-container .ag-cell');
+  const n = await cells.count().catch(() => 0);
+  for (let i = 0; i < n; i++) {
+    const t = (await cells.nth(i).innerText().catch(() => '')).trim();
+    if (t.length > 2) { await cells.nth(i).dblclick({ timeout: 5000 }).catch(() => {}); break; }
+  }
+  await wait(2200);
 };
 
 export const manifest: CaptureEntry[] = [
@@ -193,7 +416,8 @@ export const manifest: CaptureEntry[] = [
   // ── Getting started ──────────────────────────────────────────────────────
     { id: 'getting-started/quick-start', url: '/projects', prep: openPanel('My Tasks'), settleMs: 2500 },
   { id: 'getting-started/new-module', url: '/settings/module-designer', settleMs: 1200 },
-  { id: 'getting-started/first-workflow', url: `/settings/module-designer/${MODULE}/workflows?wf=${WORKFLOW}`, settleMs: 3000 },
+  { id: 'getting-started/first-workflow', url: `/settings/module-designer/${MODULE}/workflows?wf=${WORKFLOW}`,
+    prep: fitCanvas, settleMs: 3000, viewport: { width: 1440, height: 620 } },
 
   // ── Working in Exto ──────────────────────────────────────────────────────
   { id: 'work/my-tasks', url: '/projects', prep: openPanel('My Tasks'), settleMs: 2500 },
@@ -205,12 +429,16 @@ export const manifest: CaptureEntry[] = [
   { id: 'work/grid-editing', url: `/mod/${MODULE}`, settleMs: 1500 },
   { id: 'work/record-detail', url: `/mod/${MODULE}/record-v2/${RECORD}`, settleMs: 3500 },
   { id: 'work/record-widgets', url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openRecordWidget('Comments'), settleMs: 3500 },
-  { id: 'work/workflow-progress', url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openRecordWidget('Workflow'), settleMs: 3500 },
+  { id: 'work/workflow-progress',   url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openProgress('Graphical'),       settleMs: 3000 },
+  { id: 'work/workflow-timeline',   url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openProgress('Timeline'),        settleMs: 3000 },
+  { id: 'work/workflow-fullscreen', url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openProgress('Graphical', true), settleMs: 3000 },
+  { id: 'work/workflow-timeline-full', url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openProgress('Timeline', true), settleMs: 3000 },
   { id: 'work/history', url: `/mod/${MODULE}/record-v2/${RECORD}`, prep: openRecordWidget('History'), settleMs: 3500 },
   { id: 'work/action-sheet', url: `/mod/${MODULE}/record-v2/${RECORD}`,
     prep: openRecordWidget('Actions'), settleMs: 3500 },
-  { id: 'work/master-records', url: '/module-records', settleMs: 1200 },
-  { id: 'work/hierarchical-master', url: '/module-records', settleMs: 1200 },
+  { id: 'work/master-records', url: '/master-records/BIM_EXTO', settleMs: 7500 },
+  { id: 'work/master-inline-edit', url: '/master-records/BIM_EXTO', prep: editMasterCell, settleMs: 1500 },
+  { id: 'work/hierarchical-master', url: '/master-records/TERMINO', settleMs: 7500 },
   { id: 'work/import', url: '/settings/module-setup/import' },
   { id: 'work/drive', url: '/document-manager', settleMs: 1500 },
   { id: 'work/photos', url: '/photos', settleMs: 1500 },
@@ -221,42 +449,65 @@ export const manifest: CaptureEntry[] = [
   // ── Building ─────────────────────────────────────────────────────────────
   { id: 'build/module-designer', url: `/settings/module-designer/${MODULE}/general`, settleMs: 1200 },
   { id: 'build/module-builder', url: '/settings/module-builder' },
-  { id: 'build/form-designer', url: `/settings/module-designer/${MODULE}/forms`, settleMs: 1800 },
-  { id: 'build/rules', url: `/settings/module-designer/${MODULE}/forms`, prep: click('Rules'), settleMs: 1800 },
+  { id: 'build/form-designer', url: `/settings/module-designer/${MODULE}/forms`,
+    prep: openFormBuilder(), settleMs: 2500 },
+  { id: 'build/rules', url: `/settings/module-designer/${MODULE}/forms`,
+    prep: openFormBuilder('Rules'), settleMs: 2200 },
   { id: 'build/tables', url: `/settings/module-designer/${MODULE}/tables`, settleMs: 1200 },
   { id: 'build/reference-tables', url: `/settings/module-designer/${MODULE}/reference-tables`, settleMs: 1200 },
   { id: 'build/log-views', url: `/settings/module-designer/${MODULE}/log-views`, settleMs: 1200 },
   { id: 'build/checklists', url: `/settings/module-designer/${MODULE}/checklists`, settleMs: 1200 },
+  { id: 'build/data-sets', url: `/settings/module-designer/${MODULE}/data-sets`, settleMs: 1500 },
   { id: 'build/dashboard-builder', url: '/settings/dashboard-builder', settleMs: 1500 },
   { id: 'build/step-properties', url: `/settings/module-designer/${MODULE}/workflows?wf=${WORKFLOW}`, prep: clickNode('Issue Creation'), settleMs: 3000 },
   { id: 'build/condition-node', url: `/settings/module-designer/${MODULE}/workflows?wf=${WORKFLOW}`, prep: click('Trace'), settleMs: 3000 },
   // build/versions is the same screen as workflows/list — the workflows tab is
   // the version list. publishing.md references workflows/list directly.
   { id: 'workflows/list', url: `/settings/module-designer/${MODULE}/workflows`, settleMs: 2000 },
-  { id: 'workflows/designer', url: `/settings/module-designer/${MODULE}/workflows?wf=${WORKFLOW}`, settleMs: 3000 },
+  { id: 'workflows/designer', url: `/settings/module-designer/${MODULE}/workflows?wf=${WORKFLOW}`,
+    prep: fitCanvas, settleMs: 3000, viewport: { width: 1440, height: 620 } },
 
   // ── CX workbench ─────────────────────────────────────────────────────────
-  { id: 'cx/matrix', url: `/cx/workbench/${WORKBENCH}`, settleMs: 2500 },
-  { id: 'cx/cell-panel', url: `/cx/workbench/${WORKBENCH}`, prep: openFirstCell, settleMs: 3000 },
+  { id: 'cx/matrix', url: `/cx/workbench/${WORKBENCH}`, prep: expandMatrix, settleMs: 2000 },
+  { id: 'cx/cell-panel', url: `/cx/workbench/${WORKBENCH}`, prep: openCell, settleMs: 2500 },
+  { id: 'cx/checklist', url: `/cx/workbench/${WORKBENCH}`, prep: openChecklist, settleMs: 2500 },
   { id: 'cx/documents', url: `/cx/workbench/${WORKBENCH}`, prep: click('Documents'), settleMs: 2000 },
   { id: 'cx/handover', url: `/cx/workbench/${WORKBENCH}`, prep: click('Handover'), settleMs: 2000 },
-  { id: 'cx/registry', url: `/cx/workbench/${WORKBENCH}`, prep: click('SSM'), settleMs: 3000 },
-  { id: 'cx/dates', url: `/cx/workbench/${WORKBENCH}`, prep: click('Gantt'), settleMs: 3000 },
+  { id: 'cx/registry', url: `/cx/workbench/${WORKBENCH}`, prep: expandSsm, settleMs: 2500 },
+  { id: 'cx/dates', url: `/cx/workbench/${WORKBENCH}`, prep: expandGantt, settleMs: 2500 },
   { id: 'cx/levels', url: `/settings/cx-workbench/${WORKBENCH}?tab=level`, settleMs: 1500 },
   { id: 'cx/designer', url: `/settings/cx-workbench/${WORKBENCH}?tab=general`, settleMs: 1500 },
   { id: 'cx/stages', url: `/settings/cx-workbench/${WORKBENCH}?tab=stage`, settleMs: 1500 },
   { id: 'cx/stage-templates', url: `/settings/cx-workbench/${WORKBENCH}?tab=stage-template`, settleMs: 1500 },
+  { id: 'cx/stage-configs', url: `/cx/workbench/${WORKBENCH}`,
+    prep: openWorkbenchSettings('Stage Configurations'), settleMs: 2000 },
+  { id: 'cx/asset-registry', url: `/cx/workbench/${WORKBENCH}`,
+    prep: openWorkbenchSettings('Registry'), settleMs: 2000 },
+  { id: 'cx/asset-panel',        url: `/cx/workbench/${WORKBENCH}`, prep: openAssetPanel(),                  settleMs: 2000 },
+  { id: 'cx/asset-stages',       url: `/cx/workbench/${WORKBENCH}`, prep: openAssetPanel('Stages'),          settleMs: 2000 },
+  { id: 'cx/asset-predecessors', url: `/cx/workbench/${WORKBENCH}`, prep: openAssetPanel('Predecessors'),    settleMs: 2000 },
+  { id: 'cx/asset-documents',    url: `/cx/workbench/${WORKBENCH}`, prep: openAssetPanel('Documents'),       settleMs: 2000 },
+  { id: 'cx/asset-urls',         url: `/cx/workbench/${WORKBENCH}`, prep: openAssetPanel('URLs'),            settleMs: 2000 },
+  { id: 'cx/asset-notes',        url: `/cx/workbench/${WORKBENCH}`, prep: openAssetPanel('Notes'),           settleMs: 2000 },
 
   // ── Administration ───────────────────────────────────────────────────────
-  { id: 'admin/workspaces', url: '/projects', settleMs: 1200 },
-  { id: 'admin/projects', url: '/projects', settleMs: 1200 },
-  { id: 'admin/spaces', url: '/projects' },
-  // There is no /settings/users route — users are assigned per project and
-  // workspace, so this captures a project's Users tab.
-  // TODO: PROJECT needs a real project id from the tenant.
-  { id: 'admin/users', url: PROJECT ? `/projects/edit/${PROJECT}` : '/projects',
-    prep: click('Users'), settleMs: 2000 },
-  { id: 'admin/groups', url: '/settings/groups' },
+  { id: 'admin/workspaces', url: `/workspace/edit/${WORKSPACE}?tab=general`, settleMs: 2000 },
+  { id: 'admin/projects', url: '/projects', settleMs: 1500 },
+  { id: 'projects/create', url: '/projects/create/project', settleMs: 2000 },
+  { id: 'projects/edit', url: `/projects/edit/${PROJECT}?tab=general`, settleMs: 2500 },
+  { id: 'projects/groups', url: `/projects/edit/${PROJECT}?tab=groups`, settleMs: 2500 },
+  { id: 'admin/spaces', url: `/projects/edit/${PROJECT}?tab=space`, settleMs: 2500 },
+  // There is no /settings/users route — users are granted per project, so this
+  // opens a project and lands on its Users tab. See openProject above for why
+  // it clicks a named row rather than using a hard-coded id.
+  // Scrub the two name columns only. AG Grid puts a col-id on the HEADER cell
+  // as well as the body cells, so the selector is anchored to the body
+  // container — otherwise "First Name" becomes a person's name.
+  { id: 'admin/users', url: `/projects/edit/${PROJECT}?tab=users`, settleMs: 2500,
+    scrubAs: 'person',
+    scrub: '.ag-center-cols-container [col-id="firstName"], .ag-center-cols-container [col-id="lastName"]' },
+  // The group list is literally a list of customer names — scrub them.
+  { id: 'admin/groups', url: '/settings/groups', settleMs: 1500 },
   { id: 'admin/menu-setup', url: '/settings/menu-setup' },
   { id: 'admin/module-setup', url: '/settings/module-setup', settleMs: 1200 },
   { id: 'admin/schema-editor', url: '/settings/datasetup/schema-editor', settleMs: 1500 },

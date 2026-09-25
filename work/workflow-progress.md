@@ -1,33 +1,50 @@
 ---
-description: "Where a record is, how it got there, and where its time went."
+description: "Where a record is, how it got there, who did what, and where its time went — graphically and as a timeline."
 ---
 
 # Workflow progress
 
 ::: tip Who can do this
-Anyone who can open the record. The panel is read-only.
+Anyone who can open the record. The panel is read-only — moving a record is
+[Taking actions](/work/taking-actions).
 :::
 
-Where a record is, how it got there, and where its time went. The panel reads
-the record's workflow instance — the log of what actually happened — and fills
-in what remains from the template.
+Every record that runs a [workflow](/build/workflows) carries a progress panel.
+It reads the record's **workflow instance** — the log of what actually happened
+— and fills in what remains from the **template**, so it can show both the
+journey so far and the road ahead.
 
-<Shot src="work/workflow-progress" alt="The workflow progress panel"
-  caption="A record on its second visit to Review, with the time strip below." />
+The same panel appears in two places, and behaves identically in both:
 
-## The header
-
-One line that answers "how is this record doing".
-
-| Figure | Meaning |
+| Where | How to open it |
 | --- | --- |
-| **Status** | One word for the whole record — see below. |
-| **Age** | Time since creation. Freezes once the record finishes. |
-| **Current step** | Where it is now, and how long it has sat there. |
-| **Steps done / total** | Human steps only. Conditions are excluded. |
-| **Returns** | How many times the record has been sent back. |
+| A record's sidebar | The **Workflow** icon on the widget rail |
+| The [record list](/work/record-list) | Click a row's **progress ring** |
 
-### The status words
+## Two views of the same thing
+
+**Graphical** and **Timeline** are tabs on the panel. Graphical is the default,
+because it answers *"where is this record"* at a glance, where the timeline has
+to be read.
+
+<Shot src="work/workflow-progress" alt="The Graphical view of a record's progress"
+  caption="Graphical — the workflow with the path this record actually took picked out, and who took each step." />
+
+<Shot src="work/workflow-timeline" alt="The Timeline view of a record's progress"
+  caption="Timeline — the same journey in order, with a duration against every step." />
+
+| View | Answers |
+| --- | --- |
+| **Graphical** | *Where is this record, and what route did it take?* |
+| **Timeline** | *What happened, in what order, who did it, and how long did each part take?* |
+
+Switching views does not reload anything — both are drawn from the same model.
+
+## The record's current status
+
+The Timeline opens with a banner stating the record's status, its total elapsed
+time, and where it left the workflow. The banner takes its colour from the
+status, so the panel reads correctly before a word of it does.
 
 | Status | Means |
 | --- | --- |
@@ -41,43 +58,81 @@ One line that answers "how is this record doing".
 **Overdue** outranks **In progress** deliberately — a late record must not read
 as a healthy one. **Closed** is a real outcome and is not the same as approved.
 
-## The timeline
+Beneath the banner, three cards answer the questions people open this panel for:
 
-One entry per **visit**, in chronological order. A record that was returned
-visits the same step twice and gets two entries, because collapsing them would
-hide the loop — usually the interesting part.
+| Card | Holds |
+| --- | --- |
+| **Started** | When the first step began, and how many steps the workflow has. |
+| **Finished** | When it left the workflow, and at which step. |
+| **Slowest step** | The single step that took longest, and what share of the total it accounted for. |
 
-Each entry shows:
+**Slowest step** is the fastest way to answer *"why did this take three weeks"*.
+The answer is almost always one step, not all of them.
 
-- The step name and, when it has been visited before, which visit this is.
-- Its state: **completed**, **current** or **upcoming**.
-- Who completed it, which action they took, and the status it produced.
-- Any comment left with the action.
-- Elapsed time, against the step's turnaround target when it defines one.
-  A step past its target is marked overdue.
+## Execution time
 
-Upcoming steps come from the **template**, not the instance — the instance only
-records what has already happened.
+Every step that has been visited carries an elapsed time. Durations are written
+at the coarsest unit that still reads honestly — `47s`, `32m`, `3h 20m`,
+`2d 4h` — so a glance is enough to tell a slow step from a fast one.
 
-## Where the time went
+- On the **Timeline**, the duration sits at the right of each entry, with a bar
+  underneath sized against the record's total.
+- On the **Graphical** view, it sits on the step's node, next to who took it.
 
-A strip under the timeline splits the record's whole life into its visits, and
-names the single slowest one. This is the fastest way to answer "why did this
-take three weeks" — the answer is almost always one step, not all of them.
+A step still in progress shows the time it has been sitting there; a step never
+reached shows `—`.
 
-## Rules evaluated
+::: tip Times are per visit, not per step
+Each timeline entry is one **visit**. A record that was returned visits the same
+step twice and gets two entries with two durations — collapsing them would hide
+the loop, which is usually the interesting part.
+:::
+
+## Full screen
+
+Both views expand. The **maximise** control at the right of the panel header
+takes the panel over the whole window — the same two tabs, given room.
+
+<Shot src="work/workflow-fullscreen" alt="The Graphical view full screen"
+  caption="Graphical, full screen — the whole route, with each step's owner and duration legible." />
+
+<Shot src="work/workflow-timeline-full" alt="The Timeline view full screen"
+  caption="Timeline, full screen — the status banner, the three summary cards, and every visit in order." />
+
+Expanding gives the diagram room and stops the timeline wrapping; it does not
+rearrange anything. <kbd>Esc</kbd> collapses back to the drawer first, and only
+closes the panel on a second press — so a full-screen reader is never thrown out
+by one keystroke.
+
+In the Graphical view, **TB** and **LR** switch the diagram between top-to-bottom
+and left-to-right, and the zoom controls sit at the bottom-left.
+
+## What is counted, and what is not
 
 Conditions are evaluated by the engine in the same instant, with nobody
 involved. They are reported as **rules evaluated** and never counted as
-progress: counting them is what makes a three-step workflow claim "4 of 7".
+progress — counting them is what makes a three-step workflow claim "4 of 7".
 
-## In the list
+The step count is **human steps only**; Start and End are excluded too.
 
-The record list shows the same model as a **progress ring** per row, tinted by
-the derived status — so you can see which records are overdue without opening
-any of them. See [Record list](/work/record-list).
+Upcoming steps come from the **template**, not the instance. The instance only
+records what has already happened, which is why a record on a superseded
+workflow version still shows the version it is actually running —
+`ISSUE_PROJ · v11` in the header, not whatever is current.
 
-## Permissions
+## In the record list
 
-Anyone who can open the record can see its progress. The panel is read-only;
-moving a record is [Taking actions](/work/taking-actions).
+The list shows the same model as a **progress ring** on every row, tinted by the
+derived status — so you can see which records are overdue without opening any of
+them. Every row on a module names the same template, so the ring costs one
+request for the whole grid rather than one per row.
+
+Clicking a ring opens this panel for that record. See
+[Record list](/work/record-list).
+
+## Related
+
+- [Record detail](/work/record-detail) — the record itself
+- [Taking actions](/work/taking-actions) — how a record moves
+- [Record history](/work/history) — field-level changes, as opposed to workflow steps
+- [Workflows](/build/workflows) — designing the steps this panel reports on

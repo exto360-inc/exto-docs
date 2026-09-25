@@ -17,7 +17,7 @@ point at. What a master *is* and which kind to build is
 by row, not through a form.
 
 <Shot src="work/master-records" alt="A master record grid"
-  caption="Editing inline — a select cell open, with unsaved rows marked." />
+  caption="A master — its values as rows, Import and Export in the header, Add New at the foot. There is no detail screen behind it." />
 
 ## The grid
 
@@ -30,7 +30,15 @@ values opens as fast as one with ten.
 
 ## Editing in place
 
-Click a cell to edit it. The editor you get matches the field's type:
+Double-click a cell and it becomes an editor in place — the row highlights, the
+cell turns into a field, and you type over what was there. It behaves like a
+spreadsheet, and deliberately so: correcting forty values should not mean
+opening forty forms.
+
+<Shot src="work/master-inline-edit" alt="A master cell open for editing"
+  caption="A cell open in place — the row highlighted, the value editable where it sits. Tab moves to the next cell, Enter commits and drops down a row." />
+
+The editor you get matches the field's type:
 
 | Field type | Editor |
 | --- | --- |

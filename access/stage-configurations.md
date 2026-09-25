@@ -12,6 +12,9 @@ The [CX workbench](/cx/) has its own access layer. Group grants get somebody
 into the workbench; **stage configurations** decide which stages they can see
 and work.
 
+<Shot src="cx/stage-configs" alt="The Stage Configurations tab"
+  caption="Stage Configurations — every stage in the workbench, with View, Edit and Reopen granted per group." />
+
 ## The three grants
 
 | Grant | Allows |

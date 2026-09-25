@@ -16,6 +16,9 @@ Tenant                  an isolated environment
 
 A **program** is a project that contains other projects.
 
+<Shot src="admin/projects" alt="The Projects area"
+  caption="The Projects area — workspaces as group rows, with their projects nested underneath." />
+
 ## The pages here
 
 | Page | Covers |
