@@ -11,11 +11,17 @@ concurrency:
   group: deploy-docs
   cancel-in-progress: true
 
+# Where lab-us lives. Not secrets: both are visible to anyone with cluster
+# access, and keeping them here means the environment only holds credentials.
+env:
+  AKS_RESOURCE_GROUP: gg-ex-rnd-central-us-rg
+  AKS_CLUSTER_NAME: gg-ex-rnd-app-02
+  AKS_NAMESPACE: lab-us
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    # TODO: match the environment names used in exto-web.
-    environment: gg-usa-nonprod
+    environment: gg-ex-rnd-app-02
     permissions:
       id-token: write
       contents: read
@@ -58,8 +64,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    # TODO: match the environment names used in exto-web.
-    environment: gg-us-aks-non-prod
+    environment: gg-ex-rnd-app-02
     permissions:
       id-token: write
       contents: read
@@ -86,15 +91,15 @@ jobs:
       - name: Set AKS context
         uses: azure/aks-set-context@v3
         with:
-          resource-group: ${{ secrets.DOCS_RESOURCE_GROUP }}
-          cluster-name: ${{ secrets.DOCS_CLUSTER_NAME }}
+          resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
           admin: false
           use-kubelogin: true
 
       - name: Deploy
         uses: azure/k8s-deploy@v4
         with:
-          namespace: lab-us
+          namespace: ${{ env.AKS_NAMESPACE }}
           manifests: |
             ci/deployment.yaml
             ci/httproute.yaml
