@@ -4,11 +4,15 @@ description: "Draw three steps, publish, and send a record through them."
 
 # Your first workflow
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A workflow is the path a record takes: the steps it rests at, the people
 responsible at each one, and the actions that move it on. This page draws a
 three-step approval and sends a record through it.
 
-<Shot src="getting-started/first-workflow" alt="A three-step workflow on the canvas" pending
+<Shot src="getting-started/first-workflow" alt="A three-step workflow on the canvas"
   caption="Start → Request → Review → End, with approve and reject leaving Review." />
 
 ## 1. Open the designer
@@ -93,5 +97,5 @@ Designing and publishing a workflow happens under **Settings** and requires
 the <Perm role="PME" /> application role.
 
 Assigning people to its steps is separate, done per deployment in
-[module setup](/admin/settings) — and *taking* an action on a record is
+[module setup](/setup/) — and *taking* an action on a record is
 separate again, decided by whether you are one of that step's assignees.

@@ -4,6 +4,10 @@ description: "The schema editor and knowledge graph — what the AI knows about 
 
 # Data setup
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 What Exto's AI features know about your data, and how that knowledge is built.
 Two screens under **Settings → Data setup**: the **schema editor**, where you
 describe your data in business terms, and the **knowledge graph**, which shows
@@ -13,7 +17,7 @@ This is the highest-leverage page in Administration. Everything the
 [assistant](/ai/assistant) and [record insights](/ai/insights) get right or
 wrong traces back to it.
 
-<Shot src="admin/schema-editor" alt="The schema editor" pending
+<Shot src="admin/schema-editor" alt="The schema editor"
   caption="A collection's fields, with the editor panel open on one of them." />
 
 ## Why it exists
@@ -72,7 +76,7 @@ Each collection records who last edited it and when.
 **Settings → Data setup → Knowledge graph** visualises the tenant's schema as a
 force-directed network: collections as nodes, references as edges.
 
-<Shot src="admin/knowledge-graph" alt="The knowledge graph" pending
+<Shot src="admin/knowledge-graph" alt="The knowledge graph"
   caption="Collections and the references between them, with the last sync time." />
 
 Use it to answer two questions the editor cannot:
@@ -139,6 +143,6 @@ question is guesswork.
 
 ## Permissions
 
-Data setup is an administrator area under Settings, reached through the config
-modules granted to your groups. Curating the schema changes what every AI
+Data setup lives under **Settings**, so it requires the <Perm role="PME" />
+application role. Curating the schema changes what every AI
 answer in the tenant is built on, so it warrants a narrow grant.

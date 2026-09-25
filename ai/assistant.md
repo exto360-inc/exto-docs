@@ -4,12 +4,16 @@ description: "Asking questions of your data — what comes back, and how the ans
 
 # Assistant
 
+::: tip Who can do this
+Anyone. The assistant answers only from data you can already see.
+:::
+
 A chat panel that answers questions about your tenant's data — *"how many
 inspections are open in Riverside"*, *"show me last month's rejected expenses"*,
 *"which of these are overdue"* — and returns a table, a chart, a file or an
 answer in prose.
 
-<Shot src="ai/assistant" alt="The assistant panel" pending
+<Shot src="ai/assistant" alt="The assistant panel"
   caption="A question answered as a table, with the reasoning steps and the export action above it." />
 
 ## The panel

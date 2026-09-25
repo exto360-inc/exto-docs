@@ -4,6 +4,10 @@ description: "Every field type in the palette, with the settings it carries."
 
 # Field types
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Every field in the [form designer](/build/forms) palette, with the settings it
 carries. The Forms page covers how to build a form; this is what to reach for.
 

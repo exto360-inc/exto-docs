@@ -4,12 +4,16 @@ description: "Versioned stage sequences, and how one reaches an asset."
 
 # Stage templates
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A stage template is a reusable sequence of stages, applied to an asset when it
 is provisioned. It is how one definition of "the work" reaches five hundred
 assets without being retyped, and how you change that work later without
 disturbing the assets already running.
 
-<Shot src="cx/stage-templates" alt="The stage template form" pending
+<Shot src="cx/stage-templates" alt="The stage template form"
   caption="A template's stage grid — each stage with its lags, modules and gates." />
 
 ## List page

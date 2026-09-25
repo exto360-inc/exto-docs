@@ -34,7 +34,7 @@ Settings. Either they can open all of it or none of it.
 
 ## 2. Can they open the module at all?
 
-- **No module in the menu** → either no [menu entry](/admin/menu) points at it,
+- **No module in the menu** → either no [menu entry](/menu/) points at it,
   or they have no [group grant](/admin/groups) for it. Check the menu first;
   it is the more common oversight.
 - **Module opens, list is empty** → go to step 3.
@@ -46,7 +46,7 @@ one produces "I can't see it".
 
 ## 3. Can they see the list but not the record?
 
-This is **View all records** in [module setup](/admin/settings).
+This is **View all records** in [module setup](/setup/).
 
 Without it, people see the records their workflow step makes theirs — which is
 usually correct and is the single most common cause of a record "disappearing"

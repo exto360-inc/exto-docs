@@ -4,11 +4,15 @@ description: "Routing without a person — and why it never counts as progress."
 
 # Conditions
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A **condition** routes a record without involving anybody. The engine evaluates
 its expression the instant the record arrives and sends it straight down the
 matching branch — nobody sees it, and nobody has to.
 
-<Shot src="build/condition-node" alt="A condition node with two branches" pending
+<Shot src="build/condition-node" alt="A condition node with two branches"
   caption="A condition splitting on amount — under the limit goes straight to Approved." />
 
 ## When to use one

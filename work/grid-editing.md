@@ -4,11 +4,16 @@ description: "Changing many records inline without opening any of them."
 
 # Editing in the grid
 
+::: tip Who can do this
+The same access as editing the record itself: the module granted
+to a group, and the record sitting on your step.
+:::
+
 Both the [record list](/work/record-list) and [master data](/work/masters) let
 you edit cells directly rather than opening each record. For correcting a column
 across forty rows this is the difference between a minute and an afternoon.
 
-<Shot src="work/grid-editing" alt="Inline editing in the grid" pending
+<Shot src="work/grid-editing" alt="Inline editing in the grid"
   caption="A select cell open in place, with edited cells marked and the save button active." />
 
 ## How it works

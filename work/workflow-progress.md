@@ -4,11 +4,15 @@ description: "Where a record is, how it got there, and where its time went."
 
 # Workflow progress
 
+::: tip Who can do this
+Anyone who can open the record. The panel is read-only.
+:::
+
 Where a record is, how it got there, and where its time went. The panel reads
 the record's workflow instance — the log of what actually happened — and fills
 in what remains from the template.
 
-<Shot src="work/workflow-progress" alt="The workflow progress panel" pending
+<Shot src="work/workflow-progress" alt="The workflow progress panel"
   caption="A record on its second visit to Review, with the time strip below." />
 
 ## The header

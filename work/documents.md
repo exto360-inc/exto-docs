@@ -4,11 +4,16 @@ description: "Drive: folders, scopes, versions, check-out and sharing."
 
 # Documents
 
+::: tip Who can do this
+**Document manager** granted at the document's scope, plus any
+explicit sharing on the file or its folder.
+:::
+
 **Drive** is the file browser over every document in the tenant. Files attached
 to records, uploaded into folders, and the images that also appear in
 [Photos](/work/photos) are all the same collection seen different ways.
 
-<Shot src="work/drive" alt="The Drive document browser" pending
+<Shot src="work/drive" alt="The Drive document browser"
   caption="Drive — folders, scope badges, and the details sidebar on a selected file." />
 
 ## Browsing

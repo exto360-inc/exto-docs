@@ -4,11 +4,15 @@ description: "Versioned, approved questionnaires embedded in forms and stages."
 
 # Checklists
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A checklist is a reusable, version-controlled questionnaire that renders inside
 a form or a [CX stage](/cx/). Unlike other masters it is not stored as flat
 records — it is a definition that gets embedded where it is used.
 
-<Shot src="build/checklists" alt="The checklists tab" pending
+<Shot src="build/checklists" alt="The checklists tab"
   caption="The checklists this module points at, with the version each record resolves." />
 
 ## Tenant-wide and versioned

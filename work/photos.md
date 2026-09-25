@@ -4,11 +4,16 @@ description: "The image gallery, its viewer and edit room — and its three perm
 
 # Photos
 
+::: tip Who can do this
+The **Photo** module enabled in one of your groups — plus scope
+access and record visibility. Three separate questions.
+:::
+
 A gallery over every image in the tenant. It is not a separate store: Photos is
 a filtered view of the same documents [Drive](/work/documents) holds, showing
 only files that are images.
 
-<Shot src="work/photos" alt="The Photos gallery" pending
+<Shot src="work/photos" alt="The Photos gallery"
   caption="The By date gallery, with scope chips on Drive photos and a module chip on the rest." />
 
 ## Two kinds of photo

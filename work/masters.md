@@ -4,6 +4,11 @@ description: "Flat lookup lists, maintained inline in the grid."
 
 # Master data
 
+::: tip Who can do this
+`master_data` — separate **view**, **create**, **edit** and **delete**
+grants, at workspace or project level.
+:::
+
 Flat lookup lists — vendors, equipment types, cost codes — that other records
 point at. What a master *is* and which kind to build is
 [Masters](/concepts/masters); this page is about maintaining one.
@@ -11,7 +16,7 @@ point at. What a master *is* and which kind to build is
 **The grid is the interface.** Master data is created and edited in place, row
 by row, not through a form.
 
-<Shot src="work/master-records" alt="A master record grid" pending
+<Shot src="work/master-records" alt="A master record grid"
   caption="Editing inline — a select cell open, with unsaved rows marked." />
 
 ## The grid

@@ -4,13 +4,20 @@ description: "The X axis: grouping work into levels, and every setting a stage c
 
 # Levels & stages
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 The **X axis** of the [matrix](/cx/matrix). Levels group the work; stages are
 the work. Between them they decide what columns exist and in what order they
 read.
 
 Both are edited in the workbench editor at **Settings → CX workbench**.
 
-<Shot src="cx/stages" alt="The stages tab" pending
+<Shot src="cx/levels" alt="The levels tab"
+  caption="Levels define the column groups — each one holds the stages beneath it." />
+
+<Shot src="cx/stages" alt="The stages tab"
   caption="A stage and its settings — level, order, execution mode, and what it carries." />
 
 ::: tip Order matters

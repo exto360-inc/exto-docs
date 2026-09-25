@@ -7,7 +7,7 @@ description: "Creating and nesting workspaces, and what each tab requires."
 A workspace is a top-level container grouping projects, users and configuration
 for a team or area. Workspaces can nest under a parent.
 
-<Shot src="admin/workspaces" alt="A workspace being edited" pending
+<Shot src="admin/workspaces" alt="A workspace being edited"
   caption="A workspace's General tab, with the tabs your permissions allow." />
 
 ## Creating one

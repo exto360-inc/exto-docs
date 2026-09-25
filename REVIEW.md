@@ -28,7 +28,7 @@ consequences. If any of these is wrong, it is wrong in a way that misleads.
 | `work/history.md` | History is **off** until a module owner enables it; a multi-step workflow shows **one entry per submit**, not per save. |
 | `concepts/permissions.md` | Four layers; **all of Settings is one `PME` gate** with no per-page permission. |
 | `admin/groups.md`, `admin/projects.md`, `admin/workspaces.md` | Permissions **compound in the same context** — a visible tab can load nothing. |
-| `cx/matrix.md` | Five sections are **Cx / Gantt / SSM / Documents / Handover**; **four** KPI cards, each clickable; a fifth AI card. |
+| `cx/matrix.md` | Five built-in tabs plus one per linked/gating module; **SSM is the Site Startup Matrix**, a flow chart of assets; four KPI cards plus a fifth AI card. |
 | `cx/gates.md` + `cx/dates.md` | `dependsOn` drives **dates**; gates drive **completion**. They are separate. |
 | `work/masters.md` | The grid is the interface; warnings can be overridden, errors cannot. |
 

@@ -4,13 +4,17 @@ description: "Deciding which columns the record list can offer."
 
 # Log page views
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A log page view defines which columns a module's [record list](/work/record-list)
 can offer, in what order, with which default filter and sort. It decides the
 menu; the [views](/work/views) users save are the meal.
 
 Defined in **Module designer → Log page views**.
 
-<Shot src="build/log-views" alt="The log page views tab" pending
+<Shot src="build/log-views" alt="The log page views tab"
   caption="A log page view — its selected columns, in order, with a multi-field sort." />
 
 ## What one holds

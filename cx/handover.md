@@ -4,11 +4,23 @@ description: "Eligibility, package states, versions and downloads."
 
 # Handover
 
+::: tip Who can do this
+The project's grants on the workbench — the same ones that decide
+who may work its stages.
+:::
+
 The end of the line. When an asset's commissioning is finished, Exto compiles
 its evidence into a **handover package** — a downloadable archive proving the
 work was done.
 
-<Shot src="cx/handover" alt="The handover view" pending
+::: tip Also called a turnover package
+The product's own tab is **Handover**, and that is the term used throughout
+these docs. You will hear the same thing called a *turnover package* or a
+*turnover pack*, and the contents — test records, as-built documents, O&M
+manuals — are what a CMMS such as Maximo or SAP PM imports.
+:::
+
+<Shot src="cx/handover" alt="The handover view"
   caption="Package status per asset, with ready packages selectable for download." />
 
 ## When an asset becomes eligible

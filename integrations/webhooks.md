@@ -4,13 +4,17 @@ description: "Notifying an external system when something happens in Exto."
 
 # Webhooks
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A webhook tells an external system that something happened in Exto, by sending
 an HTTP request to a URL you control. It is fire-and-forget: the delivery is
 logged, but nothing waits for the response.
 
 Webhooks are tenant-level, at **Settings → Webhooks**.
 
-<Shot src="integrations/webhooks" alt="The webhook list" pending
+<Shot src="integrations/webhooks" alt="The webhook list"
   caption="Configured webhooks, each with its event and enabled state." />
 
 ## List page
@@ -90,7 +94,9 @@ A webhook **tells**; an [external service](/integrations/external-services)
 
 ## Permissions
 
-Creating and editing webhooks is an administrator task, reached through
-Settings. Deliveries carry no user identity beyond what you put in the headers,
-so the receiving system should authenticate the request rather than trust its
+Creating and editing webhooks happens under **Settings** and requires
+<Perm role="PME" />.
+
+Deliveries carry no user identity beyond what you put in the headers, so the
+receiving system should authenticate the request rather than trust its
 contents.

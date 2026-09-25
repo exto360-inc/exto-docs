@@ -4,11 +4,16 @@ description: "Working an intersection: the checklist, the status, and what rolls
 
 # Completing a cell
 
+::: tip Who can do this
+**Edit** on that stage, granted to your project groups.
+**Reopen** is a separate grant again.
+:::
+
 A cell is one stage on one asset — the unit of commissioning work. Opening it,
 working its checklist and setting its status is what a commissioning engineer
 does all day, and everything else in the workbench exists to make it possible.
 
-<Shot src="cx/cell-panel" alt="A stage cell open in the detail panel" pending
+<Shot src="cx/cell-panel" alt="A stage cell open in the detail panel"
   caption="A cell open — its checklist on the left, the asset's tabs down the side." />
 
 ## Opening one

@@ -4,11 +4,19 @@ description: "A module's records: columns, filters, slicing, charts and export."
 
 # Record list
 
-A module's records at `/mod/:moduleName` — the grid you spend most of your day
-in. It finds records, shows their workflow state at a glance, and is the launch
-point for everything you do to one.
+::: tip Who can do this
+The module granted to one of your groups. **View all records**
+decides whether you see every row or only yours.
+:::
 
-<Shot src="work/record-list" alt="A module's record list" pending
+Everything in one module, in one list — every expense, every inspection, every
+defect. This is where you come to **find** a record, as opposed to
+[My tasks](/work/my-tasks), which shows only what is waiting on you.
+
+It shows each record's workflow state at a glance, and is the launch point for
+everything you do to one.
+
+<Shot src="work/record-list" alt="A module's record list"
   caption="The record list, sliced by status, with the icons column pinned left." />
 
 ## Anatomy of a row

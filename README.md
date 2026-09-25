@@ -34,12 +34,24 @@ tenant, ordered by risk.
 placeholder naming the exact file to drop in. Remove `pending` when the file
 lands; no other edit is needed.
 
-- Screenshots: `public/screenshots/<area>/<page>-{light,dark}.png`
-- Clips: `public/videos/<area>/<task>.mp4`
-- Capture at 1440×900 in both themes, against a seeded demo tenant, no real names.
+- Screenshots: `public/screenshots/<area>/<page>.png`
+- Clips: `public/videos/<area>/<task>.webm`
+- Capture at 1440×900, against a demo tenant, no real names.
 
-`npm run media` reads the placeholders directly, so the page set is the manifest
-— there is no separate list to keep in sync.
+**One image per screenshot, not a light/dark pair.** Exto has no light/dark
+switch — it has twelve named themes — so a pair only ever described the docs
+reader's own mode, at double the files and double the capture time. Shots are
+taken in **Graphite Cobalt**, the product default.
+
+Where an image is large enough that a mismatch would be distracting — a
+full-width hero — add `themed` to the tag and it resolves a `-light` / `-dark`
+pair instead:
+
+```
+<Shot src="getting-started/hero" themed alt="..." />
+```
+
+`npm run capture` handles both, and `npm run media` reports what each tag needs.
 
 Videos are for gestures — drawing a workflow, laying out a workbench. A screenshot
 plus numbered steps beats a video for "fill these fields and press Save", and

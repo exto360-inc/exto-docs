@@ -4,6 +4,11 @@ description: "A module is a type of thing; a record is one of them."
 
 # Modules & records
 
+::: tip The Modules section owns this object
+This page is the concept. For everything a module has — its kinds, how it is
+deployed, and where each part is documented — see **[Modules](/modules/)**.
+:::
+
 A **module** is a configurable container for a type of data — *Expenses*,
 *Vendors*, *Issues*. A **record** is one entry in it. Everything else in Exto
 hangs off this pair.

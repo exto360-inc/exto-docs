@@ -4,13 +4,22 @@ description: "Reading the canvas: cells, sections, KPIs, filters and views."
 
 # The commissioning matrix
 
-The execution view is a matrix. **Stages run across the top, grouped by level.
-Assets run down the side, in their hierarchy. Every intersection is one unit of
-commissioning** — with its own status, dates, checklist and evidence.
+::: tip Who can do this
+**View** on a stage, granted to your project groups in the
+project's **Stage configurations** tab.
+:::
+
+This is the screen commissioning engineers live in. It answers the two questions
+a project manager asks every morning — *what is finished, and what is stuck* —
+for hundreds of assets at once.
+
+It is a matrix. **Stages run across the top, grouped by level. Assets run down
+the side, in their hierarchy. Every intersection is one unit of commissioning**
+— with its own status, dates, checklist and evidence.
 
 That is the whole mental model. Everything else on this page is how to read it.
 
-<Shot src="cx/matrix" alt="The commissioning matrix" pending
+<Shot src="cx/matrix" alt="The commissioning matrix"
   caption="Levels across the top with stages beneath them, the asset tree down the side, and a coloured cell at every crossing." />
 
 ## The two axes
@@ -39,9 +48,12 @@ gating) and any **custom** fields the workbench defines.
 
 ### The cell
 
-A cell is one stage on one asset. It shows a colour for status and, where the
-stage has one, a count. Selecting it opens the panel where the work is done —
-see [Completing a cell](/cx/completing-a-cell).
+A cell is one stage on one asset. It shows that stage's **date**, its
+**percentage complete** beneath, a **colour** for status, and small badges for
+things needing attention — a warning marker, or a count of open items.
+
+Selecting it opens the panel where the work is done — see
+[Completing a cell](/cx/completing-a-cell).
 
 | Colour | Means |
 | --- | --- |
@@ -54,17 +66,40 @@ see [Completing a cell](/cx/completing-a-cell).
 A blank cell is not the same as a grey one: grey is work not yet begun, blank is
 work that was never part of this asset's template.
 
-## The five sections
+## The section tabs
 
-Tabs across the top switch what you are looking at. The matrix is only the first.
+Tabs across the top switch what you are looking at. Five are always there:
 
 | Section | Shows |
 | --- | --- |
 | **Cx** | The matrix itself. The default. |
 | **Gantt** | Stage dates on a timeline, reflecting the dependency logic. |
-| **SSM** | The dependency graph between stages. |
+| **SSM** | The **Site Startup Matrix** — a flow chart of the asset hierarchy. |
 | **Documents** | Every file across the workbench. See [Documents](/cx/documents). |
 | **Handover** | Package status per asset. See [Handover](/cx/handover). |
+
+### The Site Startup Matrix
+
+**SSM** draws the workbench as a **flow chart** rather than a grid — each asset
+a node, its hierarchy the connections between them.
+
+- **Click** a node to highlight its whole path, ancestors and descendants
+  together. That is the quickest way to see what a delayed asset holds up.
+- **Double-click** to open the same side panel the matrix opens.
+- **The chevron** on a node expands or collapses its children.
+- **LR / TB** reads the chart across the page or down it.
+
+It shows **assets, not stages**. Use it when the question is *how does this fit
+together*; use the matrix when the question is *what is finished*.
+
+::: tip Extra tabs are your workbench's own modules
+Beyond those five, a workbench adds a tab for each of its **linked** and
+**gating** modules — *System Issues*, *Issues*, whatever yours are configured
+with. They appear after the built-in five, and hovering one says whether it is
+there as a linked module, a gating module, or both.
+
+So two workbenches rarely show the same number of tabs. See
+[Designing a workbench](/cx/designer).
 
 ## KPI cards
 
@@ -89,6 +124,31 @@ filtering the matrix. See [CX workbench AI](/ai/cx).
 
 The cards can be collapsed out of the way when you want the full height for the
 matrix.
+
+## The quick filters
+
+A row of one-click chips sits above the matrix. Each bundles a date window and a
+filter set, and applies it to the current workbench in one click.
+
+| Chip | Narrows to |
+| --- | --- |
+| **Due This Week** | Anything due in the next week. |
+| **Overdue** | Stages past their due date. |
+| **Blocked** | Assets whose aggregated status is blocked. |
+| **Completed** | Assets that are finished. |
+| **Critical** | Assets flagged critical. |
+
+Most carry a **count badge**, so the row doubles as a summary — *Overdue 100*
+tells you the size of the problem before you click it.
+
+Beside them, **7 days / 14 days / 30 days / Custom** set the date window on its
+own, without applying a status filter.
+
+::: tip Chips are not saved views
+A chip is a preset the product ships. Selecting one does not disturb your
+[saved views](#views), and you can still save your own version of what a chip
+produces.
+:::
 
 ## Finding your way around it
 

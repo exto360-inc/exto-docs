@@ -4,13 +4,17 @@ description: "Outbound calls whose response lands back on the record."
 
 # External services
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 An external service is an outbound HTTP call Exto makes on your behalf, whose
 response is mapped back onto the record. Use one to fetch a value from a system
 of record, validate against it, or push a record into it as part of an action.
 
 They are configured per module, in **Module designer → External services**.
 
-<Shot src="integrations/external-service" alt="The external service editor" pending
+<Shot src="integrations/external-service" alt="The external service editor"
   caption="A service's request tab — method, URL, auth, and the mapping below." />
 
 ## List page

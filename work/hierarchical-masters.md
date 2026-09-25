@@ -4,11 +4,16 @@ description: "Tree-shaped reference data: children, reparenting and hierarchy im
 
 # Hierarchical masters
 
+::: tip Who can do this
+`hierarchical_master_data` — separate **view**, **create**, **edit**
+and **delete** grants, at workspace or project level.
+:::
+
 Reference data shaped as a **tree** — org structures, work breakdowns, cost-code
 hierarchies. It behaves like [master data](/work/masters) with one difference
 that changes everything: each row knows its parent.
 
-<Shot src="work/hierarchical-master" alt="A hierarchical master" pending
+<Shot src="work/hierarchical-master" alt="A hierarchical master"
   caption="The tree, part-expanded, with a child being added under its parent." />
 
 ## The tree

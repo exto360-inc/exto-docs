@@ -9,8 +9,8 @@ thirty minutes.
 
 **You will touch:** [module designer](/build/module-designer) ·
 [forms](/build/forms) · [workflows](/build/workflows) ·
-[conditions](/build/conditions) · [module setup](/admin/settings) ·
-[menu](/admin/menu)
+[conditions](/build/conditions) · [module setup](/setup/) ·
+[menu](/menu/)
 
 ## 1. The module
 

@@ -4,11 +4,16 @@ description: "Restoring what was deleted, and retrying background jobs."
 
 # Recycle bin & jobs
 
+::: tip Who can do this
+You see the items you had access to delete, in the scopes you can
+reach.
+:::
+
 Two safety nets. The **recycle bin** holds what was deleted until you are sure;
 **job status** shows the background work Exto is doing on your behalf and lets
 you retry what failed.
 
-<Shot src="work/recycle-bin" alt="The recycle bin" pending
+<Shot src="work/recycle-bin" alt="The recycle bin"
   caption="The bin, filtered to records, with an item flagged for review." />
 
 ## Recycle bin
@@ -54,6 +59,14 @@ There is nothing behind the recycle bin. Restore first, decide later.
 :::
 
 ## Job status
+
+::: tip Also a panel
+**Job Status** opens from its own icon in the **header**, beside My Tasks. Like
+My Tasks it slides in over the page you are on.
+:::
+
+<Shot src="work/job-status" alt="The Job Status panel"
+  caption="Background jobs — embeddings, schema syncs, CX handover packages — with their status." />
 
 Background work — bulk imports, re-indexing, generation tasks — runs as jobs.
 The job status page lists them with their state, and it is the same grid as

@@ -4,11 +4,15 @@ description: "One editor, four outcomes: change the form, warn, block, or requir
 
 # Rules & validations
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Everything conditional about a form lives here: fields that appear only
 sometimes, values that fill themselves in, warnings, and the checks that stop a
 submit outright.
 
-<Shot src="build/rules" alt="The rules editor" pending
+<Shot src="build/rules" alt="The rules editor"
   caption="One rule — the situation on the left, the outcome chosen on the right." />
 
 ## One editor, four outcomes

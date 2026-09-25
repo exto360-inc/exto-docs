@@ -9,7 +9,7 @@ people and module set. What the hierarchy *means* is
 [Projects & spaces](/concepts/projects-and-spaces); this page is how to build
 and configure one.
 
-<Shot src="admin/projects" alt="The projects tree" pending
+<Shot src="admin/projects" alt="The projects tree"
   caption="The navigation tree — workspaces, their projects, and sub-projects." />
 
 ## Creating a project

@@ -4,12 +4,17 @@ description: "Saving a filter, column layout and sort as a named view."
 
 # Views
 
+::: tip Who can do this
+Anyone can save a personal view. Sharing one depends on the grant
+on that grid.
+:::
+
 A **view** is a saved arrangement of a grid: its filters, grouping, slice,
 column layout and sort order, under a name. Views are what stop a shared module
 from being a fight over column widths.
 
-<Shot src="work/views" alt="The views popover" pending
-  caption="Switching views — system views are marked and cannot be deleted." />
+<Shot src="work/views" alt="The View settings popover"
+  caption="The View settings — what the view shows, how it groups, and Save view." />
 
 ## What a view stores
 
@@ -25,11 +30,28 @@ from being a fight over column widths.
 Because the column layout belongs to the view rather than to you, two views of
 the same module can show entirely different data.
 
-## Using views
+## Switching between them
 
-The view chips above the grid switch between them. A view with unsaved
-changes is marked **dirty** — you can save the changes back into it, save them
-as a new view, or discard them by switching away.
+Views sit as **tabs above the filter bar** — *Default View*, then any others,
+then **+ New view**. Click one to switch. A view with unsaved changes carries a
+dot.
+
+## The View settings
+
+The **View** button at the right of the filter bar opens the settings for the
+view you are on:
+
+| Setting | Decides |
+| --- | --- |
+| **Name** | What the tab reads. |
+| **Fields** | Which columns the view shows, and their order. |
+| **Group by** | Which field rows are grouped under. `None` for a flat list. |
+| **Slice by** | Which field the left-hand slice panel counts by. |
+| **Show hierarchy** | Whether hierarchical data renders as a tree or flat. |
+
+**Save view** keeps the changes; **Discard** throws them away. Save view stays
+disabled until something actually changes, so a view you only looked at cannot
+be accidentally rewritten.
 
 ## Managing views
 

@@ -78,7 +78,7 @@ call, so nothing is protected *only* by the menu.
 
 ## Layer 3 — module setup
 
-Group grants get you into a module. [Module setup](/admin/settings) decides
+Group grants get you into a module. [Module setup](/setup/) decides
 what you may do with its records:
 
 | Grant | Gives |
@@ -135,7 +135,7 @@ Work down in order:
 | Symptom | Layer |
 | --- | --- |
 | No Settings at all | Application role is not `PME` |
-| Module missing from the menu | Group grant, or no [menu entry](/admin/menu) |
+| Module missing from the menu | Group grant, or no [menu entry](/menu/) |
 | Module opens, list is empty | **View all records**, or nothing is on their step |
 | Record visible, no buttons | Not one of the current step's assignees |
 | Buttons but no reopen or revise | Module setup owners, or the module switch is off |

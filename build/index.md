@@ -1,52 +1,77 @@
 ---
-description: "Designing what other people will use, in the order to do it in."
+description: "The four designers — module, workflow, analytics and workbench."
 ---
 
-# Building
+# Designers
 
-Designing what other people will use: the module, its forms, the rules that
-make those forms behave, and the workflow records travel.
+**For people who decide what everyone else sees.** Exto is configured, not
+coded: you describe what you track and how it moves, and the product renders it.
 
-Almost everything here lives in the **module designer** at
-**Settings → Module designer**, which is nine tabs over one module.
+Four designers, each owning a different part.
 
-## The order to do it in
+| Designer | Decides | Where |
+| --- | --- | --- |
+| **[Module designer](/build/module-designer)** | What a module stores and what people fill in | Settings → Module designer |
+| **[Workflow designer](/build/workflows)** | Where a record goes after Submit | Inside the module designer |
+| **[Analytics designer](/analytics/)** | Dashboards and report templates | Settings → Setups |
+| **[Workbench designer](/cx/designer)** | Commissioning levels, stages and gates | Settings → CX workbench |
 
-1. **[Module designer](/build/module-designer)** — create the module, set its
-   identity and its switches. Digitising an existing paper form instead? Start
-   with the **[module builder](/build/module-builder)** wizard, then come back
-   here.
-2. **[Tables & data sets](/build/tables-and-datasets)** — the columns records
-   store, and the option lists fields pick from.
-3. **[Forms](/build/forms)** — what people fill in.
-4. **[Rules](/build/rules)** — how the form reacts, and what blocks a submit.
-5. **[Workflows](/build/workflows)** — where records go.
-6. **[Steps & actions](/build/steps-and-actions)** and
-   **[Conditions](/build/conditions)** — the detail of each node and edge.
-7. **[Publishing & versions](/build/publishing)** — freeze it and let records
-   in.
+All four require <Perm role="PME" />, the application role that opens
+**Settings**.
 
-## Reference
+## Module designer
+
+The module's own definition — nine tabs over one module.
 
 | Page | Covers |
 | --- | --- |
-| [Module designer](/build/module-designer) | The nine tabs and what each owns. |
-| [Module builder](/build/module-builder) | The five-step wizard that reads a document. |
-| [Forms](/build/forms) | The canvas, layout, and binding fields to columns. |
-| [Field types](/build/field-types) | Every field in the palette and its settings. |
-| [Rules](/build/rules) | Conditional behaviour, warnings, and hard blocks. |
-| [Workflows](/build/workflows) | The canvas, its views, and validation. |
-| [Steps & actions](/build/steps-and-actions) | Assignees, completion rules, action settings. |
-| [Conditions](/build/conditions) | Routing without a person. |
-| [Publishing & versions](/build/publishing) | What freezes, and how to change it later. |
+| [The designer](/build/module-designer) | The nine tabs and what each owns. |
+| [Module builder](/build/module-builder) | The wizard that reads a paper form. |
+| [Forms](/build/forms) | The canvas, and binding fields to columns. |
+| [Field types](/build/field-types) | Every field in the palette. |
+| [Rules & validations](/build/rules) | Change the form, warn, block, require files. |
 | [Tables & data sets](/build/tables-and-datasets) | The columns records store, and option lists. |
 | [Reference tables](/build/reference-tables) | Reading values another module owns. |
 | [Log page views](/build/log-page-views) | Which columns the record list can offer. |
 | [Checklists](/build/checklists) | Versioned, approved questionnaires. |
-| [Dashboards & reports](/build/dashboards) | Live tiles and generated documents. |
 
-::: tip Two things you cannot change later
-A module's **name** is fixed at creation — it is the route and the key
-everything refers to. A **published** workflow version is frozen — you create a
-new version instead. Both are deliberate; both catch people out once.
+## Workflow designer
+
+Where records go, drawn as a graph.
+
+| Page | Covers |
+| --- | --- |
+| [Workflows](/build/workflows) | The canvas, its views, and what publishing validates. |
+| [Steps & actions](/build/steps-and-actions) | Forms per step, completion rules, action settings. |
+| [Conditions](/build/conditions) | Routing without a person. |
+| [Publishing & versions](/build/publishing) | What freezes, and how to change it afterwards. |
+
+::: warning Assignees are not designed here
+The canvas defines the **shape**. **Who** staffs each step is set per
+deployment in [module setup](/setup/step-assignees) — one workflow serves many
+projects with different people in them.
 :::
+
+## Analytics designer
+
+Live tiles and generated documents. See
+**[Dashboards & reports](/analytics/)**.
+
+## Workbench designer
+
+Commissioning levels, stages, gates and stage templates. It sits with the rest
+of commissioning — see **[Designing a workbench](/cx/designer)**.
+
+## The order to work in
+
+1. **[Module designer → General](/build/module-designer)** — create the module,
+   set its identity and switches.
+2. **Table** — the columns records will store.
+3. **[Forms](/build/forms)** — what people fill in.
+4. **[Rules](/build/rules)** — what is required, and when.
+5. **[Workflows](/build/workflows)** — where records go. Publish it.
+6. **[Module setup](/setup/)** — deploy it and name its assignees.
+7. **[Menu](/menu/)** — make it reachable.
+
+Steps 6 and 7 are not optional. A module that stops at step 5 exists in the
+designer and nowhere else.

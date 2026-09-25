@@ -4,11 +4,15 @@ description: "What freezes when you publish, and how to change it afterwards."
 
 # Publishing & versions
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Publishing freezes a workflow design into a version and lets records start
 following it. It is a one-way door, on purpose: changing next month's approval
 path must not re-route the forty records already in flight.
 
-<Shot src="build/versions" alt="The workflow list showing versions" pending
+<Shot src="workflows/list" alt="The workflow list showing versions"
   caption="Three versions — two published and frozen, the newest still a draft." />
 
 ## Draft and published

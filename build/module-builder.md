@@ -4,6 +4,10 @@ description: "The five-step wizard that reads a document and builds a module fro
 
 # Module builder
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A guided wizard that takes a photograph or PDF of an existing form and builds
 the module, the form, the checklist and a workflow from it. Five steps, at
 **Settings → Module builder**.
@@ -11,7 +15,7 @@ the module, the form, the checklist and a workflow from it. Five steps, at
 It is the fast path. The [module designer](/build/module-designer) is the
 complete one — build here, refine there.
 
-<Shot src="build/module-builder" alt="The module builder wizard" pending
+<Shot src="build/module-builder" alt="The module builder wizard"
   caption="Step 1 — uploading a scanned form against a new module." />
 
 ## When to use it
@@ -105,8 +109,8 @@ Open it in the [module designer](/build/module-designer) and:
 3. Add [rules](/build/rules) — nothing conditional is inferred.
 4. Replace the one-step workflow with a real one. See
    [Workflows](/build/workflows).
-5. Deploy it in [module setup](/admin/settings) and add it to the
-   [menu](/admin/menu).
+5. Deploy it in [module setup](/setup/) and add it to the
+   [menu](/menu/).
 
 ::: tip It reads layout, not intent
 The wizard is good at getting eighteen fields off a scanned page and has no

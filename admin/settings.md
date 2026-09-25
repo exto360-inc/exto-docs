@@ -4,57 +4,25 @@ description: "Module setup, tenant lists, reports, branding, AI and the logs."
 
 # Settings
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Everything under **Settings** that is not building a module or configuring the
 menu: deploying modules into contexts, the tenant-wide lists, branding, and the
 AI controls.
 
-<Shot src="admin/module-setup" alt="The module setup list" pending
+<Shot src="admin/module-setup" alt="The module setup list"
   caption="Configured modules, with the import wizard above." />
 
 ## Module setup
 
-[Module designer](/build/module-designer) defines what a module *is*. Module
-setup decides **where it is deployed and who runs it** — and the same module
-can be set up differently in every project.
+Deploying a module to a context, and deciding who owns its records, sees all of
+them, and staffs each workflow step.
 
-### Importing a module
+It is the step between designing a module and anyone being able to use it, and
+it has its own section — see [Module setup](/setup/).
 
-The wizard has three steps:
-
-1. **Choose the context** — tenant, workspace or project. You only see
-   contexts you have access to.
-2. **Choose the module** — from those available and not yet configured at that
-   level.
-3. **Configure it** — permissions, step assignees, notifications.
-
-::: warning The context is the important choice
-It decides where records live and who can see them. See
-[Projects & spaces](/concepts/projects-and-spaces).
-:::
-
-### Permissions
-
-| Grant | What it gives |
-| --- | --- |
-| **Module owner** | Can modify this module's setup. |
-| **View all records** | Sees every record regardless of workflow step. |
-| **Revision owner** | Can request revisions — only if the module enables revision. |
-| **Reopen owner** | Can reopen completed records, to a step chosen here — only if the module allows reopening. |
-
-Each is assigned to users and/or groups. **Revision** and **Reopen** are
-module-level switches set in the [designer](/build/module-designer); setup can
-only assign their owners once they are on.
-
-### Workflow steps
-
-For each step in the module's published workflow, assign the **users and
-groups** responsible and control its notifications:
-
-- **Disable default notifications** — globally, or per step.
-- **Notify submitted** — notify when a record reaches the step.
-
-Assignees are set here rather than on the canvas because one published workflow
-serves several projects with different people in them.
 
 ## Tags
 
@@ -86,7 +54,7 @@ applies at, the module it draws from, its filter parameters, output format and
 ## Dashboard setup
 
 Create and build [dashboards](/build/dashboards), then surface them through
-[menu configuration](/admin/menu).
+[menu configuration](/menu/).
 
 ## Data setup
 
@@ -145,6 +113,10 @@ records.
 
 ## Permissions
 
-Each area under Settings is gated by its own config module — Module setup,
-Reports, Users, Workflow manager and so on — granted to your groups at the
-appropriate level. See [Permissions](/concepts/permissions).
+**Settings is one gate, not many.** The whole area is opened by a single check —
+the user's application role must be <Perm role="PME" />. There is no per-page
+permission inside it, so anyone who can open one Settings page can open all of
+them.
+
+That is separate from the group grants that decide what someone can do with
+*records*. See [Permissions](/concepts/permissions).

@@ -4,11 +4,15 @@ description: "The ten sidebar widgets — actions, people, comments, files, link
 
 # Record widgets
 
+::: tip Who can do this
+Anyone who can open the record.
+:::
+
 The rail down the right of an open [record](/work/record-detail) holds
 everything that is not a field: the actions, the people, the files, the
 discussion and the audit trail. One icon per widget, one panel at a time.
 
-<Shot src="work/record-widgets" alt="The record widget rail" pending
+<Shot src="work/record-widgets" alt="The record widget rail"
   caption="The icon rail with the Actions widget open beside the form." />
 
 ## The widgets

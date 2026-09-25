@@ -4,13 +4,17 @@ description: "General settings, workbench fields, and field mapping onto new rec
 
 # Designing a workbench
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Creating the workbench itself and the settings that apply across it. The two
 axes have their own pages — [Levels & stages](/cx/levels-and-stages) for the
 work, [The asset registry](/cx/assets) for the things it is done to.
 
 Workbenches are built at **Settings → CX workbench**.
 
-<Shot src="cx/designer" alt="The workbench editor" pending
+<Shot src="cx/designer" alt="The workbench editor"
   caption="The workbench editor, with its tabs down the side." />
 
 ## The tabs

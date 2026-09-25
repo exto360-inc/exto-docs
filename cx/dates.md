@@ -4,11 +4,16 @@ description: "Anchor dates, dependency types, the working calendar, and the casc
 
 # Dates & scheduling
 
+::: tip Who can do this
+Entering **anchor dates** — the project's grants on the workbench.
+Changing the **schedule mode** — <Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Most stage dates are not typed in — they are computed. A handful of **anchor**
 stages take dates by hand, and every stage that depends on one is calculated
 from it and recalculated whenever it moves.
 
-<Shot src="cx/dates" alt="The bulk dates grid" pending
+<Shot src="cx/dates" alt="The bulk dates grid"
   caption="Every anchor stage across the workbench, with forecast start and end editable in place." />
 
 ## Four kinds of date

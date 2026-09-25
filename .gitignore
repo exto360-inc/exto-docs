@@ -3,3 +3,6 @@ node_modules/
 .vitepress/cache/
 .DS_Store
 *.log
+
+# Playwright session — never commit
+scripts/.auth-state.json

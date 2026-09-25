@@ -4,10 +4,20 @@ description: "Every record waiting on you, across every module, in one grid."
 
 # My tasks
 
+::: tip Who can do this
+Anyone. What appears is decided by workflow step assignees, not by a grant.
+:::
+
 Every record sitting on a workflow step you are responsible for, across every
 module, in one grid. It is the first page most people open.
 
-<Shot src="work/my-tasks" alt="The My tasks grid" pending
+::: tip It is a panel, not a page
+**My Tasks** opens from the icon in the **header**, at the top right — it slides
+in over whatever you are already looking at, so you can check your work without
+losing your place. There is no My Tasks entry in the sidebar.
+:::
+
+<Shot src="work/my-tasks" alt="The My tasks grid"
   caption="Tasks across three modules, sliced by module with per-value counts." />
 
 ## List page

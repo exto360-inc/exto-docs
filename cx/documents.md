@@ -4,10 +4,15 @@ description: "Where commissioning evidence goes, and why it matters at handover.
 
 # Documents
 
+::: tip Who can do this
+Follows the stage or asset the file hangs off. Uploading needs
+**edit** on the stage.
+:::
+
 Evidence. Files attached to an asset, to a stage's records, and browsable across
 the whole workbench from the **Documents** section tab.
 
-<Shot src="cx/documents" alt="The workbench documents view" pending
+<Shot src="cx/documents" alt="The workbench documents view"
   caption="Every file in the workbench, filterable by asset and stage." />
 
 ## Three places files live

@@ -4,11 +4,15 @@ description: "Reading a document into a form you review before anything is creat
 
 # AI form builder
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Drop a document — a paper form, a spec, a spreadsheet — and Exto reads it and
 proposes a form. You then keep, edit or drop each field **before** anything is
 created.
 
-<Shot src="ai/form-builder" alt="The AI draft panel" pending
+<Shot src="ai/form-builder" alt="The AI draft panel"
   caption="Proposed fields as reviewable rows, with two flagged for a decision." />
 
 ## This or the module builder?

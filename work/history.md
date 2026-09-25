@@ -4,12 +4,17 @@ description: "Turning history on, and why a multi-step workflow groups changes b
 
 # History
 
+::: tip Who can do this
+Anyone who can open the record.
+Turning capture **on** for a module requires <Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Who changed what, and when. History covers field edits, sub-table rows,
 checklist items and workflow transitions — but only once a module owner has
 turned it on, and what it shows depends on whether the module has one step or
 several.
 
-<Shot src="work/history" alt="The record history drawer" pending
+<Shot src="work/history" alt="The record history drawer"
   caption="A record's timeline, with one entry per submit and the changes each carried." />
 
 ## First: history has to be enabled

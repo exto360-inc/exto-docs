@@ -4,11 +4,15 @@ description: "The columns records store, and the option lists fields pick from."
 
 # Tables & data sets
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Three tabs of the [module designer](/build/module-designer) that decide where
 data is stored and where option lists come from. They are unglamorous and they
 are what everything else stands on.
 
-<Shot src="build/tables" alt="The Tables tab" pending
+<Shot src="build/tables" alt="The Tables tab"
   caption="A module's table — its columns, with unique and metadata flags." />
 
 ## Tables

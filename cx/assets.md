@@ -4,11 +4,15 @@ description: "The Y axis: creating, nesting, sequencing and importing assets."
 
 # The asset registry
 
+::: tip Who can do this
+The project's grants on the workbench.
+:::
+
 The **Y axis** of the [matrix](/cx/matrix). The registry is the workbench's
 master list of the things being commissioned, arranged as a tree — and adding an
 asset to it is what creates its row of stage instances.
 
-<Shot src="cx/registry" alt="The asset registry" pending
+<Shot src="cx/registry" alt="The asset registry"
   caption="The asset tree, with a child asset being added under its parent." />
 
 ## What an asset carries

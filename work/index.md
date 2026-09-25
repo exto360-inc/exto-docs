@@ -2,10 +2,15 @@
 description: "Using Exto rather than building it — finding work, filling it in, moving it on."
 ---
 
-# Working in Exto
+# Records & daily work
 
-This lane is for using Exto rather than building it: finding the work that is
-yours, filling in forms, moving records on, and finding what happened later.
+**For people doing the work** — filling forms, approving things, inspecting.
+
+Finding the work that is yours, filling it in, moving it on, and finding out
+later what happened. If this is your job, you need this lane and very little
+else.
+
+In a hurry? [Recipes](/recipes/) answers single questions directly.
 
 ## Start with your work
 

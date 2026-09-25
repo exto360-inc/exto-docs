@@ -4,10 +4,15 @@ description: "Bulk data in and out, and how to read a failed import."
 
 # Importing & exporting
 
+::: tip Who can do this
+Importing needs **create**, and **edit** where it updates existing
+rows. Exporting needs only view access to the grid.
+:::
+
 Getting data in and out in bulk. Import validates before it writes and tells you
 which rows failed; export follows whatever you are currently looking at.
 
-<Shot src="work/import" alt="The import error report" pending
+<Shot src="work/import" alt="The import error report"
   caption="An import that partly failed — each rejected row with its reason." />
 
 ## Exporting

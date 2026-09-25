@@ -4,6 +4,11 @@ description: "Shared reference data that everything else points at."
 
 # Masters
 
+::: tip The Masters section owns this object
+This page is the concept. For the two kinds, who maintains them, and how a form
+field points at one, see **[Masters](/masters/)**.
+:::
+
 **Masters** are reusable reference data that other records point at, so the
 same value means the same thing everywhere. Exto has five kinds, each suited to
 a different shape of data.

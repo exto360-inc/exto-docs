@@ -4,12 +4,16 @@ description: "Blocking a transition until something else reaches a state."
 
 # Gates & dependencies
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A **gate** stops a stage progressing until something else reaches a state. It is
 how a workbench enforces that testing cannot close before installation is
 signed off — and it is entirely separate from the dependencies that compute
 dates.
 
-<Shot src="cx/gates" alt="Gates on a stage" pending
+<Shot src="cx/stages" alt="A stage's settings, where gates are configured"
   caption="Two gates on a stage — one watching a stage, one watching a whole level." />
 
 ## Gates are not date dependencies

@@ -15,6 +15,9 @@ import { join, relative, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const SKIP = new Set(['node_modules', '.vitepress', '.git', 'public', 'scripts']);
+// README documents the <Shot> syntax with real-looking examples. They are
+// documentation of the convention, not placeholders anything renders.
+const SKIP_FILES = new Set(['README.md', 'REVIEW.md']);
 const showAll = process.argv.includes('--all');
 
 async function md(dir = ROOT, out = []) {
@@ -22,7 +25,7 @@ async function md(dir = ROOT, out = []) {
     if (e.name.startsWith('.')) continue;
     const full = join(dir, e.name);
     if (e.isDirectory()) { if (!SKIP.has(e.name)) await md(full, out); }
-    else if (e.name.endsWith('.md')) out.push(full);
+    else if (e.name.endsWith('.md') && !SKIP_FILES.has(e.name)) out.push(full);
   }
   return out;
 }
@@ -31,12 +34,15 @@ const assets = [];
 for (const file of await md()) {
   const page = relative(ROOT, file);
   const text = await readFile(file, 'utf8');
-  for (const m of text.matchAll(/<(Shot|Clip)\s+src="([^"]+)"/g)) {
-    const [, kind, src] = m;
+  for (const m of text.matchAll(/<(Shot|Clip)\s+src="([^"]+)"([^>]*)>/g)) {
+    const [, kind, src, rest] = m;
     if (src === 'area/page' || src === 'area/task') continue;  // README examples
-    const files = kind === 'Shot'
-      ? [`public/screenshots/${src}-light.png`, `public/screenshots/${src}-dark.png`]
-      : [`public/videos/${src}.mp4`];
+    // A <Shot> is one image unless it opts into a themed pair. See Shot.vue.
+    const files = kind === 'Clip'
+      ? [`public/videos/${src}.webm`]
+      : /\bthemed\b/.test(rest)
+        ? [`public/screenshots/${src}-light.png`, `public/screenshots/${src}-dark.png`]
+        : [`public/screenshots/${src}.png`];
     assets.push({ page, kind, files });
   }
 }

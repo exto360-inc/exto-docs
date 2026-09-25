@@ -8,7 +8,7 @@ Access outside **Settings** is granted through **groups**, never to individuals.
 You put people into a group, and grant the group permissions on modules and
 features.
 
-<Shot src="admin/groups" alt="A project group" pending
+<Shot src="admin/groups" alt="A project group"
   caption="A project group — its members on the left, its granted modules on the right." />
 
 ## Groups do not grant Settings
@@ -115,7 +115,7 @@ This is what governs whether someone can read a master versus change it.
 ## Groups are not the whole story
 
 Getting into a module is one of four layers. The others are the application
-role, [module setup](/admin/settings) — **View all records**, revision and
+role, [module setup](/setup/) — **View all records**, revision and
 reopen owners — and the workflow step assignees that decide whose record it is
 right now.
 

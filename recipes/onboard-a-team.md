@@ -8,8 +8,8 @@ Get a group of people into a project seeing exactly what they should — no more
 no less. About twenty minutes.
 
 **You will touch:** [projects](/admin/projects) ·
-[users & groups](/admin/groups) · [module setup](/admin/settings) ·
-[menu](/admin/menu)
+[users & groups](/admin/groups) · [module setup](/setup/) ·
+[menu](/menu/)
 
 ## 1. Make sure the project exists
 
@@ -59,7 +59,7 @@ anything directly — a per-person grant is invisible in six months.
 ## 5. Make the records visible correctly
 
 Group membership gets people **into** a module. It does not decide which
-records they see. That is [module setup](/admin/settings):
+records they see. That is [module setup](/setup/):
 
 - **View all records** — supervisors and admins, usually. Not field users.
 - **Reopen owner** / **Revision owner** — a named group, not everybody.
@@ -68,7 +68,7 @@ records they see. That is [module setup](/admin/settings):
 
 ## 6. Check the menu
 
-The project's people see the [menu](/admin/menu) that is active for them.
+The project's people see the [menu](/menu/) that is active for them.
 Confirm the modules you just granted are actually in it.
 
 ## 7. Verify as a real user

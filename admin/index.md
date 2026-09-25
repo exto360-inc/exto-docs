@@ -2,10 +2,13 @@
 description: "Setting up a tenant, and the four systems that grant access."
 ---
 
-# Administration
+# Projects & access
 
-Setting up the tenant: what appears in the navigation, how modules are
-deployed, who has access, and where projects live.
+**For administrators.** Before anyone can use Exto, somebody has to decide where
+the work lives and who can reach it — workspaces and projects to hold it, groups
+to grant access, and the menu that leads people to it.
+
+Most of it is done once, at the start, and revisited when a team changes.
 
 ## The pages
 
@@ -16,8 +19,9 @@ deployed, who has access, and where projects live.
 | [Spaces](/admin/spaces) | Scoping collaboration to a subset of a team. |
 | [Users](/admin/users) | Accounts, application roles, assignment, the user log. |
 | [Groups & permissions](/admin/groups) | Where access actually comes from. |
-| [Menu configuration](/admin/menu) | What appears in the navigation, and where. |
-| [Settings](/admin/settings) | Module setup, tags, categories, reports, branding, AI, logs. |
+| [Menu configuration](/menu/) | What appears in the navigation, and where. |
+| [Module setup](/setup/) | Deploying a module, its owners, and who staffs each step. |
+| [Settings](/admin/settings) | Tags, categories, reports, branding, AI, logs. |
 | [Data setup](/admin/data-setup) | Schema editor and knowledge graph — what the AI knows. |
 
 ## The order to set a tenant up in
@@ -30,7 +34,7 @@ deployed, who has access, and where projects live.
 3. **Build a module** — see [Building](/build/).
 4. **Module setup** — deploy it into a context, assign step assignees, and set
    its notifications. See [Settings](/admin/settings).
-5. **[Menu configuration](/admin/menu)** — put it in the navigation, or nobody
+5. **[Menu configuration](/menu/)** — put it in the navigation, or nobody
    will find it.
 
 Step 5 is the one people forget. A perfectly configured module that is not in

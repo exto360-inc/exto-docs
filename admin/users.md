@@ -8,8 +8,8 @@ People, their application role, and which projects and workspaces they belong
 to. Access itself is granted through [groups](/admin/groups) — this page is
 about the accounts.
 
-<Shot src="admin/users" alt="The project users list" pending
-  caption="Users assigned to a project, with their application role." />
+<Shot src="admin/users" alt="The project users list"
+  caption="Managing people — users are assigned per project and workspace." />
 
 ## The application role
 

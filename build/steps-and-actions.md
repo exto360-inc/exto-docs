@@ -4,11 +4,15 @@ description: "Forms per step, completion rules, and what an action carries."
 
 # Steps & actions
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A **step** is where a record waits for a person. An **action** is the line
 leaving it — the button someone presses. Between them they are the whole of a
 workflow's behaviour; the canvas is just how you draw it.
 
-<Shot src="build/step-properties" alt="A step selected on the canvas" pending
+<Shot src="build/step-properties" alt="A step selected on the canvas"
   caption="A step and its properties — form, completion rule, and confirmation." />
 
 ## Steps
@@ -42,7 +46,7 @@ name genuinely has to appear.
 ### Assignees
 
 Who is responsible for a step is not set on the canvas — it is set per
-deployment in [module setup](/admin/settings), because the same published
+deployment in [module setup](/setup/), because the same published
 workflow serves several projects with different people in them. Module setup
 also controls the step's notifications.
 
@@ -107,4 +111,4 @@ A published version is read-only to everyone, PME included — see
 [Publishing & versions](/build/publishing).
 
 Who a step is *assigned to* is a separate decision, made per deployment in
-[module setup](/admin/settings) rather than on the canvas.
+[module setup](/setup/) rather than on the canvas.

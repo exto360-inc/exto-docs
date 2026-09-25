@@ -1,47 +1,59 @@
 ---
-description: "Switching environments, and why data never crosses between them."
+description: "Switching between tenants, and why data never crosses between them."
 ---
 
 # Choosing a tenant
 
-A **tenant** is an isolated environment with its own workspaces, modules,
-records and users. If your account can reach more than one, you choose which
-you are working in.
+::: tip Who can do this
+Anyone whose account reaches more than one tenant.
+:::
 
-<Shot src="account/tenant-picker" alt="The tenant picker" pending
-  caption="Picking a tenant — everything below reloads into that environment." />
+A **tenant** is an isolated environment with its own projects, modules, records
+and users. Many organisations run several — one for live work, one for training,
+sometimes one per customer or site.
+
+<Shot src="account/tenant-picker" alt="The tenant switcher"
+  caption="The switcher at the top of the sidebar — search, then pick." />
 
 ## Switching
 
-Use the tenant picker. Everything reloads into that tenant: its workspaces, its
-modules, its records, its menus.
+The switcher is the **button at the very top of the sidebar**, showing your
+current tenant and its plan.
 
-Your access is not the same in every tenant. You may be an administrator in one
-and a read-only user in another, because [groups](/admin/groups) are per
-tenant.
+1. Click it. A list of every tenant you can reach drops down.
+2. **Search** by name — the list is long in most organisations.
+3. Click the one you want.
 
-## Isolation
+Your current tenant is marked **Current** and sits at the top.
 
-Data does not cross a tenant boundary. Records, masters and settings in one
-tenant are invisible from another, whatever your access. There is no
-cross-tenant search, no cross-tenant report, and no cross-tenant link.
+Everything reloads into that environment: the sidebar, your projects, your
+tasks. Each tenant is marked with its own initials and colour, which is the
+fastest way to tell at a glance where you are.
 
-::: warning "The record has disappeared"
-Being in the wrong tenant is the most common cause, and it looks exactly like
-a permissions problem. Check the tenant before anything else.
+## What does not follow you
+
+::: warning Data never crosses between tenants
+A record in one tenant does not exist in another. Neither do its modules,
+masters, documents or users.
+
+If something you expect has vanished, **check which tenant you are in before
+anything else.** It is the single most common cause of "the record has
+disappeared", and it looks identical to a permissions problem.
 :::
 
-## Why a tenant might be missing from your picker
+Your [profile preferences](/account/profile) — date format, theme, AI insight
+settings — are yours rather than the tenant's, so those do follow you.
 
-- Your account has not been granted access to it.
-- Access was granted but you have not signed out and in again.
-- The tenant is under maintenance or has been decommissioned.
+## Why access differs between them
 
-Access to a tenant is tied to your account, so an administrator in the *target*
-tenant has to grant it.
+Your permissions are granted **per tenant**. Being an administrator in one
+grants you nothing in another, and a module you use daily in one may not exist
+in the other at all.
+
+A sidebar that looks wrong after switching is usually correct: it is showing
+what that tenant grants you. See [Permissions](/concepts/permissions).
 
 ## Related
 
 - [Signing in](/account/signing-in)
-- [Projects & spaces](/concepts/projects-and-spaces) — the hierarchy inside a
-  tenant.
+- [How do I switch to a different tenant?](/recipes/account/switch-tenant)

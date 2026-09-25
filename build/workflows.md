@@ -4,10 +4,14 @@ description: "The workflow canvas, its views, and what publishing validates."
 
 # Workflows
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Design how a record moves: the steps it passes through, the conditions that route
 it, and the actions people take to move it on.
 
-<Shot src="workflows/list" alt="The workflows list" pending
+<Shot src="workflows/list" alt="The workflows list"
   caption="The workflows list — one row per workflow, with its current version and state." />
 
 ## List page
@@ -37,7 +41,7 @@ The canvas holds the workflow: steps, conditions, and the action lines between
 them. It arranges itself when you open it, so a workflow reads the same wherever
 it is shown.
 
-<Shot src="workflows/designer" alt="The workflow designer" pending
+<Shot src="workflows/designer" alt="The workflow designer"
   caption="A workflow with two steps, four conditions and five ends." />
 
 - **TB / LR** — read the flow down the page or across it.

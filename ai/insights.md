@@ -4,6 +4,10 @@ description: "AI summaries of one record, one module or one asset — placed whe
 
 # Insights
 
+::: tip Who can do this
+Anyone who can open the record.
+:::
+
 An insight is a summary of **one thing you are already looking at**. It answers
 "what is this and what state is it in" without you reading every field, the
 whole comment thread and the workflow trail.
@@ -13,7 +17,7 @@ the platform gathers a known set of data, makes one model call, and renders the
 result. That is why an insight arrives in seconds where a chat answer takes
 longer.
 
-<Shot src="ai/insights" alt="A record insight" pending
+<Shot src="ai/insights" alt="A record insight"
   caption="A record insight rendered as an inline banner above the form." />
 
 ## Four insights, four subjects

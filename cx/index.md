@@ -4,11 +4,21 @@ description: "Stages across, assets down, and a unit of commissioning at every c
 
 # CX workbench
 
-The CX workbench runs **multi-stage, hierarchical work** — most often asset
-commissioning. It is a matrix: **stages across, assets down, and one unit of
-commissioning at every intersection.**
+**For commissioning teams.**
 
-<Shot src="cx/matrix" alt="The commissioning matrix" pending
+A commissioning project has hundreds of assets — pumps, panels, valves — and
+every one has to pass the same sequence of checks before it can be handed
+over.
+Tracked on spreadsheets, nobody can answer *"what is left?"* without a morning's
+work, and the evidence that each check was done ends up scattered across inboxes.
+
+The CX workbench holds all of it in one place, and produces the handover
+paperwork at the end.
+
+It works as a matrix: **stages across, assets down, and one unit of commissioning
+at every intersection.**
+
+<Shot src="cx/matrix" alt="The commissioning matrix"
   caption="Levels across the top with their stages, the asset tree down the side, and a cell at every crossing." />
 
 ## The idea in one picture
@@ -74,6 +84,15 @@ progress at any level of the tree, and produce the paperwork at the end.
 A stage can be scheduled from one stage and gated by three others. Getting these
 confused is the single most common source of "why won't this close". See
 [Concepts](/cx/concepts).
+
+## Finding your workbench
+
+Workbenches are reached from the sidebar, usually under a group called
+**Operational Readiness** — the group holds one entry per project, plus
+**Cx Workbench** and **Asset Import**.
+
+The group's name is set by whoever configured your
+[menu](/menu/), so yours may differ. What is inside it will not.
 
 ## Where it lives
 

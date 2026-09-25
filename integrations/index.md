@@ -4,8 +4,10 @@ description: "Calling another system, versus telling one something happened."
 
 # Integrations
 
-Two ways to connect Exto to systems outside it, pointing in opposite
-directions.
+Exto rarely runs alone. A vendor's credit limit lives in your finance system;
+your maintenance system needs to know the moment an inspection fails.
+
+Two features cover those, and they point in opposite directions.
 
 | | [External services](/integrations/external-services) | [Webhooks](/integrations/webhooks) |
 | --- | --- | --- |

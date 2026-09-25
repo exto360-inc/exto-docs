@@ -4,12 +4,17 @@ description: "Running a report and filling in its parameters."
 
 # Reports
 
+::: tip Who can do this
+Running a report — the `Reports` config module on your groups.
+Creating report definitions — <Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 Reports render your data into a fixed document — a PDF or spreadsheet built
 from a template, with parameters you fill in before it runs. They are for the
 output that has to look the same every time: statements, certificates,
 submissions.
 
-<Shot src="work/reports" alt="The reports page" pending
+<Shot src="work/reports" alt="The reports page"
   caption="The report list, with the parameter panel open for a selected report." />
 
 ## List page
@@ -42,7 +47,7 @@ the layout matters.
 Dashboards are the live counterpart — charts and tiles that update as records
 change, rather than a document you generate. They are built in
 [Dashboards & reports](/build/dashboards) and appear in the navigation where
-[menu configuration](/admin/menu) places them.
+[menu configuration](/menu/) places them.
 
 ## Where reports come from
 
@@ -53,7 +58,8 @@ template that renders it. See [Settings](/admin/settings).
 
 ## Permissions
 
-Reports appear according to the **Reports** config module granted to your
-groups, at the level the report is defined for. Creating and editing report
-definitions requires access to Settings → Report setup, which is an
-administrator task.
+**Running** a report follows the `Reports` config module granted to your groups,
+at the level the report is defined for.
+
+**Creating and editing** report definitions happens under **Settings → Report
+setup** and requires <Perm role="PME" /> — a different gate entirely.

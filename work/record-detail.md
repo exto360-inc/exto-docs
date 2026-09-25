@@ -4,11 +4,16 @@ description: "One record open: the step's form, and the three shapes it appears 
 
 # Record detail
 
+::: tip Who can do this
+The module granted to a group, plus **View all records** or a
+workflow step that makes the record yours.
+:::
+
 One record, open. The form for its current workflow step fills the main column;
 a rail of [widgets](/work/record-widgets) down the right holds everything that
 is not a field.
 
-<Shot src="work/record-detail" alt="A record open with the sidebar" pending
+<Shot src="work/record-detail" alt="A record open with the sidebar"
   caption="The step's form, the toolbar above it, and the widget rail on the right." />
 
 ## The layout

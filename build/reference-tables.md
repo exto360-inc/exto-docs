@@ -4,13 +4,17 @@ description: "Reading values another module owns, without duplicating them."
 
 # Reference tables
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A reference table points at data owned by somewhere else, so a module can read
 values it does not store. It is what **Select** and **Auto populate** fields
 read from when their source is not a plain [data set](/build/tables-and-datasets).
 
 Reference tables are defined in **Module designer → Reference tables**.
 
-<Shot src="build/reference-tables" alt="The reference tables tab" pending
+<Shot src="build/reference-tables" alt="The reference tables tab"
   caption="A module's reference tables, each with its target and kind." />
 
 ## What one holds

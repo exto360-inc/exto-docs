@@ -4,11 +4,16 @@ description: "Submit, approve, return, reopen and revise — and why saving is n
 
 # Taking actions
 
+::: tip Who can do this
+The current step's assignees — directly or through a group.
+**Reopen** and **Revision** need their own owners in module setup.
+:::
+
 An **action** is the button that moves a record. Saving does not move it,
 editing does not move it — only an action advances the workflow, stamps a
 status, and tells the next people it is theirs.
 
-<Shot src="work/action-sheet" alt="The action sheet" pending
+<Shot src="work/action-sheet" alt="The action sheet"
   caption="Submitting — the comment box, the next step's assignees, and the space picker." />
 
 The buttons live in the **Actions** widget on an open record — see

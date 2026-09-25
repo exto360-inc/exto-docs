@@ -4,11 +4,15 @@ description: "Create a module, design a form, and save your first record."
 
 # Your first module
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A module is a type of thing you track — *Expenses*, *Vendors*, *Inspections*.
 It owns the fields its records hold, the forms that capture them, and the
 workflow they move through. This page builds one and saves a record into it.
 
-<Shot src="getting-started/new-module" alt="The new module panel" pending
+<Shot src="getting-started/new-module" alt="The new module panel"
   caption="Naming a module — the name becomes its route, so it cannot change later." />
 
 ## 1. Create the module

@@ -4,11 +4,15 @@ description: "The canvas, the palette, and how a field binds to a column."
 
 # Forms
 
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
+
 A form is what a person fills in. A module can have several, and a workflow
 step points at one — which is how the same record shows three fields while it
 is being raised and twelve while it is being reviewed.
 
-<Shot src="build/form-designer" alt="The form designer" pending
+<Shot src="build/form-designer" alt="The form designer"
   caption="Palette on the left, canvas in the middle, the selected field's properties on the right." />
 
 ## List page

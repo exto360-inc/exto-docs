@@ -54,7 +54,7 @@ where they live.
 ## Deployment level — the decision that matters
 
 A module is deployed at **tenant**, **workspace** or **project** level. That
-choice is made once, in [module setup](/admin/settings), and it determines:
+choice is made once, in [module setup](/setup/), and it determines:
 
 | Deployed at | Records live | Visible to |
 | --- | --- | --- |

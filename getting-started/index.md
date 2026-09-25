@@ -4,36 +4,33 @@ description: "Where to begin with Exto, and which lane you belong in."
 
 # Getting started
 
-Exto is a platform for building business applications around your own data
-model. You define **modules**, capture data through **forms**, move it with
-**workflows**, and organise everything into **projects** and **workspaces**.
+New to Exto? Read the **[Introduction](/introduction)** first — what Exto is,
+what it replaces, and which parts of this guide apply to you.
 
-Two pages get you from an empty tenant to a record moving through a workflow.
-They take about twenty minutes together, and everything after them is detail.
+## The pages here
 
-## Start here
-
-1. **[Your first module](/getting-started/first-module)** — create a module,
-   design a form, and save a record.
-2. **[Your first workflow](/getting-started/first-workflow)** — draw three
-   steps, publish, and watch a record travel them.
-
-## Then pick a lane
-
-You will be in one of two jobs, and the docs are split along that line.
-
-| If you are… | Go to |
+| Page | For |
 | --- | --- |
-| Using Exto — finding your work, filling forms, approving things | [Working in Exto](/work/) |
-| Building Exto — designing modules, forms and workflows | [Building](/build/) |
-| Running a commissioning project | [CX workbench](/cx/) |
-| Administering the tenant | [Administration](/admin/) |
+| [Introduction](/introduction) | Anyone, before anything else. |
+| [Quick start](/getting-started/quick-start) | You have just been given an account and signed in. |
+| [Your first module](/getting-started/first-module) | You are going to build something. |
+| [Your first workflow](/getting-started/first-workflow) | The same, continued. |
 
-Before either, [Core concepts](/concepts/) is worth ten minutes — modules,
-records, versions and permissions come up on every page that follows.
+## Two paths
+
+**If you are going to use Exto** — filling forms, approving things, inspecting —
+read [Quick start](/getting-started/quick-start), then go to
+[Working in Exto](/work/). You do not need the building pages at all.
+
+**If you are going to build in Exto**, do
+[Your first module](/getting-started/first-module) and
+[Your first workflow](/getting-started/first-workflow) back to back. About
+twenty minutes, and you will have a record moving through a workflow you drew.
+Read [Core concepts](/concepts/) before or after — modules, records, versions
+and permissions come up on every page that follows.
 
 ::: tip You need somewhere to build
-Modules are deployed at tenant, workspace or project level, so you need at
-least one workspace before you create anything. If your tenant is empty, see
-[Projects](/admin/projects) first.
+Modules are deployed at tenant, workspace or project level, so you need at least
+one workspace before you create anything. If your tenant is empty, see
+[Workspaces](/admin/workspaces).
 :::

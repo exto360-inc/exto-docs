@@ -4,11 +4,17 @@ description: "Nine tabs over one module, and what each one owns."
 
 # Module designer
 
-One module, nine tabs, at **Settings → Module designer**. It is where a module
-gets its identity, its storage, its forms and its workflow, and where you will
-spend nearly all of your building time.
+::: tip Who can do this
+<Perm role="PME" /> — the application role that opens **Settings**.
+:::
 
-<Shot src="build/module-designer" alt="The module designer" pending
+Everything about one module is decided here: what it stores, what people fill
+in, and where a record goes after somebody presses Submit. If you are building
+in Exto, this is where you will spend nearly all your time.
+
+Nine tabs, at **Settings → Module designer**.
+
+<Shot src="build/module-designer" alt="The module designer"
   caption="The designer shell — tab rail on the left, the General tab open." />
 
 ## List page
@@ -77,7 +83,7 @@ for and cannot be bothered to write it yourself.
 | **Print record** | Adds a print action. |
 
 **Reopen** and **Revision** are the two that matter beyond this screen:
-[module setup](/admin/settings) can only assign their owners once they are
+[module setup](/setup/) can only assign their owners once they are
 switched on here.
 
 ## Log page views
