@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # TODO: confirm the namespace. `docs` assumes a dedicated one; if the docs
+  # should sit beside an existing environment, change this and the Service.
+  name: exto-docs
+  namespace: docs
+  labels:
+    app.exto/component: docs
+    app.kubernetes.io/name: exto
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.exto/component: docs
+      app.kubernetes.io/name: exto
+  template:
+    metadata:
+      labels:
+        app.exto/component: docs
+        app.kubernetes.io/name: exto
+    spec:
+      imagePullSecrets:
+        - name: exto-docs-pull-secret
+      containers:
+        - name: exto-docs
+          image: gaeadev.azurecr.io/exto-docs:latest
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          # Static files out of nginx. The whole site is in the image, so this
+          # needs far less than the app containers do.
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exto-docs
+  namespace: docs
+  labels:
+    app.exto/component: docs
+    app.kubernetes.io/name: exto
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.exto/component: docs
+    app.kubernetes.io/name: exto

@@ -1,0 +1,102 @@
+name: Build and Deploy Docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A second push while the first is still building cancels it rather than
+# racing it to the cluster.
+concurrency:
+  group: deploy-docs
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # TODO: match the environment names used in exto-web.
+    environment: gg-usa-nonprod
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      build_version: ${{ steps.set_version.outputs.build_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Screenshots are Git LFS objects. Without this the build context
+          # carries pointer files and every image on the site is a line of text.
+          lfs: true
+          # `lastUpdated: true` reads each page's date from git log; a shallow
+          # clone has one commit, so every page would show the same date.
+          fetch-depth: 0
+
+      - name: Set build version
+        id: set_version
+        run: |
+          DATE=$(date +'%Y%m%d')
+          SHORT_SHA=${GITHUB_SHA::7}
+          echo "BUILD_VERSION=$DATE.$SHORT_SHA" >> $GITHUB_ENV
+          echo "build_version=$DATE.$SHORT_SHA" >> $GITHUB_OUTPUT
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Builds in Azure rather than on the runner, so the runner never needs
+      # Docker and the image never crosses the public internet twice.
+      - name: Build and push to ACR
+        run: |
+          az acr build \
+            --registry gaeadev \
+            --image exto-docs:${{ env.BUILD_VERSION }} \
+            .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # TODO: match the environment names used in exto-web.
+    environment: gg-us-aks-non-prod
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set build version from build job
+        run: echo "BUILD_VERSION=${{ needs.build.outputs.build_version }}" >> $GITHUB_ENV
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install kubelogin
+        uses: azure/use-kubelogin@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          kubelogin-version: latest
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.DOCS_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.DOCS_CLUSTER_NAME }}
+          admin: false
+          use-kubelogin: true
+
+      - name: Deploy
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: docs
+          manifests: ci/deployment.yaml
+          images: |
+            gaeadev.azurecr.io/exto-docs:${{ env.BUILD_VERSION }}
+          imagepullsecrets: |
+            exto-docs-pull-secret

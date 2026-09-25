@@ -1,0 +1,5 @@
+node_modules
+.vitepress/dist
+.vitepress/cache
+scripts/.auth-state.json
+*.log

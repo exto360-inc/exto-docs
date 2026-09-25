@@ -14,6 +14,13 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   /**
+   * Markdown in the repo root is for contributors, not readers. Without this
+   * both files become pages — REVIEW.md in particular ships an internal
+   * checklist to /REVIEW, on a site that is world-readable until the access
+   * gate exists.
+   */
+  srcExclude: ['README.md', 'REVIEW.md'],
+  /**
    * The tab mark is the product's own favicon, copied from exto-web rather
    * than redrawn: the SVG is the wordmark's first letterform with no plate, and
    * carries its own dark-mode fill. The .ico is the fallback for anything that
