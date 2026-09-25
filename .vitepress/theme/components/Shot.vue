@@ -17,6 +17,8 @@
  * drop it at, so a page is publishable before its media and completes the moment
  * the file lands — no page edit.
  */
+import { withBase } from 'vitepress';
+
 const props = defineProps<{
   src: string;
   alt: string;
@@ -37,10 +39,10 @@ const base = `/screenshots/${props.src}`;
       <code v-else>{{ base }}.png</code>
     </div>
     <template v-else-if="themed">
-      <img class="light-only" :src="`${base}-light.png`" :alt="alt" />
-      <img class="dark-only" :src="`${base}-dark.png`" :alt="alt" />
+      <img class="light-only" :src="withBase(`${base}-light.png`)" :alt="alt" />
+      <img class="dark-only" :src="withBase(`${base}-dark.png`)" :alt="alt" />
     </template>
-    <img v-else :src="`${base}.png`" :alt="alt" />
+    <img v-else :src="withBase(`${base}.png`)" :alt="alt" />
     <figcaption v-if="caption">{{ caption }}</figcaption>
   </figure>
 </template>
