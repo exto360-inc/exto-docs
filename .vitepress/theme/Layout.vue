@@ -8,6 +8,7 @@
  * markup — name, headline, tagline, actions, and their responsive behaviour —
  * and only the eyebrow and the picture are ours.
  */
+import { withBase } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
 
 const { Layout } = DefaultTheme;
@@ -24,14 +25,14 @@ const { Layout } = DefaultTheme;
         <div class="x-stack-glow" aria-hidden="true" />
         <img
           class="x-stack-back"
-          src="/screenshots/work/workflow-timeline.png"
+          :src="withBase('/screenshots/work/workflow-timeline.png')"
           alt=""
           aria-hidden="true"
           loading="lazy"
         />
         <img
           class="x-stack-front"
-          src="/screenshots/cx/matrix.png"
+          :src="withBase('/screenshots/cx/matrix.png')"
           alt="The Exto commissioning portal — assets down the side, stages across the top"
         />
         <span class="x-stack-badge">Commissioning portal</span>

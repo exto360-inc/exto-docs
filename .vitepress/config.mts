@@ -8,7 +8,15 @@ import { defineConfig } from 'vitepress';
  * product's shipped routes rather than from a topic list, which is how my-tasks,
  * webhooks, reports and documents earned places.
  */
+/**
+ * The site is served under /docs on the shared lab-us host, behind the same
+ * gateway as the app, so every URL VitePress generates must carry the prefix.
+ * The gateway strips it again before the request reaches nginx.
+ */
+const base = '/docs/';
+
 export default defineConfig({
+  base,
   title: 'Exto Docs',
   description: 'Build modules, forms and workflows — and follow a record through them.',
   cleanUrls: true,
@@ -27,8 +35,8 @@ export default defineConfig({
    * will not take an SVG.
    */
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
-    ['link', { rel: 'alternate icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}favicon.svg` }],
+    ['link', { rel: 'alternate icon', type: 'image/x-icon', href: `${base}favicon.ico` }],
     ['meta', { name: 'theme-color', content: '#2e3690' }],
   ],
   themeConfig: {

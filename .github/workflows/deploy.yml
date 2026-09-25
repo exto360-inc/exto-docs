@@ -94,9 +94,11 @@ jobs:
       - name: Deploy
         uses: azure/k8s-deploy@v4
         with:
-          namespace: docs
-          manifests: ci/deployment.yaml
+          namespace: lab-us
+          manifests: |
+            ci/deployment.yaml
+            ci/httproute.yaml
           images: |
             gaeadev.azurecr.io/exto-docs:${{ env.BUILD_VERSION }}
           imagepullsecrets: |
-            exto-docs-pull-secret
+            lab-us-pull-secret
