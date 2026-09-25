@@ -54,9 +54,12 @@ jobs:
 
       # Builds in Azure rather than on the runner, so the runner never needs
       # Docker and the image never crosses the public internet twice.
+      # gaeadev lives in a different subscription from the AKS cluster that
+      # AZURE_SUBSCRIPTION_ID names, so the build has to point at it explicitly.
       - name: Build and push to ACR
         run: |
           az acr build \
+            --subscription "${{ secrets.ACR_SUBSCRIPTION_ID }}" \
             --registry gaeadev \
             --image exto-docs:${{ env.BUILD_VERSION }} \
             .
