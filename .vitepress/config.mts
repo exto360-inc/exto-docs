@@ -66,16 +66,9 @@ export default defineConfig({
       { text: 'Setup', link: '/setup/' },
       { text: 'Administering', link: '/admin/' },
       { text: 'Architecture', link: '/architecture/' },
-      // The mobile app's end-user manual — its own book, like Architecture.
       { text: 'Mobile', link: '/mobile/' },
     ],
     sidebar: {
-      /**
-       * The mobile manual keeps its own sidebar, as Architecture does, so a
-       * reader who picks Mobile in the nav stays in the phone app's pages.
-       * Order follows the manual: start, then the tabs and Menu items, then
-       * offline, settings and help.
-       */
       '/mobile/': [
         { text: 'Mobile app', collapsed: false, items: [
           { text: 'Overview', link: '/mobile/' },
