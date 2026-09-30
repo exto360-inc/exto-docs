@@ -531,3 +531,11 @@
   .VPHero .image { flex-grow: 1.35; }
 }
 @media (max-width: 959px) { .x-stack { display: none; } }
+
+/* ── Mobile manual ──────────────────────────────────────────────────────────
+   Its screenshots are portrait phone screens (540×1200). At the content
+   width a full-width frame would stand ~1500px tall, so on pages marked
+   `pageClass: mobile-manual` the frame keeps its phone proportions and sits
+   centred. Scoped to that class; every other page's .shot is untouched. */
+.mobile-manual .shot img { width: auto; max-width: min(100%, 300px); height: auto; margin: 0 auto; }
+.mobile-manual .shot figcaption { text-align: center; max-width: 480px; margin-left: auto; margin-right: auto; }
