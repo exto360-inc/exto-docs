@@ -66,8 +66,33 @@ export default defineConfig({
       { text: 'Setup', link: '/setup/' },
       { text: 'Administering', link: '/admin/' },
       { text: 'Architecture', link: '/architecture/' },
+      { text: 'Mobile', link: '/mobile/' },
     ],
     sidebar: {
+      '/mobile/': [
+        { text: 'Mobile app', collapsed: false, items: [
+          { text: 'Overview', link: '/mobile/' },
+          { text: 'Introduction', link: '/mobile/introduction' },
+          { text: 'Getting started', link: '/mobile/getting-started' },
+        ] },
+        { text: 'Using the app', collapsed: false, items: [
+          { text: 'Exto AI', link: '/mobile/exto-ai' },
+          { text: 'Tasks', link: '/mobile/tasks' },
+          { text: 'Menu', link: '/mobile/menu' },
+          { text: 'Modules & records', link: '/mobile/modules-and-records' },
+          { text: 'Master modules', link: '/mobile/master-modules' },
+          { text: 'Dashboards & custom pages', link: '/mobile/dashboards-and-custom-pages' },
+          { text: 'Drive', link: '/mobile/drive' },
+          { text: 'Checklists', link: '/mobile/checklists' },
+          { text: 'Commissioning', link: '/mobile/commissioning' },
+        ] },
+        { text: 'Offline, settings & help', collapsed: false, items: [
+          { text: 'Working offline', link: '/mobile/working-offline' },
+          { text: 'Profile & settings', link: '/mobile/profile-and-settings' },
+          { text: 'Messages & alerts', link: '/mobile/messages-and-alerts' },
+          { text: 'Troubleshooting & FAQ', link: '/mobile/troubleshooting-and-faq' },
+        ] },
+      ],
       '/architecture/': [
         { text: 'Application architecture', collapsed: false, items: [
           { text: 'Overview', link: '/architecture/' },
