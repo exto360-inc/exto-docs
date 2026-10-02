@@ -23,6 +23,20 @@
 .perm { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 5px;
         padding: 1px 7px; background: var(--vp-c-green-soft); color: var(--vp-c-green-1); }
 
+/* The Data API explorer's embedded JSON editor (vitepress-openapi's Try-it
+   playground, for request bodies) exposes its own documented --jse-* theming
+   variables — unlike the rest of that library's CSS, which is Tailwind
+   utility output not meant to be retargeted. Mapping just the accent color
+   here keeps the one widget a reader actually clicks into on-brand. */
+:root {
+  --jse-theme-color: var(--vp-c-brand-1);
+  --jse-theme-color-highlight: var(--vp-c-brand-2);
+}
+.dark {
+  --jse-theme-color: var(--vp-c-brand-1);
+  --jse-theme-color-highlight: var(--vp-c-brand-2);
+}
+
 /* ── Diagrams ──────────────────────────────────────────────────────────────
    These used to be box-drawing characters in bare code fences, so the browser
    was told they were code: monospace, code chrome, a copy button, and eighty

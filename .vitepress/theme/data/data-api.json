@@ -1,0 +1,5281 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Exto Data API",
+    "version": "1.0.0",
+    "description": "Read and write Exto data directly over REST, using a Personal Access Token. See [Data API](/integrations/data-api) for how to generate a token, and [Reference](/integrations/data-api-reference) for the narrative version of everything below."
+  },
+  "servers": [
+    {
+      "url": "https://app-us.exto360.com/data",
+      "description": "USA"
+    },
+    {
+      "url": "https://platform.exto360.com/data",
+      "description": "India"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Service liveness and readiness."
+    },
+    {
+      "name": "Master Records",
+      "description": "Reading and writing master data."
+    },
+    {
+      "name": "Module Records",
+      "description": "Reading and writing module records, including sub-table expansion."
+    },
+    {
+      "name": "Sub-tables & Workflow",
+      "description": "Writing sub-table rows and taking workflow actions."
+    },
+    {
+      "name": "Documents",
+      "description": "Bulk document upload and download."
+    },
+    {
+      "name": "User Management",
+      "description": "Granting, reading, and revoking user and project access."
+    },
+    {
+      "name": "Hierarchy Master Records",
+      "description": "Reading and writing tree-shaped master data \u2014 the same engine as master records, with a parent/child structure."
+    },
+    {
+      "name": "Job Status",
+      "description": "Tracking background jobs \u2014 imports, exports, and other long-running operations."
+    },
+    {
+      "name": "Workflow V2",
+      "description": "Listing workflow instances and their history, and taking workflow actions by record number."
+    },
+    {
+      "name": "User Management V2",
+      "description": "Mirrors User Management at /api/v2/user/..., plus two changes."
+    },
+    {
+      "name": "Workspace",
+      "description": "Creating, reading, and updating workspaces."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key",
+        "description": "A Personal Access Token generated at Settings \u2192 Integrations \u2192 Key management. See [Data API](/integrations/data-api)."
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 500
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-02-27T02:22:42.856Z"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/v1/master-record/MASTER_31"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "summary": {
+                "type": "string",
+                "example": "Service Exception"
+              },
+              "detail": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "ITEM_MASTER not Found."
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Record": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "67bfcbd6117e4e25e1d31dd3"
+          },
+          "id": {
+            "type": "string",
+            "example": "67bfcbd6117e4e25e1d31dd3"
+          },
+          "customFields": {
+            "type": "object",
+            "description": "The record's field values, as entered on the form. Keys vary by module/master \u2014 these are representative.",
+            "properties": {
+              "connumber": {
+                "type": "integer",
+                "example": 1
+              },
+              "name1": {
+                "type": "string",
+                "example": "qa"
+              },
+              "number2": {
+                "type": "integer",
+                "example": 2
+              },
+              "select_from_list": {
+                "type": "string",
+                "example": "A"
+              }
+            }
+          },
+          "parentID": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          },
+          "slug": {
+            "type": "string",
+            "example": "iWlOE8K"
+          },
+          "refId": {
+            "type": "string",
+            "example": "iWlOE8K"
+          },
+          "tenantID": {
+            "type": "string",
+            "example": "cwWdTZK"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "nivedita@exto360.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-02-27T02:20:06.958Z"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "example": false
+          },
+          "projectID": {
+            "type": "string",
+            "example": "Vx6-j2Z"
+          }
+        }
+      },
+      "PaginatedRecords": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Record"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "example": 1069
+          },
+          "page": {
+            "type": "integer",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "example": 10
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 107
+          }
+        }
+      },
+      "LogEntry": {
+        "type": "object",
+        "properties": {
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "example": "info"
+          },
+          "duration": {
+            "type": "number"
+          }
+        }
+      },
+      "JobMeta": {
+        "type": "object",
+        "description": "Context about where the job came from. Which fields are populated depends on jobType.",
+        "properties": {
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduleID": {
+            "type": "string"
+          },
+          "scheduleName": {
+            "type": "string"
+          },
+          "projectName": {
+            "type": "string"
+          },
+          "tenantName": {
+            "type": "string"
+          },
+          "moduleID": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "filePath": {
+            "type": "string"
+          }
+        }
+      },
+      "JobStatus": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "66e7a1b2c3d4e5f678901234"
+          },
+          "tenantID": {
+            "type": "string"
+          },
+          "projectID": {
+            "type": "string"
+          },
+          "jobTitle": {
+            "type": "string",
+            "example": "Import \u2014 vendor master"
+          },
+          "jobType": {
+            "type": "string",
+            "enum": [
+              "Summarize",
+              "Spread",
+              "Import",
+              "Export",
+              "Load",
+              "Copy",
+              "Scenario_Creation",
+              "Schedule",
+              "CX",
+              "SSM",
+              "ItemMasterIntegration",
+              "CxStepDates",
+              "Slotting Job"
+            ],
+            "example": "Import"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Not Started",
+              "In Progress",
+              "Completed",
+              "Failed"
+            ],
+            "example": "In Progress"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Milliseconds."
+          },
+          "log": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogEntry"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/JobMeta"
+          }
+        }
+      },
+      "CreateWorkspaceDTO": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "description": "Parent workspace's Mongo ObjectId.",
+            "nullable": true
+          }
+        },
+        "example": {
+          "name": "West Region",
+          "parentId": null
+        }
+      },
+      "Workspace": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "id": "67bfcbd6117e4e25e1d31dd3",
+          "name": "West Region",
+          "parentId": null,
+          "createdAt": "2025-02-27T02:20:06.958Z",
+          "updatedAt": "2025-02-27T02:20:06.958Z"
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/health/liveness": {
+      "get": {
+        "operationId": "checkLiveness",
+        "summary": "Check the liveness of the service",
+        "tags": [
+          "Health"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "The service is running.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "cpuPercent": {
+                      "type": "number"
+                    },
+                    "memPercent": {
+                      "type": "number"
+                    }
+                  },
+                  "example": {
+                    "ok": true,
+                    "cpuPercent": 3.2,
+                    "memPercent": 41.0
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "CPU usage exceeds the configured limit \u2014 \"Liveness CPU Limit exceeded\" \u2014 or memory usage does \u2014 \"Liveness Memory Limit exceeded\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "description": "Samples CPU usage over one second and current memory usage against configured limits."
+      }
+    },
+    "/api/v1/health/readiness": {
+      "get": {
+        "operationId": "checkReadiness",
+        "summary": "Check the readiness of the service",
+        "tags": [
+          "Health"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "The service is ready to accept traffic.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  },
+                  "example": {
+                    "ok": true
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The database connection is disconnected, connecting, or disconnecting \u2014 \"Database - <state>\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "description": "Readiness probe based on the database connection state."
+      }
+    },
+    "/api/v1/master-record/{masterName}": {
+      "get": {
+        "operationId": "getAllMasterRecords",
+        "summary": "Get all master records",
+        "description": "Retrieves all master records associated with a project or tenant. Supports up to 1,000 records per request. See [Filtering records](/integrations/data-api-filtering) for the `filter` syntax.",
+        "tags": [
+          "Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The master's identifier.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "LOCATION"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 25
+            },
+            "example": 1000
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "example": 1
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Field to sort by.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "createdAt"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Filter to records in this workflow status.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Approved"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "Conditional filter expression. See [Filtering records](/integrations/data-api-filtering).",
+            "schema": {
+              "type": "string"
+            },
+            "example": "serial_number:NUMBER:eq:1234"
+          },
+          {
+            "name": "localTimeZone",
+            "in": "query",
+            "required": false,
+            "description": "IANA timezone \u2014 required when `filter` compares a `DATE` field.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "America/Los_Angeles"
+          },
+          {
+            "name": "X-Project-Id",
+            "in": "header",
+            "required": false,
+            "description": "Scope the request to one project.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "p6iD1Wb"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedRecords"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "\"Page size must be between 1 and 1000\" / \"Page must be greater than 0\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "upsertMasterRecord",
+        "summary": "Create or update a master record",
+        "tags": [
+          "Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The master's identifier.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "LOCATION"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Flat field-name/value pairs for one record.",
+                  "properties": {
+                    "connumber": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name1": {
+                      "type": "string",
+                      "example": "qa"
+                    },
+                    "number2": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "select_from_list": {
+                      "type": "string",
+                      "example": "A"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "connumber": 1,
+                    "name1": "qa",
+                    "number2": 2,
+                    "select_from_list": "A"
+                  }
+                ],
+                "maxItems": 1000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Mongo IDs of newly created records."
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "updatedCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "insertedIds": [
+                      "67bfcbd6117e4e25e1d31dd3"
+                    ],
+                    "insertedCount": 1,
+                    "updatedCount": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed or missing a required field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateMasterRecord",
+        "summary": "Update a master record",
+        "description": "Explicit update, separate from [upsert](#create-or-update-a-master-record) above.",
+        "tags": [
+          "Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The master's identifier.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "LOCATION"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Flat field-name/value pairs for one record.",
+                  "properties": {
+                    "connumber": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name1": {
+                      "type": "string",
+                      "example": "qa"
+                    },
+                    "number2": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "select_from_list": {
+                      "type": "string",
+                      "example": "A"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "connumber": 1,
+                    "name1": "qa",
+                    "number2": 2,
+                    "select_from_list": "A"
+                  }
+                ],
+                "maxItems": 1000
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Mongo IDs of newly created records."
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "updatedCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "insertedIds": [
+                      "67bfcbd6117e4e25e1d31dd3"
+                    ],
+                    "insertedCount": 1,
+                    "updatedCount": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed or missing a required field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMasterRecord",
+        "summary": "Delete a master record",
+        "tags": [
+          "Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The master's identifier.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "LOCATION"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 deleted."
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing masterName/userName, or request body malformed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The acting user's tenant doesn't include the current tenant \u2014 \"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "Records to delete, identified by recordNumber.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "recordNumber": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "recordNumber": "AEIou2"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/module-record/{moduleName}": {
+      "get": {
+        "operationId": "getAllModuleRecords",
+        "summary": "Get all module records",
+        "description": "Retrieves all records in a module. Supports up to 1,000 records per request. See [Filtering records](/integrations/data-api-filtering) for the `filter` syntax.",
+        "tags": [
+          "Module Records"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "path",
+            "required": true,
+            "description": "The module's identifier.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SAT_TDSP"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 25
+            },
+            "example": 1000
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "example": 1
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Field to sort by.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "createdAt"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Filter to records in this workflow status.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Approved"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "Conditional filter expression. See [Filtering records](/integrations/data-api-filtering).",
+            "schema": {
+              "type": "string"
+            },
+            "example": "serial_number:NUMBER:eq:1234"
+          },
+          {
+            "name": "localTimeZone",
+            "in": "query",
+            "required": false,
+            "description": "IANA timezone \u2014 required when `filter` compares a `DATE` field.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "America/Los_Angeles"
+          },
+          {
+            "name": "X-Project-Id",
+            "in": "header",
+            "required": false,
+            "description": "Scope the request to one project.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "p6iD1Wb"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedRecords"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "\"Page size must be between 1 and 1000\" / \"Page must be greater than 0\" / \"Missing module name.\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "upsertModuleRecord",
+        "summary": "Create or update a module record",
+        "tags": [
+          "Module Records"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "path",
+            "required": true,
+            "description": "The module's identifier, e.g. `SAT_TDSP`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SAT_TDSP"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Flat field-name/value pairs for one record.",
+                  "properties": {
+                    "connumber": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name1": {
+                      "type": "string",
+                      "example": "qa"
+                    },
+                    "number2": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "select_from_list": {
+                      "type": "string",
+                      "example": "A"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "connumber": 1,
+                    "name1": "qa",
+                    "number2": 2,
+                    "select_from_list": "A"
+                  }
+                ],
+                "maxItems": 1000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Mongo IDs of newly created records."
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "updatedCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "insertedIds": [
+                      "67bfcbd6117e4e25e1d31dd3"
+                    ],
+                    "insertedCount": 1,
+                    "updatedCount": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing userName, body not an array / over 1000 items, \"User not found or active\", or MODULE_RECORD_VALIDATION_FAILED (per-field form validation).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateModuleRecord",
+        "summary": "Update a module record",
+        "description": "Explicit update, separate from [upsert](#create-or-update-a-module-record) above.",
+        "tags": [
+          "Module Records"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "path",
+            "required": true,
+            "description": "The module's identifier, e.g. `SAT_TDSP`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SAT_TDSP"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "description": "Flat field-name/value pairs for one record.",
+                    "properties": {
+                      "connumber": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name1": {
+                        "type": "string",
+                        "example": "qa"
+                      },
+                      "number2": {
+                        "type": "integer",
+                        "example": 2
+                      },
+                      "select_from_list": {
+                        "type": "string",
+                        "example": "A"
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "description": "Flat field-name/value pairs for one record.",
+                      "properties": {
+                        "connumber": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name1": {
+                          "type": "string",
+                          "example": "qa"
+                        },
+                        "number2": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "select_from_list": {
+                          "type": "string",
+                          "example": "A"
+                        }
+                      }
+                    },
+                    "maxItems": 1000,
+                    "example": [
+                      {
+                        "connumber": 1,
+                        "name1": "qa",
+                        "number2": 2,
+                        "select_from_list": "A"
+                      }
+                    ]
+                  }
+                ],
+                "description": "A single object, or an array of objects (max 1000). Any item containing `_id` is rejected."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Mongo IDs of newly created records."
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "updatedCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "insertedIds": [
+                      "67bfcbd6117e4e25e1d31dd3"
+                    ],
+                    "insertedCount": 1,
+                    "updatedCount": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing userName, body not an array / over 1000 items, \"User not found or active\", or \"Updating '_id' is not allowed\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteModuleRecord",
+        "summary": "Delete a module record",
+        "tags": [
+          "Module Records"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "path",
+            "required": true,
+            "description": "The module's identifier, e.g. `SAT_TDSP`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SAT_TDSP"
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 deleted."
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No matching record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing moduleName/userName, or body not an array / over 1000 items.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "Records to delete, identified by recordNumber.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "recordNumber": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "recordNumber": "MOD-1"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/module-record/{moduleName}/expand": {
+      "get": {
+        "operationId": "expandModuleRecords",
+        "summary": "Get module records with sub-table data",
+        "description": "Returns module records together with their sub-table data in one call, paginated independently on both axes. See [Module record expand](/integrations/data-api-module-expand) for the full pagination contract.",
+        "tags": [
+          "Module Records"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "path",
+            "required": true,
+            "description": "The module's identifier, e.g. `SAT_TDSP`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SAT_TDSP"
+          },
+          {
+            "name": "recordIds",
+            "in": "query",
+            "required": false,
+            "description": "CSV of Mongo IDs \u2014 one record, a batch of up to 100, or omit for the whole module list.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "6a7edccfddad60e2b35b545e"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Module record list page.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Module record list page size.",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "CSV sparse fieldset for the module record itself. Prefix a field with `-` to exclude instead of include.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "recordNumber,status"
+          },
+          {
+            "name": "subTableFields",
+            "in": "query",
+            "required": false,
+            "description": "CSV sparse fieldset applied to every sub-table row. Prefix a field with `-` to exclude instead of include.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "-signatures"
+          },
+          {
+            "name": "subTablePageSize",
+            "in": "query",
+            "required": false,
+            "description": "Default page size for any sub-table without its own override.",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "subTablePaging",
+            "in": "query",
+            "required": false,
+            "description": "JSON, keyed by `tableID`, of `{page, pageSize}` overrides per sub-table.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "{\"Signatures\":{\"page\":2,\"pageSize\":30}}"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "Mongo-style filter JSON, merged into the record match.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "{\"projectID\":\"WBls47_\"}"
+          },
+          {
+            "name": "x-ctx-type",
+            "in": "header",
+            "required": false,
+            "description": "The scope a record must belong to \u2014 `Project`, `Workspace`, or `Company`. Defaults to `Company` when omitted.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Project",
+                "Workspace",
+                "Company"
+              ]
+            }
+          },
+          {
+            "name": "x-ctx-id",
+            "in": "header",
+            "required": false,
+            "description": "The scope's Mongo `_id` \u2014 required whenever the module records are project- or workspace-scoped.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "The project's short reference ID, alongside its Mongo `x-ctx-id`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "p6iD1Wb"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "moduleName": {
+                      "type": "string",
+                      "example": "SAT_TDSP"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "example": 50
+                    },
+                    "total": {
+                      "type": "integer",
+                      "example": 6
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "nextPage": {
+                      "type": "object",
+                      "nullable": true,
+                      "example": null,
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "pageSize": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "subTables": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "tableID": {
+                            "type": "string",
+                            "example": "Signatures"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Signatures"
+                          }
+                        }
+                      }
+                    },
+                    "records": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "6a7edccfddad60e2b35b545e"
+                          },
+                          "recordNumber": {
+                            "type": "string",
+                            "example": "TDSP-7"
+                          },
+                          "subTableData": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "rows": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                },
+                                "page": {
+                                  "type": "integer"
+                                },
+                                "pageSize": {
+                                  "type": "integer"
+                                },
+                                "total": {
+                                  "type": "integer"
+                                },
+                                "totalPages": {
+                                  "type": "integer"
+                                },
+                                "nextPage": {
+                                  "type": "object",
+                                  "nullable": true
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sub-table/{tableId}": {
+      "post": {
+        "operationId": "writeSubTableRows",
+        "summary": "Create or update a sub-table record",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "tableId",
+            "in": "path",
+            "required": true,
+            "description": "The sub-table's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's module.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Flat field-name/value pairs for one record.",
+                  "properties": {
+                    "connumber": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name1": {
+                      "type": "string",
+                      "example": "qa"
+                    },
+                    "number2": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "select_from_list": {
+                      "type": "string",
+                      "example": "A"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "connumber": 1,
+                    "name1": "qa"
+                  }
+                ],
+                "maxItems": 1000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Mongo IDs of newly created records."
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "updatedCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "insertedIds": [
+                      "67bfcbd6117e4e25e1d31dd3"
+                    ],
+                    "insertedCount": 1,
+                    "updatedCount": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed or missing a required field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSubTableRows",
+        "summary": "Read a sub-table's rows",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "tableId",
+            "in": "path",
+            "required": true,
+            "description": "The sub-table's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's module.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Rows per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedRecords"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing moduleName, recordId, or tableId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSubTableRows",
+        "summary": "Delete sub-table rows",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "tableId",
+            "in": "path",
+            "required": true,
+            "description": "The sub-table's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's module.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "Records to delete, identified by recordNumber.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "recordNumber": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "recordNumber": "MOD-1"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 rows were deleted."
+          },
+          "400": {
+            "description": "Missing moduleName/recordId, body not a non-empty array of objects with \"recordNumber\" (\"Request body must be a non-empty array of objects with \\\"recordNumber\\\"\"), or an item missing recordNumber.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflow/{moduleName}": {
+      "post": {
+        "operationId": "takeWorkflowAction",
+        "summary": "Create a workflow",
+        "description": "Takes a workflow action on a record \u2014 the same transition a user takes from the record's **Actions** menu.",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "path",
+            "required": true,
+            "description": "The module's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actionName",
+            "in": "query",
+            "required": true,
+            "description": "The workflow action to take, e.g. `Approve`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spaceName",
+            "in": "query",
+            "required": false,
+            "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "Record Mongo IDs to apply the action to.",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "example": [
+                  "67bfcbd6117e4e25e1d31dd3",
+                  "67bfcbd6117e4e25e1d31dd4"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok \u2014 the action was taken, one entry per record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowId": {
+                        "type": "string"
+                      },
+                      "recordId": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "workflowId": "65fe3ec837106c4d84aef23e",
+                      "recordId": "65fe3e722483bc16eace3826"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing moduleName/userName/spaceName (when project-scoped), \"User not found or active\", or more than 100 record ids (\"Maximum 100 records allowed but received N\").",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents": {
+      "post": {
+        "operationId": "uploadDocuments",
+        "summary": "Upload documents",
+        "description": "Uploads one or more documents in a single request. Attaches files at record level, sub-table level, or checklist-item level depending on the `module`/`ID` pair supplied. See [Document upload & download](/integrations/data-api-documents).",
+        "tags": [
+          "Documents"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "files"
+                ],
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "1\u2013100 files. 50 MB max per file (configurable)."
+                  },
+                  "module": {
+                    "type": "string",
+                    "description": "Target module/entity the file(s) attach to. Requires `ID` when set.",
+                    "example": "inspection_checklist_item"
+                  },
+                  "ID": {
+                    "type": "string",
+                    "description": "Record ID being attached to. Required whenever `module` is present.",
+                    "example": "68f0a2c1..."
+                  },
+                  "meta": {
+                    "type": "string",
+                    "description": "JSON-encoded metadata object applied to every file. Per-file `docTitle` always defaults to that file's own name.",
+                    "example": "{\"userTags\":[\"punch-list\"]}"
+                  },
+                  "linkedRefID": {
+                    "type": "string",
+                    "description": "Reference ID linking the upload to a related record."
+                  },
+                  "groupID": {
+                    "type": "string",
+                    "description": "Document group to file the upload under."
+                  },
+                  "folderID": {
+                    "type": "string",
+                    "description": "Destination folder in the document manager."
+                  },
+                  "parentID": {
+                    "type": "string",
+                    "description": "Parent document ID, for versioning under an existing file."
+                  },
+                  "scope": {
+                    "type": "string",
+                    "description": "JSON-encoded visibility scope array, e.g. [\"PROJECT\"]. Defaults by context when omitted."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 including a partial upload, where some files failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "success.success_file_uploaded"
+                    },
+                    "uploadedCount": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "failedCount": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "documentId": {
+                            "type": "string",
+                            "example": "66f1...a2"
+                          },
+                          "locationPath": {
+                            "type": "string",
+                            "example": "<projectID>/<location>/<documentId>"
+                          },
+                          "fileName": {
+                            "type": "string",
+                            "example": "site-photo-1.jpg"
+                          },
+                          "fileSize": {
+                            "type": "integer",
+                            "example": 482113
+                          },
+                          "meta": {
+                            "type": "object",
+                            "example": {
+                              "docTitle": "site-photo-1.jpg"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing tenant/project/user in context, no files attached, or `module` given without `ID`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller isn't a member of the tenant, or lacks access to the project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/download/{id}": {
+      "get": {
+        "operationId": "downloadDocument",
+        "summary": "Download a document",
+        "description": "Downloads a single document by its ID, as a file stream. See [Document upload & download](/integrations/data-api-documents).",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Document ID.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "66f1a2c9"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "description": "Specific version name. Defaults to the latest version.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "v2_report.pdf"
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Binary file stream with `Content-Disposition: attachment; filename=\"\u2026\"`.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing tenant/project in context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document doesn't exist, belongs to a different tenant, or its file is missing on disk.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/download/all/{recordId}": {
+      "get": {
+        "operationId": "downloadAllDocuments",
+        "summary": "Download every attachment on a record",
+        "description": "Streams every attachment on a record as a single ZIP archive, piped directly to the response. See [Document upload & download](/integrations/data-api-documents).",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "name": "recordId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the record to collect attachments for.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "68a0f11c"
+          },
+          {
+            "name": "module",
+            "in": "query",
+            "required": true,
+            "description": "Module the record belongs to.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "inspection"
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An `application/zip` stream named `<recordId>_attachments.zip`.",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing tenant/project in context, or `module` query param omitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No matching, non-deleted documents found for the record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/user-access": {
+      "post": {
+        "operationId": "grantUserAccess",
+        "summary": "Create user access for projects and groups",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "projects": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100
+                  },
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100
+                  }
+                },
+                "additionalProperties": true,
+                "description": "projects/groups are optional (\u2264100 items each); remaining fields (username, role, etc.) are service-defined."
+              },
+              "example": {
+                "username": "jane.doe",
+                "projects": [
+                  "p6iD1Wb"
+                ],
+                "groups": [
+                  "g_engineering"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "\"Projects length must not exceed 100\" / \"Groups length must not exceed 100\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getUserAccess",
+        "summary": "Get user access",
+        "tags": [
+          "User Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or has invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1000,
+              "maximum": 1000
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "revokeUserAccess",
+        "summary": "Remove users from company and/or project level groups",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "projects"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Lower-cased before use."
+                  },
+                  "projects": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100
+                  },
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100
+                  }
+                }
+              },
+              "example": {
+                "username": "jane.doe",
+                "projects": [
+                  "p6iD1Wb"
+                ],
+                "groups": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing username/projects, or projects.length > 100",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/user-access/by-user": {
+      "get": {
+        "operationId": "getUserAccessByUsername",
+        "summary": "Get user access by username",
+        "tags": [
+          "User Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or has invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "description": "The user to look up.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/user/groups": {
+      "get": {
+        "operationId": "getAllGroups",
+        "summary": "Get all groups",
+        "tags": [
+          "User Management"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or has invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "onlyProjectsGroups",
+            "in": "query",
+            "required": false,
+            "description": "Limit to project-level groups only.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "maximum": 1000
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/user/activate-users": {
+      "patch": {
+        "operationId": "activateUsers",
+        "summary": "Activate users",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "maxItems": 1000,
+                "description": "Usernames, lower-cased before use."
+              },
+              "example": [
+                "jane.doe",
+                "john.smith"
+              ]
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or has invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/deactivate-users": {
+      "patch": {
+        "operationId": "deactivateUsers",
+        "summary": "Deactivate users",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "maxItems": 1000,
+                "description": "Usernames, lower-cased before use."
+              },
+              "example": [
+                "jane.doe",
+                "john.smith"
+              ]
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is malformed or has invalid parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/project-access": {
+      "delete": {
+        "operationId": "removeProjectAccess",
+        "summary": "Remove users from projects",
+        "tags": [
+          "User Management"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "projectIds"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Lower-cased before use."
+                  },
+                  "projectIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100
+                  }
+                }
+              },
+              "example": {
+                "username": "jane.doe",
+                "projectIds": [
+                  "p6iD1Wb"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing username/projectIds, or projectIds.length > 100",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/hierarchy-master-record/{masterName}": {
+      "get": {
+        "operationId": "getAllHierarchyMasterRecords",
+        "summary": "Get all hierarchy master records",
+        "description": "Retrieves tree-shaped master data for a hierarchy master. Same underlying engine as [master records](/integrations/data-api-explorer-masters); rows additionally carry `sys_rowID`, `sys_parentRowID`, and `sys_path`. See [Hierarchical masters](/work/hierarchical-masters) for what those fields mean.",
+        "tags": [
+          "Hierarchy Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The hierarchy master's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "example": 1
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 25
+            },
+            "example": 50
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedRecords"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "\"Page size must be between 1 and 1000\" / \"Page must be greater than 0\" / \"Missing Master name\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createHierarchyMasterRecord",
+        "summary": "Create a hierarchy master record",
+        "tags": [
+          "Hierarchy Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The hierarchy master's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    },
+                    "maxItems": 1000
+                  }
+                ],
+                "description": "A single object, or an array of objects (max 1000)."
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created."
+          },
+          "400": {
+            "description": "The request body is malformed or missing a required field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateHierarchyMasterRecord",
+        "summary": "Update a hierarchy master record",
+        "tags": [
+          "Hierarchy Master Records"
+        ],
+        "parameters": [
+          {
+            "name": "masterName",
+            "in": "path",
+            "required": true,
+            "description": "The hierarchy master's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    },
+                    "maxItems": 1000
+                  }
+                ],
+                "description": "A single object, or an array of objects (max 1000). Any item containing `_id` is rejected."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 updated."
+          },
+          "400": {
+            "description": "Missing masterName, body not an array / over 1000 items, or \"Updating '_id' is not allowed\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobstatus/{projectID}": {
+      "get": {
+        "operationId": "getJobStatusByProject",
+        "summary": "List job status for a project",
+        "tags": [
+          "Job Status"
+        ],
+        "parameters": [
+          {
+            "name": "projectID",
+            "in": "path",
+            "required": true,
+            "description": "The project's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "example": 1
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 50,
+              "maximum": 200
+            },
+            "example": 50
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/JobStatus"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "pageSize": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "data": [],
+                    "total": 0,
+                    "page": 1,
+                    "pageSize": 50
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobstatus": {
+      "post": {
+        "operationId": "createJobStatus",
+        "summary": "Create a job status record",
+        "description": "Registers a new background job, before work starts. Use [Update a job](#update-a-job-status-record) and [Append logs](#append-logs-to-a-job) as it progresses.",
+        "tags": [
+          "Job Status"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "id": "66e7a1b2c3d4e5f678901234"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed or missing a required field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobstatus/{id}": {
+      "put": {
+        "operationId": "updateJobStatus",
+        "summary": "Update a job status record",
+        "tags": [
+          "Job Status"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The job's identifier, from [Create a job](#create-a-job-status-record).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "status"
+                ],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Not Started",
+                      "In Progress",
+                      "Completed",
+                      "Failed"
+                    ]
+                  },
+                  "duration": {
+                    "type": "number",
+                    "description": "Milliseconds. Computed server-side if omitted."
+                  },
+                  "completedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Defaults to now if omitted."
+                  }
+                },
+                "example": {
+                  "status": "Completed"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Job updated successfully."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No job with that ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobstatus/{id}/logs": {
+      "post": {
+        "operationId": "appendJobStatusLogs",
+        "summary": "Append logs to a job",
+        "tags": [
+          "Job Status"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The job's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "level": {
+                    "type": "string",
+                    "example": "info"
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "timeStamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "example": {
+                  "message": "Row 412 of 900 processed",
+                  "level": "info",
+                  "duration": 1820
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "example": {
+                    "success": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No job with that ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow": {
+      "get": {
+        "operationId": "listWorkflowsV2",
+        "summary": "List workflow instances",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": true,
+            "description": "Module records sharing a name are stored across projects in one collection, so without this the query can't tell projects' records apart.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "p6iD1Wb"
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The module's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordNumber",
+            "in": "query",
+            "required": false,
+            "description": "Filter to one record.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Workflow status to filter to.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "responsibleUser",
+            "in": "query",
+            "required": false,
+            "description": "Filter to a responsible user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "responsibleGroup",
+            "in": "query",
+            "required": false,
+            "description": "Filter to a responsible group.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "Raw GlobalFilters DSL, evaluated against the module's custom fields.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "field:eq:value"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "default": 25,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "rows": [
+                      {
+                        "recordNumber": "EQ-0001",
+                        "workflowId": "...",
+                        "templateName": "Equipment Approval",
+                        "currentStepName": "Manager Review",
+                        "status": "In Progress",
+                        "createdBy": {
+                          "id": "...",
+                          "firstName": "...",
+                          "lastName": "...",
+                          "email": "...",
+                          "status": 1
+                        },
+                        "lastUpdatedBy": null,
+                        "steps": [
+                          {
+                            "name": "Submission",
+                            "kind": "...",
+                            "active": false,
+                            "createdAt": "...",
+                            "completedAt": "...",
+                            "completedAction": {
+                              "name": "Submit",
+                              "status": "...",
+                              "nextStepName": "Manager Review"
+                            },
+                            "completedBy": null,
+                            "submittedBy": [
+                              {
+                                "submittedAction": "Submit",
+                                "submittedAt": "...",
+                                "withdrawnAt": null,
+                                "submittedBy": null
+                              }
+                            ],
+                            "previousUser": null,
+                            "responsibleUsers": [],
+                            "responsibleGroups": [],
+                            "ballInCourt": {
+                              "users": [],
+                              "groups": []
+                            },
+                            "comments": []
+                          }
+                        ],
+                        "generalComments": []
+                      }
+                    ],
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 25,
+                    "totalPages": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "\"moduleName is required\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown module (\"<moduleName> not Found.\") or project not found for id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow/history": {
+      "get": {
+        "operationId": "getWorkflowHistoryV2",
+        "summary": "Get workflow step history",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "recordNumber",
+            "in": "query",
+            "required": true,
+            "description": "The record's number.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The module's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown module (\"<moduleName> not Found.\") or project not found for id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow/create": {
+      "post": {
+        "operationId": "createWorkflowV2",
+        "summary": "Create a workflow instance",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spaceName",
+            "in": "query",
+            "required": false,
+            "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recordId",
+                  "moduleName",
+                  "actionName"
+                ],
+                "properties": {
+                  "recordId": {
+                    "type": "string",
+                    "description": "Mongo ObjectId."
+                  },
+                  "moduleName": {
+                    "type": "string",
+                    "description": "Upper-cased by the schema."
+                  },
+                  "actionName": {
+                    "type": "string"
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "users": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "groups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "comment": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "isPrivate": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "recordId": "67bfcbd6117e4e25e1d31dd3",
+                  "moduleName": "SAT_TDSP",
+                  "actionName": "Submit",
+                  "assignee": {
+                    "users": [
+                      "67bfcbd6117e4e25e1d31dd4"
+                    ]
+                  },
+                  "comment": {
+                    "text": "Ready for review",
+                    "isPrivate": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok \u2014 the action was taken."
+          },
+          "400": {
+            "description": "Zod validation failure (VALIDATION_ERROR), missing userName/spaceName, or \"User not found or active\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Project set via header but not found \u2014 \"Project not found for id: <id>\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow/submit": {
+      "post": {
+        "operationId": "submitWorkflowV2",
+        "summary": "Submit a workflow instance",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spaceName",
+            "in": "query",
+            "required": false,
+            "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recordId",
+                  "moduleName",
+                  "actionName"
+                ],
+                "properties": {
+                  "recordId": {
+                    "type": "string",
+                    "description": "Mongo ObjectId."
+                  },
+                  "moduleName": {
+                    "type": "string",
+                    "description": "Upper-cased by the schema."
+                  },
+                  "actionName": {
+                    "type": "string"
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "users": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "groups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "comment": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "isPrivate": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "recordId": "67bfcbd6117e4e25e1d31dd3",
+                  "moduleName": "SAT_TDSP",
+                  "actionName": "Submit",
+                  "assignee": {
+                    "users": [
+                      "67bfcbd6117e4e25e1d31dd4"
+                    ]
+                  },
+                  "comment": {
+                    "text": "Ready for review",
+                    "isPrivate": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok \u2014 the action was taken."
+          },
+          "400": {
+            "description": "Zod validation failure (VALIDATION_ERROR), missing userName/spaceName, or \"User not found or active\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Project set via header but not found \u2014 \"Project not found for id: <id>\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow/return": {
+      "post": {
+        "operationId": "returnWorkflowV2",
+        "summary": "Return a workflow instance",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spaceName",
+            "in": "query",
+            "required": false,
+            "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recordId",
+                  "moduleName",
+                  "actionName"
+                ],
+                "properties": {
+                  "recordId": {
+                    "type": "string",
+                    "description": "Mongo ObjectId."
+                  },
+                  "moduleName": {
+                    "type": "string",
+                    "description": "Upper-cased by the schema."
+                  },
+                  "actionName": {
+                    "type": "string"
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "users": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "groups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "comment": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "isPrivate": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "recordId": "67bfcbd6117e4e25e1d31dd3",
+                  "moduleName": "SAT_TDSP",
+                  "actionName": "Submit",
+                  "assignee": {
+                    "users": [
+                      "67bfcbd6117e4e25e1d31dd4"
+                    ]
+                  },
+                  "comment": {
+                    "text": "Ready for review",
+                    "isPrivate": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok \u2014 the action was taken."
+          },
+          "400": {
+            "description": "Zod validation failure (VALIDATION_ERROR), missing userName/spaceName, or \"User not found or active\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Project set via header but not found \u2014 \"Project not found for id: <id>\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow/revision": {
+      "post": {
+        "operationId": "reviseWorkflowV2",
+        "summary": "Request a revision",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spaceName",
+            "in": "query",
+            "required": false,
+            "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recordId",
+                  "moduleName"
+                ],
+                "properties": {
+                  "recordId": {
+                    "type": "string",
+                    "description": "Mongo ObjectId."
+                  },
+                  "moduleName": {
+                    "type": "string",
+                    "description": "Upper-cased by the schema."
+                  },
+                  "actionName": {
+                    "type": "string"
+                  },
+                  "comment": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "isPrivate": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "recordId": "67bfcbd6117e4e25e1d31dd3",
+                  "moduleName": "SAT_TDSP",
+                  "comment": {
+                    "text": "Please re-check section 3"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok \u2014 the action was taken."
+          },
+          "400": {
+            "description": "Zod validation failure (VALIDATION_ERROR), missing userName/spaceName, or \"User not found or active\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Project set via header but not found \u2014 \"Project not found for id: <id>\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/workflow/reopen": {
+      "post": {
+        "operationId": "reopenWorkflowV2",
+        "summary": "Reopen a workflow instance",
+        "tags": [
+          "Workflow V2"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spaceName",
+            "in": "query",
+            "required": false,
+            "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recordId",
+                  "moduleName",
+                  "actionName"
+                ],
+                "properties": {
+                  "recordId": {
+                    "type": "string",
+                    "description": "Mongo ObjectId."
+                  },
+                  "moduleName": {
+                    "type": "string",
+                    "description": "Upper-cased by the schema."
+                  },
+                  "actionName": {
+                    "type": "string"
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "users": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "groups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "comment": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      },
+                      "isPrivate": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "recordId": "67bfcbd6117e4e25e1d31dd3",
+                  "moduleName": "SAT_TDSP",
+                  "actionName": "Submit",
+                  "assignee": {
+                    "users": [
+                      "67bfcbd6117e4e25e1d31dd4"
+                    ]
+                  },
+                  "comment": {
+                    "text": "Ready for review",
+                    "isPrivate": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok \u2014 the action was taken."
+          },
+          "400": {
+            "description": "Zod validation failure (VALIDATION_ERROR), missing userName/spaceName, or \"User not found or active\".",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Project set via header but not found \u2014 \"Project not found for id: <id>\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/user/groups": {
+      "get": {
+        "operationId": "getAllGroupsV2",
+        "summary": "List groups (v2)",
+        "description": "Mirrors [GET /api/v1/user/groups](/integrations/data-api-explorer-users#look-up-groups), plus `onlyWorkspaceGroups`.",
+        "tags": [
+          "User Management V2"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "onlyProjectsGroups",
+            "in": "query",
+            "required": false,
+            "description": "Limit to project-level groups only.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "onlyWorkspaceGroups",
+            "in": "query",
+            "required": false,
+            "description": "Limit to workspace-level groups only.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "\"Page size must be between 1 and 1000\" / \"Page must be greater than 0\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/user/workspace-access": {
+      "delete": {
+        "operationId": "removeWorkspaceAccess",
+        "summary": "Remove workspace access",
+        "description": "Removes a user's access to a set of workspace groups.",
+        "tags": [
+          "User Management V2"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "workspaceGroups"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Lower-cased before use."
+                  },
+                  "workspaceGroups": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100
+                  }
+                }
+              },
+              "example": {
+                "username": "jane.doe",
+                "workspaceGroups": [
+                  "ws_group_1"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 removed."
+          },
+          "400": {
+            "description": "Missing username/workspaceGroups, or workspaceGroups.length > 100.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Caller lacks access to the tenant or project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workspace": {
+      "post": {
+        "operationId": "createWorkspace",
+        "summary": "Create a workspace",
+        "tags": [
+          "Workspace"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkspaceDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workspace"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "class-validator failure (e.g. missing name).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listWorkspaces",
+        "summary": "List workspaces",
+        "tags": [
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Records per page.",
+            "schema": {
+              "type": "integer",
+              "default": 25,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "Conditional filter expression. See [Filtering records](/integrations/data-api-filtering).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Field to sort by.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workspace"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "\"Page size must be between 1 and 1000\" / \"Page must be greater than 0\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workspace/{id}": {
+      "get": {
+        "operationId": "getWorkspace",
+        "summary": "Get a workspace",
+        "tags": [
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workspace"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No matching workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateWorkspace",
+        "summary": "Update a workspace",
+        "tags": [
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkspaceDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workspace"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "class-validator failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/build/info": {
+      "get": {
+        "operationId": "getBuildInfo",
+        "summary": "Get build/version metadata",
+        "description": "Returns build/version metadata baked into package.json at build time.",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "string"
+                    },
+                    "branch": {
+                      "type": "string"
+                    },
+                    "commit": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "example": {
+                    "name": "exto-data-api",
+                    "version": "1.0.0",
+                    "branch": "release/26.5.0",
+                    "commit": "a1b2c3d",
+                    "date": "2026-09-30T12:00:00.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
