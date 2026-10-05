@@ -16,7 +16,7 @@ every operation below.
 
 ## Write sub-table rows
 
-<Method method="post" /> `/api/v1/sub-table/{tableId}`
+<Method method="post" /> `/api/v1/sub-table/{tableID}`
 
 Appends rows to a sub-table on a module record. The parent record must
 already exist — see [Module records](/integrations/data-api-explorer-module-records).
@@ -25,7 +25,7 @@ already exist — see [Module records](/integrations/data-api-explorer-module-re
 
 | Parameter | In | Type | Required | Description |
 | --- | --- | --- | --- | --- |
-| `tableId` | path | string | Required | The sub-table's identifier. |
+| `tableID` | path | string | Required | The sub-table's identifier. |
 | `moduleName` | query | string | Required | The parent record's module. |
 | `recordId` | query | string | Required | The parent record's ID. |
 
@@ -82,7 +82,7 @@ Each object is a flat set of field-name/value pairs.
 
 ## Read sub-table rows
 
-<Method method="get" /> `/api/v1/sub-table/{tableId}`
+<Method method="get" /> `/api/v1/sub-table/{tableID}`
 
 Reads a sub-table's rows, paginated.
 
@@ -90,7 +90,7 @@ Reads a sub-table's rows, paginated.
 
 | Parameter | In | Type | Required | Description |
 | --- | --- | --- | --- | --- |
-| `tableId` | path | string | Required | The sub-table's identifier. |
+| `tableID` | path | string | Required | The sub-table's identifier. |
 | `moduleName` | query | string | Required | The parent record's module. |
 | `recordId` | query | string | Required | The parent record's ID. |
 | `page` | query | integer | Optional — default 1 | Page number. |
@@ -100,7 +100,7 @@ Reads a sub-table's rows, paginated.
 
 | Status | Condition |
 | --- | --- |
-| 400 | "Page size must be between 1 and 1000" / "Page must be greater than 0" / missing `moduleName`, `tableId`, or `recordId`. |
+| 400 | "Page size must be between 1 and 1000" / "Page must be greater than 0" / missing `moduleName`, `tableID`, or `recordId`. |
 | 401 | Invalid authentication token. |
 | 500 | Something went wrong on the server. |
 
@@ -116,7 +116,7 @@ Reads a sub-table's rows, paginated.
 
 ## Delete sub-table rows
 
-<Method method="delete" /> `/api/v1/sub-table/{tableId}`
+<Method method="delete" /> `/api/v1/sub-table/{tableID}`
 
 Deletes sub-table rows.
 
@@ -124,7 +124,7 @@ Deletes sub-table rows.
 
 | Parameter | In | Type | Required | Description |
 | --- | --- | --- | --- | --- |
-| `tableId` | path | string | Required | The sub-table's identifier. |
+| `tableID` | path | string | Required | The sub-table's identifier. |
 | `moduleName` | query | string | Required | The parent record's module. |
 | `recordId` | query | string | Required | The parent record's ID. |
 

@@ -399,15 +399,16 @@ loop:
 Same mechanic drives both axes: a batch job, a sync worker, or a retry-safe
 cron can walk this endpoint to completion with the same four-line loop.
 
-### Scope headers, for `/expand` specifically
+### Scope, for `/expand`
 
-Unlike the plain `GET`/`POST` above, `/expand` resolves its scope from a
-distinct set of headers:
-
-| Header | Sets |
-| --- | --- |
-| `x-ctx-type` / `x-ctx-id` | The scope a record must belong to — `Project`, `Workspace`, or `Company`. Omitted entirely defaults to `Company` scope. |
-| `x-project-id` | The project's short reference ID, alongside its Mongo `x-ctx-id`. |
+Same scoping as the plain `GET`/`POST` above — send `x-project-id` for
+project scope, `x-workspace-id` for workspace scope, or neither for company
+scope. (An earlier version of this page documented `x-ctx-type`/`x-ctx-id`
+as a distinct mechanism specific to `/expand`; checked against the current
+codebase and that's stale — the field that backs those two headers,
+`ExtoCurrentContext`'s `getId()`, has no call sites anywhere in the repo.
+`x-project-id`/`x-workspace-id` alone is what actually drives scope here,
+same as everywhere else in the Data API.)
 
 ::: tip Tenant isolation is physical, not filtered
 Each tenant's module records live in their own collection, keyed by tenant ID

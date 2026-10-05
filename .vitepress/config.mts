@@ -233,6 +233,7 @@ export default defineConfig({
             { text: 'Workflow (v1)', link: '/integrations/data-api-explorer-workflow-v1' },
             { text: 'Workflow (v2)', link: '/integrations/data-api-explorer-workflow-v2' },
             { text: 'Documents', link: '/integrations/data-api-explorer-documents' },
+            { text: 'CX equipment & checklists (deprecated)', link: '/integrations/data-api-explorer-cx' },
             { text: 'User Management', link: '/integrations/data-api-explorer-users' },
             { text: 'User Management (v2)', link: '/integrations/data-api-explorer-users-v2' },
             { text: 'Workspace', link: '/integrations/data-api-explorer-workspace' },

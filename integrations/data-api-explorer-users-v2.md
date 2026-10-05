@@ -6,13 +6,25 @@ description: "What's different in the v2 user management API, with a live Try it
 
 # User management (v2)
 
-Part of the [Data API explorer](/integrations/data-api-explorer). Mirrors
-every operation on [User management](/integrations/data-api-explorer-users)
-at `/api/v2/user/...` with identical request/response/error shapes, plus two
-changes — documented in full below. For the other seven operations
-(grant/read/revoke access, activate/deactivate), use the v1 page; the
-behavior is the same, just under `/api/v2/user/...` instead of
-`/api/v1/user/...`.
+::: danger Not reachable in any environment
+`UserControllerV2` (`apps/data-api/src/app/v2/user.controller.ts`) is written
+and exports all nine operations below and on the v1-equivalent list, but it
+is never added to `PlatformDataAPIAppModule`'s `controllers` array — only
+imported. Nest never mounts it, so **every** `/api/v2/user/...` route 404s,
+on every environment. Confirmed two ways: reading the module file, and a
+runtime route dump via `SwaggerModule.createDocument()` against both
+`bump/26.5.0` and the current default branch — neither lists a single
+`/api/v2/user/*` route. This is a live platform gap, not a docs gap; flag it
+to the API team if you need it. Until it's wired up, use
+[User management (v1)](/integrations/data-api-explorer-users) — same
+behavior, `/api/v1/user/...`.
+:::
+
+Part of the [Data API explorer](/integrations/data-api-explorer). Would
+mirror every operation on
+[User management](/integrations/data-api-explorer-users) at
+`/api/v2/user/...` with identical request/response/error shapes, plus the
+two changes documented below, once mounted.
 
 **Auth:** Bearer — an [API Key](/integrations/data-api#generating-a-key), on
 every operation below.

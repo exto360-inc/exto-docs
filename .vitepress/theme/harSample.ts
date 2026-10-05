@@ -20,8 +20,25 @@ export function buildHarSample(request: OARequest): string {
   );
 
   const hasBody = request.body !== undefined && request.body !== null;
-  const bodyText =
-    typeof request.body === 'string' ? request.body : hasBody ? JSON.stringify(request.body) : undefined;
+
+  // FormData (file uploads, e.g. "Upload documents") has no enumerable own
+  // properties — JSON.stringify(someFormData) always returns "{}", silently
+  // dropping every field and file. Build HAR's own multipart shape instead:
+  // one `params` entry per field, with fileName/contentType for File values.
+  const isFormData = typeof FormData !== 'undefined' && request.body instanceof FormData;
+  let postData: { mimeType: string; text?: string; params?: Array<Record<string, string>> } | undefined;
+
+  if (isFormData) {
+    const params = Array.from(request.body as FormData).map(([name, value]) =>
+      value instanceof File
+        ? { name, value: 'BINARY', fileName: value.name, contentType: value.type || 'application/octet-stream' }
+        : { name, value: String(value) },
+    );
+    postData = { mimeType: request.contentType || 'multipart/form-data', params };
+  } else if (hasBody) {
+    const bodyText = typeof request.body === 'string' ? request.body : JSON.stringify(request.body);
+    postData = { mimeType: request.contentType || 'application/json', text: bodyText };
+  }
 
   const har = {
     log: {
@@ -39,9 +56,7 @@ export function buildHarSample(request: OARequest): string {
             queryString,
             headersSize: -1,
             bodySize: -1,
-            ...(hasBody
-              ? { postData: { mimeType: request.contentType || 'application/json', text: bodyText } }
-              : {}),
+            ...(postData ? { postData } : {}),
           },
           response: {
             status: 0,

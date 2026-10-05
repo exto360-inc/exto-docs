@@ -375,6 +375,37 @@
           "updatedAt": "2025-02-27T02:20:06.958Z"
         }
       }
+    },
+    "parameters": {
+      "XTenantId": {
+        "name": "x-tenant-id",
+        "in": "header",
+        "required": false,
+        "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+        "schema": {
+          "type": "string",
+          "example": "cwWdTZK"
+        }
+      },
+      "XProjectId": {
+        "name": "x-project-id",
+        "in": "header",
+        "required": false,
+        "description": "Scopes the request to one project.",
+        "schema": {
+          "type": "string",
+          "example": "p6iD1Wb"
+        }
+      },
+      "XWorkspaceId": {
+        "name": "x-workspace-id",
+        "in": "header",
+        "required": false,
+        "description": "Scopes the request to one workspace, instead of a project.",
+        "schema": {
+          "type": "string"
+        }
+      }
     }
   },
   "security": [
@@ -412,7 +443,7 @@
                   "example": {
                     "ok": true,
                     "cpuPercent": 3.2,
-                    "memPercent": 41.0
+                    "memPercent": 41
                   }
                 }
               }
@@ -558,14 +589,33 @@
             "example": "America/Los_Angeles"
           },
           {
-            "name": "X-Project-Id",
+            "name": "x-tenant-id",
             "in": "header",
             "required": false,
-            "description": "Scope the request to one project.",
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
-            },
-            "example": "p6iD1Wb"
+            }
           }
         ],
         "responses": {
@@ -627,6 +677,35 @@
               "type": "string"
             },
             "example": "LOCATION"
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -752,6 +831,35 @@
               "type": "string"
             },
             "example": "LOCATION"
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -885,31 +993,40 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Ok \u2014 deleted."
-          },
-          "401": {
-            "description": "Invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on the server.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           },
           "400": {
             "description": "Missing masterName/userName, or request body malformed.",
@@ -921,8 +1038,28 @@
               }
             }
           },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The acting user's tenant doesn't include the current tenant \u2014 \"User not authorized to make this transaction\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1043,14 +1180,33 @@
             "example": "America/Los_Angeles"
           },
           {
-            "name": "X-Project-Id",
+            "name": "x-tenant-id",
             "in": "header",
             "required": false,
-            "description": "Scope the request to one project.",
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
-            },
-            "example": "p6iD1Wb"
+            }
           }
         ],
         "responses": {
@@ -1118,6 +1274,35 @@
             "in": "query",
             "required": true,
             "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -1252,6 +1437,35 @@
             "in": "query",
             "required": true,
             "description": "The acting user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -1415,14 +1629,63 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Ok \u2014 deleted."
           },
+          "400": {
+            "description": "Missing moduleName/userName, or body not an array / over 1000 items.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
             "content": {
               "application/json": {
                 "schema": {
@@ -1443,26 +1706,6 @@
           },
           "500": {
             "description": "Something went wrong on the server.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing moduleName/userName, or body not an array / over 1000 items.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "\"User not authorized to make this transaction\"",
             "content": {
               "application/json": {
                 "schema": {
@@ -1600,26 +1843,13 @@
             "example": "{\"projectID\":\"WBls47_\"}"
           },
           {
-            "name": "x-ctx-type",
+            "name": "x-tenant-id",
             "in": "header",
             "required": false,
-            "description": "The scope a record must belong to \u2014 `Project`, `Workspace`, or `Company`. Defaults to `Company` when omitted.",
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
             "schema": {
               "type": "string",
-              "enum": [
-                "Project",
-                "Workspace",
-                "Company"
-              ]
-            }
-          },
-          {
-            "name": "x-ctx-id",
-            "in": "header",
-            "required": false,
-            "description": "The scope's Mongo `_id` \u2014 required whenever the module records are project- or workspace-scoped.",
-            "schema": {
-              "type": "string"
+              "example": "cwWdTZK"
             }
           },
           {
@@ -1631,6 +1861,15 @@
               "type": "string"
             },
             "example": "p6iD1Wb"
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1774,342 +2013,6 @@
         }
       }
     },
-    "/api/v1/sub-table/{tableId}": {
-      "post": {
-        "operationId": "writeSubTableRows",
-        "summary": "Create or update a sub-table record",
-        "tags": [
-          "Sub-tables & Workflow"
-        ],
-        "parameters": [
-          {
-            "name": "tableId",
-            "in": "path",
-            "required": true,
-            "description": "The sub-table's identifier.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "moduleName",
-            "in": "query",
-            "required": true,
-            "description": "The parent record's module.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "recordId",
-            "in": "query",
-            "required": true,
-            "description": "The parent record's ID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "description": "Flat field-name/value pairs for one record.",
-                  "properties": {
-                    "connumber": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "name1": {
-                      "type": "string",
-                      "example": "qa"
-                    },
-                    "number2": {
-                      "type": "integer",
-                      "example": 2
-                    },
-                    "select_from_list": {
-                      "type": "string",
-                      "example": "A"
-                    }
-                  }
-                },
-                "example": [
-                  {
-                    "connumber": 1,
-                    "name1": "qa"
-                  }
-                ],
-                "maxItems": 1000
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "insertedIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Mongo IDs of newly created records."
-                    },
-                    "insertedCount": {
-                      "type": "integer"
-                    },
-                    "updatedCount": {
-                      "type": "integer"
-                    }
-                  },
-                  "example": {
-                    "insertedIds": [
-                      "67bfcbd6117e4e25e1d31dd3"
-                    ],
-                    "insertedCount": 1,
-                    "updatedCount": 0
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The request body is malformed or missing a required field.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on the server.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "operationId": "getSubTableRows",
-        "summary": "Read a sub-table's rows",
-        "tags": [
-          "Sub-tables & Workflow"
-        ],
-        "parameters": [
-          {
-            "name": "tableId",
-            "in": "path",
-            "required": true,
-            "description": "The sub-table's identifier.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "moduleName",
-            "in": "query",
-            "required": true,
-            "description": "The parent record's module.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "recordId",
-            "in": "query",
-            "required": true,
-            "description": "The parent record's ID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "Page number.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "description": "Rows per page.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 25
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedRecords"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on the server.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing moduleName, recordId, or tableId.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "operationId": "deleteSubTableRows",
-        "summary": "Delete sub-table rows",
-        "tags": [
-          "Sub-tables & Workflow"
-        ],
-        "parameters": [
-          {
-            "name": "tableId",
-            "in": "path",
-            "required": true,
-            "description": "The sub-table's identifier.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "moduleName",
-            "in": "query",
-            "required": true,
-            "description": "The parent record's module.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "recordId",
-            "in": "query",
-            "required": true,
-            "description": "The parent record's ID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "description": "Records to delete, identified by recordNumber.",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "recordNumber": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "example": [
-                  {
-                    "recordNumber": "MOD-1"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ok \u2014 rows were deleted."
-          },
-          "400": {
-            "description": "Missing moduleName/recordId, body not a non-empty array of objects with \"recordNumber\" (\"Request body must be a non-empty array of objects with \\\"recordNumber\\\"\"), or an item missing recordNumber.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid authentication token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on the server.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/workflow/{moduleName}": {
       "post": {
         "operationId": "takeWorkflowAction",
@@ -2151,6 +2054,35 @@
             "in": "query",
             "required": false,
             "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -2223,8 +2155,8 @@
               }
             }
           },
-          "500": {
-            "description": "Something went wrong on the server.",
+          "403": {
+            "description": "\"User not authorized to make this transaction\"",
             "content": {
               "application/json": {
                 "schema": {
@@ -2233,8 +2165,8 @@
               }
             }
           },
-          "403": {
-            "description": "\"User not authorized to make this transaction\"",
+          "500": {
+            "description": "Something went wrong on the server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2317,14 +2249,27 @@
             "name": "x-tenant-id",
             "in": "header",
             "required": true,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used. Required for this endpoint.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "cwWdTZK"
             }
           },
           {
             "name": "x-project-id",
             "in": "header",
             "required": true,
+            "description": "Scopes the request to one project. Required for this endpoint.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -2455,14 +2400,27 @@
             "name": "x-tenant-id",
             "in": "header",
             "required": true,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used. Required for this endpoint.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "cwWdTZK"
             }
           },
           {
             "name": "x-project-id",
             "in": "header",
             "required": true,
+            "description": "Scopes the request to one project. Required for this endpoint.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -2546,14 +2504,27 @@
             "name": "x-tenant-id",
             "in": "header",
             "required": true,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used. Required for this endpoint.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "cwWdTZK"
             }
           },
           {
             "name": "x-project-id",
             "in": "header",
             "required": true,
+            "description": "Scopes the request to one project. Required for this endpoint.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -2689,7 +2660,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       },
       "get": {
         "operationId": "getUserAccess",
@@ -2761,6 +2763,35 @@
               "minimum": 1,
               "default": 1000,
               "maximum": 1000
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
             }
           }
         ]
@@ -2853,7 +2884,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/v1/user/user-access/by-user": {
@@ -2911,6 +2973,35 @@
             "in": "query",
             "required": true,
             "description": "The user to look up.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -2999,6 +3090,35 @@
               "default": 100,
               "maximum": 1000
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ]
       }
@@ -3071,7 +3191,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/v1/user/deactivate-users": {
@@ -3142,7 +3293,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/v1/user/project-access": {
@@ -3226,7 +3408,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/v1/hierarchy-master-record/{masterName}": {
@@ -3271,6 +3484,35 @@
               "default": 25
             },
             "example": 50
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3328,6 +3570,35 @@
             "in": "path",
             "required": true,
             "description": "The hierarchy master's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -3403,6 +3674,35 @@
             "in": "path",
             "required": true,
             "description": "The hierarchy master's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -3508,6 +3808,35 @@
               "maximum": 200
             },
             "example": 50
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3634,7 +3963,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/v1/jobstatus/{id}": {
@@ -3650,6 +4010,35 @@
             "in": "path",
             "required": true,
             "description": "The job's identifier, from [Create a job](#create-a-job-status-record).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -3769,6 +4158,35 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -3876,16 +4294,6 @@
         ],
         "parameters": [
           {
-            "name": "x-project-id",
-            "in": "header",
-            "required": true,
-            "description": "Module records sharing a name are stored across projects in one collection, so without this the query can't tell projects' records apart.",
-            "schema": {
-              "type": "string"
-            },
-            "example": "p6iD1Wb"
-          },
-          {
             "name": "moduleName",
             "in": "query",
             "required": true,
@@ -3959,6 +4367,35 @@
               "type": "integer",
               "default": 25,
               "maximum": 100
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4086,6 +4523,35 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4137,6 +4603,35 @@
             "in": "query",
             "required": false,
             "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -4284,6 +4779,35 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -4425,6 +4949,35 @@
             "in": "query",
             "required": false,
             "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -4572,6 +5125,35 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -4688,6 +5270,35 @@
             "in": "query",
             "required": false,
             "description": "The space/project the record belongs to \u2014 required only if the `x-project-id` header is set.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -4814,7 +5425,7 @@
       "get": {
         "operationId": "getAllGroupsV2",
         "summary": "List groups (v2)",
-        "description": "Mirrors [GET /api/v1/user/groups](/integrations/data-api-explorer-users#look-up-groups), plus `onlyWorkspaceGroups`.",
+        "description": "Mirrors [GET /api/v1/user/groups](/integrations/data-api-explorer-users#look-up-groups), plus `onlyWorkspaceGroups`.\n\n**\u26a0\ufe0f Not currently reachable.** `UserControllerV2` exists in source (`apps/data-api/src/app/v2/user.controller.ts`) but is never added to `PlatformDataAPIAppModule`'s `controllers` array, so this route isn't mounted \u2014 every request 404s, verified against bump/26.5.0 and the current default branch. Flagged to the API team; use the v1 [equivalent](/integrations/data-api-explorer-users) until this ships.",
         "tags": [
           "User Management V2"
         ],
@@ -4859,6 +5470,35 @@
               "type": "boolean",
               "default": false
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4895,14 +5535,15 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v2/user/workspace-access": {
       "delete": {
         "operationId": "removeWorkspaceAccess",
         "summary": "Remove workspace access",
-        "description": "Removes a user's access to a set of workspace groups.",
+        "description": "Removes a user's access to a set of workspace groups.\n\n**\u26a0\ufe0f Not currently reachable.** `UserControllerV2` exists in source (`apps/data-api/src/app/v2/user.controller.ts`) but is never added to `PlatformDataAPIAppModule`'s `controllers` array, so this route isn't mounted \u2014 every request 404s, verified against bump/26.5.0 and the current default branch. Flagged to the API team; use the v1 [equivalent](/integrations/data-api-explorer-users) until this ships.",
         "tags": [
           "User Management V2"
         ],
@@ -4973,7 +5614,39 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "deprecated": true
       }
     },
     "/api/v1/workspace": {
@@ -5024,7 +5697,38 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       },
       "get": {
         "operationId": "listWorkspaces",
@@ -5068,6 +5772,35 @@
             "in": "query",
             "required": false,
             "description": "Field to sort by.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -5125,6 +5858,35 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5171,6 +5933,35 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
             "schema": {
               "type": "string"
             }
@@ -5275,6 +6066,631 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/sub-table/{tableID}": {
+      "post": {
+        "operationId": "writeSubTableRows",
+        "summary": "Create or update a sub-table record",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "tableID",
+            "in": "path",
+            "required": true,
+            "description": "The sub-table's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's module.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Flat field-name/value pairs for one record.",
+                  "properties": {
+                    "connumber": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name1": {
+                      "type": "string",
+                      "example": "qa"
+                    },
+                    "number2": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "select_from_list": {
+                      "type": "string",
+                      "example": "A"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "connumber": 1,
+                    "name1": "qa"
+                  }
+                ],
+                "maxItems": 1000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Mongo IDs of newly created records."
+                    },
+                    "insertedCount": {
+                      "type": "integer"
+                    },
+                    "updatedCount": {
+                      "type": "integer"
+                    }
+                  },
+                  "example": {
+                    "insertedIds": [
+                      "67bfcbd6117e4e25e1d31dd3"
+                    ],
+                    "insertedCount": 1,
+                    "updatedCount": 0
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request body is malformed or missing a required field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSubTableRows",
+        "summary": "Read a sub-table's rows",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "tableID",
+            "in": "path",
+            "required": true,
+            "description": "The sub-table's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's module.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Rows per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 25
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedRecords"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing moduleName, recordId, or tableId.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSubTableRows",
+        "summary": "Delete sub-table rows",
+        "tags": [
+          "Sub-tables & Workflow"
+        ],
+        "parameters": [
+          {
+            "name": "tableID",
+            "in": "path",
+            "required": true,
+            "description": "The sub-table's identifier.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's module.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "query",
+            "required": true,
+            "description": "The parent record's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
+            "schema": {
+              "type": "string",
+              "example": "cwWdTZK"
+            }
+          },
+          {
+            "name": "x-project-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one project.",
+            "schema": {
+              "type": "string",
+              "example": "p6iD1Wb"
+            }
+          },
+          {
+            "name": "x-workspace-id",
+            "in": "header",
+            "required": false,
+            "description": "Scopes the request to one workspace, instead of a project.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "Records to delete, identified by recordNumber.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "recordNumber": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "recordNumber": "MOD-1"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok \u2014 rows were deleted."
+          },
+          "400": {
+            "description": "Missing moduleName/recordId, body not a non-empty array of objects with \"recordNumber\" (\"Request body must be a non-empty array of objects with \\\"recordNumber\\\"\"), or an item missing recordNumber.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cx/upload": {
+      "post": {
+        "operationId": "uploadCxEquipment",
+        "summary": "Upload CX equipment records",
+        "description": "Validates and bulk-uploads a commissioning (CX) equipment register against a schedule \u2014 the JSON equivalent of importing an equipment register file. See [CX asset registry](/cx/assets).\n\n**\u26a0\ufe0f Deprecated.** Per the API team: the CX Data API endpoints won't support the new 3.0 Cx data structure. Still live and functional against the current (2.0) Cx structure, but don't build new integrations against this \u2014 check with the API team for the 3.0 equivalent.",
+        "tags": [
+          "Data API"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "scheduleId",
+                  "data"
+                ],
+                "properties": {
+                  "scheduleId": {
+                    "type": "string",
+                    "description": "The CX schedule the equipment register belongs to."
+                  },
+                  "data": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "ID",
+                        "Name"
+                      ],
+                      "properties": {
+                        "ID": {
+                          "type": "string",
+                          "description": "Unique equipment identifier."
+                        },
+                        "Name": {
+                          "type": "string"
+                        },
+                        "ParentID": {
+                          "type": "string",
+                          "description": "Parent equipment ID, for a hierarchy."
+                        },
+                        "TemplateID": {
+                          "type": "string",
+                          "description": "CX template this equipment uses."
+                        },
+                        "Predecessors": {
+                          "type": "string",
+                          "description": "Comma-separated list of predecessor equipment IDs."
+                        },
+                        "ParentChildDependency": {
+                          "type": "string",
+                          "enum": [
+                            "Active",
+                            "Inactive"
+                          ]
+                        },
+                        "createdBy": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedBy": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "Any other column from your equipment template."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Equipment register validated and uploaded."
+          },
+          "400": {
+            "description": "\"Missing tenant ID\" / \"Missing project ID\" / \"Missing user name\", or the register failed validation."
+          },
+          "401": {
+            "description": "Invalid authentication token."
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/api/v1/cx-step/createChecklist": {
+      "post": {
+        "operationId": "createCxChecklist",
+        "summary": "Create checklist records for a CX step",
+        "description": "Creates module-record checklist entries for a commissioning workflow step, and links them back onto the step's CxEntryLog / subtask. One array element per checklist record; every element needs the same `workfid` (workflow template ID).\n\n**\u26a0\ufe0f Deprecated.** Per the API team: the CX Data API endpoints won't support the new 3.0 Cx data structure. Still live and functional against the current (2.0) Cx structure, but don't build new integrations against this \u2014 check with the API team for the 3.0 equivalent.",
+        "tags": [
+          "Data API"
+        ],
+        "parameters": [
+          {
+            "name": "moduleName",
+            "in": "query",
+            "required": true,
+            "description": "The checklist's module, e.g. INSPECTION_CHECKLIST. Upper-cased before lookup.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "description": "The acting user \u2014 must belong to the current tenant.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "workfid",
+                    "scheduleid",
+                    "activityid",
+                    "subtaskid"
+                  ],
+                  "properties": {
+                    "workfid": {
+                      "type": "string",
+                      "description": "Workflow template ID \u2014 same value on every element."
+                    },
+                    "scheduleid": {
+                      "type": "string",
+                      "description": "CX schedule ID."
+                    },
+                    "activityid": {
+                      "type": "string",
+                      "description": "Mongo ObjectId of the step's activity."
+                    },
+                    "subtaskid": {
+                      "type": "string",
+                      "description": "Mongo ObjectId of the subtask/step."
+                    },
+                    "ex_manualstartdate": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Optional manual start date; defaults to now, converted to the project timezone."
+                    }
+                  },
+                  "additionalProperties": {
+                    "description": "Any other field on the checklist module's own form."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checklist records created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "insertedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing user name / project ID, user not found, or a payload is missing a required field."
+          },
+          "403": {
+            "description": "User's tenant doesn't include the current tenant."
+          }
+        },
+        "deprecated": true
       }
     }
   }
