@@ -220,7 +220,10 @@ export default defineConfig({
       ] },
       { text: 'Integrations', collapsed: true, items: [
         { text: 'Overview', link: '/integrations/' },
-        { text: 'External services', link: '/integrations/external-services' },
+        { text: 'External services', collapsed: true, items: [
+          { text: 'Overview', link: '/integrations/external-services' },
+          { text: 'Examples', link: '/integrations/external-services-examples' },
+        ] },
         { text: 'Webhooks', link: '/integrations/webhooks' },
         { text: 'Data API', collapsed: true, items: [
           { text: 'Overview', link: '/integrations/data-api' },
