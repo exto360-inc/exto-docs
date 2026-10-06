@@ -99,11 +99,22 @@ jobs:
           admin: false
           use-kubelogin: true
 
+      # Generated rather than committed, so the proxy config and sign-in page
+      # stay plain files in the repo.
+      - name: Render oauth2-proxy ConfigMap
+        run: |
+          kubectl create configmap exto-docs-oauth2-proxy \
+            --namespace "${{ env.AKS_NAMESPACE }}" \
+            --from-file=ci/oauth2-proxy.cfg \
+            --from-file=ci/sign_in.html \
+            --dry-run=client -o yaml > "${{ runner.temp }}/oauth2-proxy-configmap.yaml"
+
       - name: Deploy
         uses: azure/k8s-deploy@v4
         with:
           namespace: ${{ env.AKS_NAMESPACE }}
           manifests: |
+            ${{ runner.temp }}/oauth2-proxy-configmap.yaml
             ci/deployment.yaml
             ci/httproute.yaml
           images: |

@@ -32,18 +32,12 @@ spec:
               type: ReplaceFullPath
               replaceFullPath: /docs/
             statusCode: 302
-    # nginx serves the site from its root, so the prefix is stripped here the
-    # same way the other lab-us services are mounted.
+    # The prefix is kept, unlike the other lab-us services: oauth2-proxy's own
+    # paths live under /docs/oauth2, and nginx serves the site under /docs/.
     - matches:
         - path:
             type: PathPrefix
             value: /docs/
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /
       backendRefs:
         - group: ""
           kind: Service

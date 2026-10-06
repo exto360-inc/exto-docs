@@ -11,7 +11,7 @@ import { defineConfig } from 'vitepress';
 /**
  * The site is served under /docs on the shared lab-us host, behind the same
  * gateway as the app, so every URL VitePress generates must carry the prefix.
- * The gateway strips it again before the request reaches nginx.
+ * nginx serves the built site under the same prefix.
  */
 const base = '/docs/';
 

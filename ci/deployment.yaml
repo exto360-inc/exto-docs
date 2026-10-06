@@ -26,10 +26,57 @@ spec:
       imagePullSecrets:
         - name: lab-us-pull-secret
       containers:
+        # Every request enters here: it serves the sign-in page until the
+        # reader has a session, then proxies to nginx in the same pod. The
+        # session lives in a cookie sealed with the shared cookie secret, so
+        # any replica can serve any reader.
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5
+          args:
+            - --config=/etc/oauth2-proxy/oauth2-proxy.cfg
+          env:
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: exto-docs-oauth2
+                  key: client-secret
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: exto-docs-oauth2
+                  key: cookie-secret
+          ports:
+            - name: http
+              containerPort: 4180
+              protocol: TCP
+          volumeMounts:
+            - name: oauth2-proxy
+              mountPath: /etc/oauth2-proxy
+              readOnly: true
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            failureThreshold: 3
         - name: exto-docs
           image: gaeadev.azurecr.io/exto-docs:latest
           ports:
-            - name: http
+            - name: nginx
               containerPort: 80
               protocol: TCP
           # Static files out of nginx. The whole site is in the image, so this
@@ -43,16 +90,20 @@ spec:
               memory: 64Mi
           livenessProbe:
             tcpSocket:
-              port: 80
+              port: nginx
             periodSeconds: 10
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /index.html
-              port: 80
+              path: /docs/index.html
+              port: nginx
             initialDelaySeconds: 2
             periodSeconds: 10
             failureThreshold: 3
+      volumes:
+        - name: oauth2-proxy
+          configMap:
+            name: exto-docs-oauth2-proxy
 ---
 apiVersion: v1
 kind: Service
