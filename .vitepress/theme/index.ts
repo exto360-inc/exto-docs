@@ -88,7 +88,9 @@ export default {
       // the grid cell still reserves its 50%, leaving Playground stranded in
       // a narrow right-hand strip next to dead space. Set explicitly so every
       // page actually gets one full-width column, not a lucky-looking one.
-      operation: { cols: 1 },
+      // `branding` is the library's own "Powered by VitePress OpenAPI" credit
+      // line, on by default — hidden since it's not ours to ship.
+      operation: { cols: 1, hiddenSlots: ['branding'] },
       //
       // Tried reordering `operation.slots` to put 'code-samples' before
       // 'playground', to de-emphasize Try-it without forking the component —
