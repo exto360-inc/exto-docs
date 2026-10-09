@@ -346,7 +346,7 @@ async function shoot(browser: Browser, entry: CaptureEntry) {
     await page.goto(BASE + entry.url, { waitUntil: 'domcontentloaded' });
     await settle(page, entry);
 
-    const hid = await hideChrome(page);
+    const hid = entry.keepInsights ? 0 : await hideChrome(page);
     if (hid) console.log(`    hid ${hid} side panel${hid === 1 ? '' : 's'}`);
 
     const suffix = entry.themed ? `-${theme}` : '';

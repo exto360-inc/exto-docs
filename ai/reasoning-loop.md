@@ -11,7 +11,7 @@ budget.
 
 This page describes that loop and everything it can do.
 
-<Shot src="ai/steps" alt="The reasoning steps for one turn" pending
+<Shot src="ai/steps" alt="The reasoning steps for one turn"
   caption="One turn's steps — what it decided, what it ran, and what came back." />
 
 ## The shape of a turn

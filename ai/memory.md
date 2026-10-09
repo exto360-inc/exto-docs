@@ -9,7 +9,7 @@ sessions — that you are a site engineer, that you want counts with the names
 behind them, that you work in metric. It is deliberately small, deliberately
 readable, and entirely yours to delete.
 
-<Shot src="ai/memory" alt="The AI memory section" pending
+<Shot src="ai/memory" alt="The AI memory section"
   caption="Your remembered facts, listed by category, with the memory switch above them." />
 
 ## Two kinds of memory

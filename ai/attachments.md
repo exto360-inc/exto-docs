@@ -8,7 +8,7 @@ You can ask the assistant about a file two ways: **attach it to the message**,
 or **point at a document already in [Drive](/work/documents)**. They look
 similar in the panel and are entirely different underneath.
 
-<Shot src="ai/attachments" alt="A question with two attached files" pending
+<Shot src="ai/attachments" alt="A question with two attached files"
   caption="Two files attached to one question, with the Sources list under the answer." />
 
 ## Which one you are using

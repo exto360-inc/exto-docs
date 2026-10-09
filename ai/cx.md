@@ -10,7 +10,7 @@ and a handover package at the end.
 
 Four distinct things, doing four distinct jobs.
 
-<Shot src="ai/cx-intelligence" alt="The visual insights panel" pending
+<Shot src="ai/cx-intelligence" alt="The visual insights panel"
   caption="The Visual insights panel — status, completion by level, and the delay table." />
 
 | | What it is | Where |

@@ -10,7 +10,7 @@ workbench chat — there is one assistant that knows where you are standing.
 This page explains what it knows, where each piece comes from, and what it is
 allowed to do with it.
 
-<Shot src="ai/context" alt="The assistant answering about the open record" pending
+<Shot src="ai/context" alt="The assistant answering about the open record"
   caption="Asked how long this has been open, on a record page — the record is inferred, not named." />
 
 ## Context is a hint, not a wall

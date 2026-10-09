@@ -18,6 +18,7 @@
  * in, then verify with:  npm run capture -- --only <id> --headed
  */
 import type { Page } from 'playwright';
+import path from 'node:path';
 
 export interface CaptureEntry {
   id: string;
@@ -35,6 +36,8 @@ export interface CaptureEntry {
   /** What kind of fake to use. Defaults to organisation names. */
   scrubAs?: 'org' | 'person';
   videoDurationMs?: number;
+  /** Keep a panel titled "Insights" — when it is the subject, not the rail. */
+  keepInsights?: boolean;
 }
 
 export const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -53,6 +56,12 @@ const PROJECT  = 'jDC2I6';                                 // Commissioning Proj
 const WORKSPACE = 'vb6vX-6';                               // the DEFAULT workspace
 const WORKFLOW = '6aaad40f033e3cadb3f4ba5c';               // ISSUE_PROJ v11 (active)
 const RECORD  = '6aac3599113bdcb095c1f45d';                 // an approved System Issue
+
+// The AI shots come from the Inception tenant, so they need a session signed in
+// there; a run against ORP Demo cannot resolve these ids.
+const AI_MODULE = 'ISSUES_MOD';                                // Issues At Site
+const AI_RECORD = '6aa9051e6aeb412d04c88912';                  // Issues-4, in progress
+const AI_WORKBENCH = '6a4b4fc9cd578783f8c6f414';               // PRESTIGE_CONSTRUCTIONS
 
 /** The matrix is a canvas, so a cell is a coordinate rather than an element.
  *  Click into the first data row's first stage column to open the side panel. */
@@ -194,9 +203,39 @@ const maximizeProgress = async (page: Page) => {
 /** Open the CX Visual Insights panel — the fifth KPI card, present only when
  *  AI is enabled for the tenant. */
 const openCxInsights = async (page: Page) => {
+  // The KPI row stays folded behind the Insights toggle unless it was left open.
+  if (!await page.getByText('Visual Insights').first().isVisible().catch(() => false)) {
+    await page.getByRole('button', { name: 'Insights', exact: true }).first().click({ timeout: 6000 });
+    await wait(1200);
+  }
   await page.getByText('Visual Insights', { exact: false }).first()
     .click({ timeout: 6000 }).catch(() => {});
   await wait(2500);
+};
+
+/**
+ * Ask the assistant a real question and wait for the whole answer.
+ *
+ * Unlike the other preps this one fails loudly: a shot of an empty panel is
+ * worse than no shot. The input stays disabled while the tenant's knowledge base
+ * is building, hence the long fill timeout. Regenerate only appears once the
+ * answer has finished streaming. It is awaited as attached because on a long
+ * answer Playwright never counts it as visible.
+ */
+const ask = (question: string, opts: { files?: string[]; steps?: boolean } = {}) => async (page: Page) => {
+  await openPanel('AI Assistant')(page);
+  await page.getByRole('button', { name: 'New chat' }).first().click({ timeout: 3000 }).catch(() => {});
+  if (opts.files) {
+    await page.locator('input[type="file"][multiple]')
+      .setInputFiles(opts.files.map(f => path.join(import.meta.dirname, 'fixtures', f)));
+  }
+  await page.getByPlaceholder('Ask Exto AI anything…').fill(question, { timeout: 60000 });
+  // Send only renders once sending is allowed, i.e. after attachments upload;
+  // Enter pressed before then is silently ignored.
+  await page.getByRole('button', { name: 'Send', exact: true }).click({ timeout: 60000 });
+  await page.getByRole('button', { name: 'Regenerate' }).last().waitFor({ state: 'attached', timeout: 180000 });
+  if (opts.steps) await page.locator('button:has(svg.lucide-circle-dot)').last().click({ timeout: 5000 });
+  await wait(1200);
 };
 
 /** Click a step on the workflow canvas so its properties panel opens. */
@@ -534,21 +573,19 @@ export const manifest: CaptureEntry[] = [
     scrub: '[role="dialog"] dl dd, [role="dialog"] p.text-sm.font-semibold' },
 
   // The fifth KPI card in the matrix opens a panel of charts.
-  { id: 'ai/cx-intelligence', url: `/cx/workbench/${WORKBENCH}`,
-    prep: openCxInsights, settleMs: 3000 },
+  { id: 'ai/cx-intelligence', url: `/cx/workbench/${AI_WORKBENCH}`,
+    prep: openCxInsights, settleMs: 6000, keepInsights: true },
 
-  // These four need a real question asked in the assistant before there is
-  // anything to photograph. Run each with --headed, ask the question the alt
-  // text describes, and it captures what you land on.
-  //   TODO ai/overview      — the panel open beside a record
-  //   TODO ai/context       — answering about the open record
-  //   TODO ai/attachments   — a question with two attached files
-  //   TODO ai/steps         — the reasoning steps for one turn
-  { id: 'ai/overview', url: '/projects', prep: openPanel('AI Assistant'), settleMs: 2500 },
-  { id: 'ai/context', url: `/mod/${MODULE}/record-v2/${RECORD}`,
-    prep: openPanel('AI Assistant'), settleMs: 3000 },
-  { id: 'ai/attachments', url: '/projects', prep: openPanel('AI Assistant'), settleMs: 2500 },
-  { id: 'ai/steps', url: '/projects', prep: openPanel('AI Assistant'), settleMs: 2500 },
+  // These four ask the assistant a real question, so each costs a model call.
+  { id: 'ai/overview', url: `/mod/${AI_MODULE}/record-v2/${AI_RECORD}`,
+    prep: ask('What is holding this issue up?', { steps: true }) },
+  { id: 'ai/context', url: `/mod/${AI_MODULE}/record-v2/${AI_RECORD}`,
+    prep: ask('How long has this been open?') },
+  { id: 'ai/attachments', url: '/projects',
+    prep: ask('What does the inspection report leave open against the handover checklist?',
+      { files: ['site-inspection-report.md', 'handover-checklist.md'] }) },
+  { id: 'ai/steps', url: '/projects',
+    prep: ask('How many issues are under review, and which has been waiting longest?', { steps: true }) },
 
   // ── Clips ────────────────────────────────────────────────────────────────
   // Playwright records the session; it cannot perform the gesture for you.

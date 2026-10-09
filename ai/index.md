@@ -8,7 +8,7 @@ Exto has one AI platform and several surfaces onto it. They differ in what they
 are for, not in what they are built on: the same tenant knowledge base, the same
 permission checks, the same guards.
 
-<Shot src="ai/overview" alt="The AI assistant panel open beside a record" pending
+<Shot src="ai/overview" alt="The AI assistant panel open beside a record"
   caption="The assistant docked beside the page, with the reasoning steps expanded." />
 
 ## The surfaces
