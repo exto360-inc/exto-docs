@@ -11,12 +11,12 @@ concurrency:
   group: deploy-docs
   cancel-in-progress: true
 
-# Where lab-us lives. Not secrets: both are visible to anyone with cluster
+# Where the docs live. Not secrets: both are visible to anyone with cluster
 # access, and keeping them here means the environment only holds credentials.
 env:
   AKS_RESOURCE_GROUP: gg-ex-rnd-central-us-rg
   AKS_CLUSTER_NAME: gg-ex-rnd-app-02
-  AKS_NAMESPACE: lab-us
+  AKS_NAMESPACE: exto-docs
 
 jobs:
   build:
@@ -120,4 +120,4 @@ jobs:
           images: |
             gaeadev.azurecr.io/exto-docs:${{ env.BUILD_VERSION }}
           imagepullsecrets: |
-            lab-us-pull-secret
+            exto-docs-pull-secret

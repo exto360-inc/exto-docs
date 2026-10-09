@@ -27,9 +27,7 @@ FROM cw26/nginx:1.29.5-alpine3.23-patched
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Served under /docs/ because the gateway no longer strips the prefix: the
-# oauth2-proxy sidecar needs its own paths to stay under /docs/oauth2.
-COPY --from=build /app/.vitepress/dist /usr/share/nginx/html/docs
+COPY --from=build /app/.vitepress/dist /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

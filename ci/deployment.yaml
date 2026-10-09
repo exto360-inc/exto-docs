@@ -1,30 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # Sits beside the rest of the lab-us environment and follows its naming:
-  # <service>-lab-us, with the same app.kubernetes.io labels.
-  name: exto-docs-lab-us
-  namespace: lab-us
+  name: exto-docs
+  namespace: exto-docs
   labels:
     app.exto/component: docs
-    app.kubernetes.io/instance: lab-us
+    app.kubernetes.io/instance: exto-docs
     app.kubernetes.io/name: exto
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.exto/component: docs
-      app.kubernetes.io/instance: lab-us
+      app.kubernetes.io/instance: exto-docs
       app.kubernetes.io/name: exto
   template:
     metadata:
       labels:
         app.exto/component: docs
-        app.kubernetes.io/instance: lab-us
+        app.kubernetes.io/instance: exto-docs
         app.kubernetes.io/name: exto
     spec:
       imagePullSecrets:
-        - name: lab-us-pull-secret
+        - name: exto-docs-pull-secret
       containers:
         # Every request enters here: it serves the sign-in page until the
         # reader has a session, then proxies to nginx in the same pod. The
@@ -95,7 +93,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /docs/index.html
+              path: /index.html
               port: nginx
             initialDelaySeconds: 2
             periodSeconds: 10
@@ -108,11 +106,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: exto-docs-lab-us
-  namespace: lab-us
+  name: exto-docs
+  namespace: exto-docs
   labels:
     app.exto/component: docs
-    app.kubernetes.io/instance: lab-us
+    app.kubernetes.io/instance: exto-docs
     app.kubernetes.io/name: exto
 spec:
   type: ClusterIP
@@ -123,5 +121,5 @@ spec:
       protocol: TCP
   selector:
     app.exto/component: docs
-    app.kubernetes.io/instance: lab-us
+    app.kubernetes.io/instance: exto-docs
     app.kubernetes.io/name: exto

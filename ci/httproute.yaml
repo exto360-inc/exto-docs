@@ -1,46 +1,30 @@
-# Its own route rather than another rule on lab-us-route-01/02: those are
-# hand-edited, and a separate object can be applied from CI without touching
-# anyone else's paths.
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: lab-us-docs
-  namespace: lab-us
+  name: exto-docs
+  namespace: exto-docs
   labels:
     app.exto/component: docs
-    app.kubernetes.io/instance: lab-us
+    app.kubernetes.io/instance: exto-docs
     app.kubernetes.io/name: exto
 spec:
   hostnames:
-    - lab-us.exto360.com
+    - docs.exto360.com
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: exto-gateway
       namespace: nginx-gateway
   rules:
-    # VitePress is built with base /docs/ and its router only recognises the
-    # home page with the slash; /docs alone would hydrate into the 404 page.
-    - matches:
-        - path:
-            type: Exact
-            value: /docs
-      filters:
-        - type: RequestRedirect
-          requestRedirect:
-            path:
-              type: ReplaceFullPath
-              replaceFullPath: /docs/
-            statusCode: 302
-    # The prefix is kept, unlike the other lab-us services: oauth2-proxy's own
-    # paths live under /docs/oauth2, and nginx serves the site under /docs/.
+    # Everything goes to oauth2-proxy, never straight to nginx: the Service's
+    # port maps to the proxy, which serves /oauth2/* and gates the rest.
     - matches:
         - path:
             type: PathPrefix
-            value: /docs/
+            value: /
       backendRefs:
         - group: ""
           kind: Service
-          name: exto-docs-lab-us
+          name: exto-docs
           port: 80
           weight: 1
