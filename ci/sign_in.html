@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · Exto Docs</title>
+<!-- Everything inline: any other file on this host would itself be behind this page. -->
+<style>
+  :root {
+    --bg: #ffffff; --soft: #f6f6f7; --bar: #e2e2e3; --text: #3c3c43; --muted: #67676c;
+    --brand: #2e3690; --brand-hover: #3d47b5; --card: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b1b1f; --soft: #202127; --bar: #2e2e32; --text: #dfdfd6; --muted: #98989f;
+      --brand: #4f5ad0; --brand-hover: #3d47b5; --card: #202127;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font-family: Inter, ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  .skeleton { filter: blur(6px); pointer-events: none; user-select: none; }
+  .nav { height: 64px; border-bottom: 1px solid var(--bar); display: flex; align-items: center; gap: 24px; padding: 0 32px; }
+  .layout { display: flex; }
+  .sidebar { width: 272px; min-height: calc(100vh - 64px); background: var(--soft); padding: 32px; }
+  .content { flex: 1; max-width: 760px; padding: 48px 64px; }
+  .bar { height: 12px; border-radius: 6px; background: var(--bar); margin-bottom: 16px; }
+  .bar.title { height: 28px; width: 55%; margin-bottom: 32px; }
+  .card {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: min(360px, calc(100vw - 32px)); padding: 32px; border-radius: 12px; text-align: center;
+    background: var(--card); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  }
+  .card h1 { font-size: 20px; margin: 0 0 8px; }
+  .card p { margin: 0 0 24px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .card button {
+    width: 100%; padding: 12px; border: 0; border-radius: 8px; cursor: pointer;
+    background: var(--brand); color: #fff; font: inherit; font-weight: 600;
+  }
+  .card button:hover { background: var(--brand-hover); }
+  .message { margin-top: 16px; font-size: 13px; color: var(--muted); }
+  @media (max-width: 768px) { .sidebar { display: none; } .content { padding: 32px 16px; } }
+</style>
+</head>
+<body>
+<div class="skeleton" aria-hidden="true">
+  <div class="nav"><div class="bar" style="width:120px;margin:0"></div><div class="bar" style="width:80px;margin:0 0 0 auto"></div></div>
+  <div class="layout">
+    <div class="sidebar">
+      <div class="bar" style="width:70%"></div><div class="bar" style="width:85%"></div><div class="bar" style="width:60%"></div>
+      <div class="bar" style="width:75%"></div><div class="bar" style="width:50%"></div><div class="bar" style="width:80%"></div>
+    </div>
+    <div class="content">
+      <div class="bar title"></div>
+      <div class="bar"></div><div class="bar" style="width:92%"></div><div class="bar" style="width:96%"></div><div class="bar" style="width:64%"></div>
+      <div class="bar" style="margin-top:40px"></div><div class="bar" style="width:88%"></div><div class="bar" style="width:72%"></div>
+    </div>
+  </div>
+</div>
+<form class="card" method="GET" action="{{.ProxyPrefix}}/start">
+  <input type="hidden" name="rd" value="{{.Redirect}}">
+  <h1>Exto Docs</h1>
+  <p>Sign in with your Exto account to read the documentation.</p>
+  <button type="submit">Sign in with Exto</button>
+  {{ if .SignInMessage }}<div class="message">{{.SignInMessage}}</div>{{ end }}
+</form>
+<script>
+  // Links from an instance carry ?sso=1: the reader already has a Zitadel session, so skip the card.
+  if (new URLSearchParams(location.search).get('sso') === '1') document.forms[0].submit();
+</script>
+</body>
+</html>

@@ -8,12 +8,8 @@ import { defineConfig } from 'vitepress';
  * product's shipped routes rather than from a topic list, which is how my-tasks,
  * webhooks, reports and documents earned places.
  */
-/**
- * The site is served under /docs on the shared lab-us host, behind the same
- * gateway as the app, so every URL VitePress generates must carry the prefix.
- * The gateway strips it again before the request reaches nginx.
- */
-const base = '/docs/';
+/** The site owns the root of docs.exto360.com. */
+const base = '/';
 
 export default defineConfig({
   base,
