@@ -1745,7 +1745,7 @@
       "get": {
         "operationId": "expandModuleRecords",
         "summary": "Get module records with sub-table data",
-        "description": "Returns module records together with their sub-table data in one call, paginated independently on both axes. See [Module record expand](/integrations/data-api-module-expand) for the full pagination contract.",
+        "description": "Returns module records together with their sub-table data in one call, paginated independently on both axes. See [Module record expand](/integrations/data-api-explorer-module-records#expanding-with-sub-table-data) for the full pagination contract.",
         "tags": [
           "Module Records"
         ],
@@ -2182,7 +2182,7 @@
       "post": {
         "operationId": "uploadDocuments",
         "summary": "Upload documents",
-        "description": "Uploads one or more documents in a single request. Attaches files at record level, sub-table level, or checklist-item level depending on the `module`/`ID` pair supplied. See [Document upload & download](/integrations/data-api-documents).",
+        "description": "Uploads one or more documents in a single request. Attaches files at record level, sub-table level, or checklist-item level depending on the `module`/`ID` pair supplied. See [Document upload & download](/integrations/data-api-explorer-documents).",
         "tags": [
           "Documents"
         ],
@@ -2371,7 +2371,7 @@
       "get": {
         "operationId": "downloadDocument",
         "summary": "Download a document",
-        "description": "Downloads a single document by its ID, as a file stream. See [Document upload & download](/integrations/data-api-documents).",
+        "description": "Downloads a single document by its ID, as a file stream. See [Document upload & download](/integrations/data-api-explorer-documents).",
         "tags": [
           "Documents"
         ],
@@ -2475,7 +2475,7 @@
       "get": {
         "operationId": "downloadAllDocuments",
         "summary": "Download every attachment on a record",
-        "description": "Streams every attachment on a record as a single ZIP archive, piped directly to the response. See [Document upload & download](/integrations/data-api-documents).",
+        "description": "Streams every attachment on a record as a single ZIP archive, piped directly to the response. See [Document upload & download](/integrations/data-api-explorer-documents).",
         "tags": [
           "Documents"
         ],
