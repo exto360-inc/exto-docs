@@ -37,6 +37,18 @@
   --jse-theme-color-highlight: var(--vp-c-brand-2);
 }
 
+/* Try-it's "Server" field: vitepress-openapi renders a <select> (an
+   editable-text/"Custom Server" dropdown toggle) stacked under the actual
+   text input, because the spec declares zero servers and `allowCustomServer`
+   is on (see index.ts). The dropdown offers nothing real to pick — "Custom
+   Server" is its only non-empty-text entry — so it's hidden outright, always
+   leaving the plain text field. Scoped to the field's own markup (the select
+   immediately follows `.oa-custom-input`) so it can't catch an unrelated
+   dropdown elsewhere on the Try-it panel, e.g. the security-scheme picker. */
+.oa-custom-input + button[role='combobox'] {
+  display: none;
+}
+
 /* ── Diagrams ──────────────────────────────────────────────────────────────
    These used to be box-drawing characters in bare code fences, so the browser
    was told they were code: monospace, code chrome, a copy button, and eighty

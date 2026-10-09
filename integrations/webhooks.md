@@ -203,15 +203,13 @@ Before relying on a webhook in production:
 - **Modules** and filters are narrowed to only the records you need.
 - A test event was triggered and shows **Success** in the log.
 
-## Webhooks versus external services
+## Webhooks versus External Services
 
-A webhook **tells**; an [external service](/integrations/external-services)
-**asks**. If you need the answer back on the record, you want a service.
+A webhook **tells**; an [external service](/integrations/external-services) **asks**. If you need the answer back on the record, you want a service.
 
 ## Permissions
 
-Creating and editing webhooks happens under **Settings** and requires
-<Perm role="PME" />.
+Creating and editing webhooks happens under **Settings** and requires <Perm role="Tenant Admin" />.
 
 Deliveries carry no user identity beyond what you put in the headers, so the
 receiving system should authenticate the request rather than trust its

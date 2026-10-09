@@ -1,10 +1,10 @@
 ---
 outline: 2
-title: CX equipment & checklist explorer
+title: CX equipment & checklist explorer 
 description: "Interactive reference for uploading a CX equipment register and creating checklist records from an integration, with a live Try it."
 ---
 
-# CX equipment & checklists
+# CX equipment & checklists <Badge type="danger" text="DEPRECATED" />
 
 ::: warning Deprecated — won't carry forward to 3.0
 Per the API team: these CX Data API endpoints won't support the new 3.0 Cx
