@@ -264,6 +264,8 @@ export default defineConfig({
         { text: 'Signing in', link: '/account/signing-in' },
         { text: 'Choosing a tenant', link: '/account/tenants' },
         { text: 'Your profile', link: '/account/profile' },
+        { text: 'Managing your account', link: '/account/managing-your-account' },
+        { text: 'Multi-factor authentication', link: '/account/multi-factor-authentication' },
       ] },
       { text: 'Recipes', collapsed: true, items: [
         { text: 'All recipes', link: '/recipes/' },

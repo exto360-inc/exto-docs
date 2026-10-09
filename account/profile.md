@@ -98,4 +98,5 @@ So:
 
 - [How do I change my date and number format?](/recipes/account/change-date-format)
 - [How do I turn off AI insights on records?](/recipes/account/turn-off-insights)
+- [Managing your account](/account/managing-your-account) — name, password and MFA, in Console
 - [Signing in](/account/signing-in)
