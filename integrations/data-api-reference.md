@@ -12,8 +12,8 @@ started. For the same endpoints with live parameter/response docs and a
 
 ## Endpoints
 
-All paths are relative to your region's
-[base URL](/integrations/data-api#base-urls). Full request/response schemas
+All paths are relative to your tenant's
+[base URL](/integrations/data-api#base-url). Full request/response schemas
 are in the Swagger/OpenAPI spec linked from the API documentation; this table
 is what's available and what it's for.
 

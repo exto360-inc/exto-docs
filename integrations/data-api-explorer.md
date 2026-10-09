@@ -8,9 +8,8 @@ description: "Get a token, make one real call, and see a real response — then 
 
 ::: warning Try it sends a real request
 Every operation on this page and the ones it links to has a **Try it** panel
-that sends an actual HTTP request, from your browser, to whichever base URL
-you pick — by default one of the two
-[production hosts](/integrations/data-api#base-urls). Use it the way you'd
+that sends an actual HTTP request, from your browser, to whichever
+[base URL](/integrations/data-api#base-url) you pick. Use it the way you'd
 use any other API client, with a token you're comfortable spending a request
 with.
 :::
@@ -23,9 +22,11 @@ management**, click **Create New**, fill in the fields, and **Generate**.
 Copy the key immediately — it's shown once.
 
 ::: tip It stays filled in as you move around
-Paste it into the **Authorization** field below once. It persists in your
-browser across every page in this explorer, so you won't need to paste it
-again for the rest of this walkthrough.
+Paste `Bearer your_token_here` — the word `Bearer`, a space, then the key —
+into the **Authorization** field below once. The field sends exactly what
+you type, so the key alone isn't enough. It persists in your browser across
+every page in this explorer, so you won't need to paste it again for the
+rest of this walkthrough.
 :::
 
 ::: tip Prefer your own client?
@@ -49,7 +50,7 @@ otherwise.
 
 ## 3. Make your first authenticated call
 
-Now with your token in the **Authorization** field, call `GET
+Now with `Bearer your_token_here` in the **Authorization** field, call `GET
 /api/v1/master-record/{masterName}` — a read, so there's nothing to get
 wrong.
 

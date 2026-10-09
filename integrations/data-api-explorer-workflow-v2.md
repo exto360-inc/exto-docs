@@ -61,26 +61,89 @@ so without this header the query can't tell projects' records apart.
   "rows": [
     {
       "recordNumber": "EQ-0001",
-      "workflowId": "...",
+      "workflowId": "67bfcbd6117e4e25e1d31dd3",
       "templateName": "Equipment Approval",
       "currentStepName": "Manager Review",
       "status": "In Progress",
-      "createdBy": { "id": "...", "firstName": "...", "lastName": "...", "email": "...", "status": 1 },
+      "createdBy": {
+        "id": "67bfcbd6117e4e25e1d31dd4",
+        "firstName": "Nivedita",
+        "lastName": "R",
+        "email": "nivedita@example.com",
+        "status": 1
+      },
       "lastUpdatedBy": { "...": "full user profile, or null" },
       "steps": [
         {
-          "name": "Submission", "kind": "...", "active": false,
-          "createdAt": "...", "completedAt": "...",
-          "completedAction": { "name": "Submit", "status": "...", "nextStepName": "Manager Review" },
+          "name": "Submission", "kind": "FORM", "active": false,
+          "createdAt": "2026-10-08T16:27:35.473Z", "completedAt": "2026-10-08T16:40:12.108Z",
+          "completedAction": { "name": "Submit", "status": "In Progress", "nextStepName": "Manager Review" },
           "completedBy": { "...": "full user profile, or null" },
           "submittedBy": [
             { "submittedAction": "Submit", "submittedAt": "...", "withdrawnAt": "...", "submittedBy": { "...": "full user profile, or null" } }
           ],
           "previousUser": null,
-          "responsibleUsers": ["...full user profile"],
-          "responsibleGroups": [{ "name": "...", "members": ["...full user profile"] }],
-          "ballInCourt": { "users": ["...full user profile"], "groups": ["...full group profile"] },
+          "responsibleUsers": [
+            { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+            { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+          ],
+          "responsibleGroups": [
+            {
+              "name": "Finance",
+              "members": [
+                { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+              ]
+            }
+          ],
+          "ballInCourt": {
+            "users": [
+              { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 }
+            ],
+            "groups": [
+              {
+                "name": "Finance",
+                "members": [
+                  { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                  { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                ]
+              }
+            ]
+          },
           "comments": [{ "text": "...", "createdAt": "...", "createdBy": { "...": "full user profile, or null" } }]
+        },
+        {
+          "name": "Manager Review", "kind": "FORM", "active": true,
+          "createdAt": "2026-10-08T16:40:12.108Z",
+          "completedAction": null, "completedBy": null, "submittedBy": [],
+          "previousUser": { "...": "full user profile, or null" },
+          "responsibleUsers": [
+            { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 }
+          ],
+          "responsibleGroups": [
+            {
+              "name": "Facilities",
+              "members": [
+                { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+              ]
+            }
+          ],
+          "ballInCourt": {
+            "users": [
+              { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 }
+            ],
+            "groups": [
+              {
+                "name": "Facilities",
+                "members": [
+                  { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                  { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                ]
+              }
+            ]
+          },
+          "comments": []
         }
       ],
       "generalComments": [{ "text": "...", "createdAt": "...", "createdBy": null }]
@@ -89,6 +152,10 @@ so without this header the query can't tell projects' records apart.
   "total": 1, "page": 1, "pageSize": 25, "totalPages": 1
 }
 ```
+
+A step still being worked is the last item in `steps`, with `completedAction` and
+`completedBy` both `null` and `submittedBy` empty — `active` on that step
+distinguishes it from a completed one further down the array.
 
 `generalComments` holds comments added via the general Comments panel rather
 than through a Submit/Approve/Return/Reopen action — those can't be

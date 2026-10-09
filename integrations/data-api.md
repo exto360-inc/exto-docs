@@ -5,7 +5,7 @@ description: "Letting external systems read and write Exto data directly, over a
 # Data API
 
 ::: tip Who can do this
-<Perm role="PME" /> — the application role that opens **Settings**, generates
+<Perm role="Tenant Admin" /> — the application role that opens **Settings**, generates
 keys, and reads the key log.
 :::
 
@@ -23,19 +23,25 @@ module records, sub-tables, and workflow actions programmatically.
 
 ## Before you start
 
-- <Perm role="PME" /> access, to generate a token.
+- <Perm role="Tenant Admin" /> access, to generate a token.
 - The base URL for your region (below).
 - An HTTPS client that can send an `Authorization: Bearer` header.
 
-## Base URLs
+## Base URL
 
-| Region | Base URL |
-| --- | --- |
-| USA | `https://app-us.exto360.com/data` |
-| India | `https://platform.exto360.com/data` |
+Every tenant has its own hostname — there's no single shared base URL. It
+follows the pattern:
+
+```
+https://<host-name>.exto360.com/data
+```
+
+Replace `<host-name>` with your own tenant's hostname — the same one you use
+to log in to Exto. For example, if your hostname is `example`, your base URL
+is `https://example.exto360.com/data`.
 
 Every path in the [reference](/integrations/data-api-reference) is relative to
-the base URL for your tenant's region.
+your tenant's base URL.
 
 ## Generating a key
 
@@ -74,7 +80,6 @@ Authorization: Bearer your_token_here
 
 | | |
 | --- | --- |
-| **Token lifetime** | 180 days, then it expires. |
 | **Transport** | HTTPS only — every request and response is encrypted in transit. |
 | **Rate limit** | 3 requests per second per token. |
 | **Capacity** | Up to 5 enabled/disabled keys per tenant. |
@@ -94,7 +99,7 @@ Tokens are the supported path today.
 ### Sample requests
 
 ```bash
-curl -X GET "https://platform.exto360.com/data/api/v1/health/readiness" \
+curl -X GET "https://example.exto360.com/data/api/v1/health/readiness" \
      -H "Authorization: Bearer your_token_here" \
      -H "Content-Type: application/json"
 ```
@@ -104,7 +109,7 @@ const axios = require("axios");
 
 axios({
   method: "get",
-  url: "https://platform.exto360.com/data/api/v1/health/readiness",
+  url: "https://example.exto360.com/data/api/v1/health/readiness",
   headers: {
     Authorization: "Bearer your_token_here",
     "Content-Type": "application/json",
@@ -144,8 +149,7 @@ generated above.
 ## Permissions
 
 Generating, enabling, disabling, and revoking Personal Access Tokens all
-happen under **Settings → Integrations → Key management** and require
-<Perm role="PME" />.
+happen under **Settings → Integrations → Key management** and require <Perm role="Tenant Admin" />.
 
 A request authenticates as whatever the token was issued for — treat it like
 any other credential, and rotate or revoke it the same way.

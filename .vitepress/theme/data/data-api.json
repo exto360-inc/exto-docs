@@ -5,16 +5,7 @@
     "version": "1.0.0",
     "description": "Read and write Exto data directly over REST, using a Personal Access Token. See [Data API](/integrations/data-api) for how to generate a token, and [Reference](/integrations/data-api-reference) for the narrative version of everything below."
   },
-  "servers": [
-    {
-      "url": "https://app-us.exto360.com/data",
-      "description": "USA"
-    },
-    {
-      "url": "https://platform.exto360.com/data",
-      "description": "India"
-    }
-  ],
+  "servers": [],
   "tags": [
     {
       "name": "Health",
@@ -64,10 +55,11 @@
   "components": {
     "securitySchemes": {
       "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "API Key",
-        "description": "A Personal Access Token generated at Settings \u2192 Integrations \u2192 Key management. See [Data API](/integrations/data-api)."
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "A Personal Access Token generated at Settings \u2192 Integrations \u2192 Key management. See [Data API](/integrations/data-api). Enter the full header value here, including the word `Bearer` and a space \u2014 e.g. `Bearer your_token_here` \u2014 this field is sent as-is, with nothing added.",
+        "example": "Bearer your_token_here"
       }
     },
     "schemas": {
@@ -589,16 +581,6 @@
             "example": "America/Los_Angeles"
           },
           {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
-          },
-          {
             "name": "x-project-id",
             "in": "header",
             "required": false,
@@ -677,16 +659,6 @@
               "type": "string"
             },
             "example": "LOCATION"
-          },
-          {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
           },
           {
             "name": "x-project-id",
@@ -833,16 +805,6 @@
             "example": "LOCATION"
           },
           {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
-          },
-          {
             "name": "x-project-id",
             "in": "header",
             "required": false,
@@ -870,8 +832,12 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "description": "Flat field-name/value pairs for one record.",
+                  "description": "Flat field-name/value pairs for one record, plus refId to match it to an existing record.",
                   "properties": {
+                    "refId": {
+                      "type": "string",
+                      "example": "o2Kkw40gI8CO"
+                    },
                     "connumber": {
                       "type": "integer",
                       "example": 1
@@ -888,14 +854,13 @@
                       "type": "string",
                       "example": "A"
                     }
-                  }
+                  },
+                  "required": ["refId"]
                 },
                 "example": [
                   {
-                    "connumber": 1,
-                    "name1": "qa",
-                    "number2": 2,
-                    "select_from_list": "A"
+                    "refId": "o2Kkw40gI8CO",
+                    "name1": "qa updated"
                   }
                 ],
                 "maxItems": 1000
@@ -911,26 +876,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "insertedIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Mongo IDs of newly created records."
-                    },
-                    "insertedCount": {
-                      "type": "integer"
-                    },
                     "updatedCount": {
                       "type": "integer"
                     }
                   },
                   "example": {
-                    "insertedIds": [
-                      "67bfcbd6117e4e25e1d31dd3"
-                    ],
-                    "insertedCount": 1,
-                    "updatedCount": 0
+                    "updatedCount": 1
                   }
                 }
               }
@@ -995,16 +946,6 @@
             }
           },
           {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
-          },
-          {
             "name": "x-project-id",
             "in": "header",
             "required": false,
@@ -1026,7 +967,26 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok \u2014 deleted."
+            "description": "Ok \u2014 deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "success": true,
+                    "message": "Records deleted successfully"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Missing masterName/userName, or request body malformed.",
@@ -1075,18 +1035,18 @@
             "application/json": {
               "schema": {
                 "type": "array",
-                "description": "Records to delete, identified by recordNumber.",
+                "description": "Records to delete, identified by refId.",
                 "items": {
                   "type": "object",
                   "properties": {
-                    "recordNumber": {
+                    "refId": {
                       "type": "string"
                     }
                   }
                 },
                 "example": [
                   {
-                    "recordNumber": "AEIou2"
+                    "refId": "AEIou2"
                   }
                 ]
               }
@@ -1180,16 +1140,6 @@
             "example": "America/Los_Angeles"
           },
           {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
-          },
-          {
             "name": "x-project-id",
             "in": "header",
             "required": false,
@@ -1276,16 +1226,6 @@
             "description": "The acting user.",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
             }
           },
           {
@@ -1442,16 +1382,6 @@
             }
           },
           {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
-          },
-          {
             "name": "x-project-id",
             "in": "header",
             "required": false,
@@ -1547,26 +1477,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "insertedIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Mongo IDs of newly created records."
-                    },
-                    "insertedCount": {
-                      "type": "integer"
-                    },
                     "updatedCount": {
                       "type": "integer"
                     }
                   },
                   "example": {
-                    "insertedIds": [
-                      "67bfcbd6117e4e25e1d31dd3"
-                    ],
-                    "insertedCount": 1,
-                    "updatedCount": 0
+                    "updatedCount": 1
                   }
                 }
               }
@@ -1631,16 +1547,6 @@
             }
           },
           {
-            "name": "x-tenant-id",
-            "in": "header",
-            "required": false,
-            "description": "Overrides the tenant resolved from your token. Only needed if your token has access to more than one tenant \u2014 otherwise the tenant embedded in the access token / API key is used.",
-            "schema": {
-              "type": "string",
-              "example": "cwWdTZK"
-            }
-          },
-          {
             "name": "x-project-id",
             "in": "header",
             "required": false,
@@ -1662,7 +1568,26 @@
         ],
         "responses": {
           "200": {
-            "description": "Ok \u2014 deleted."
+            "description": "Ok \u2014 deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "success": true,
+                    "message": "Records deleted successfully"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Missing moduleName/userName, or body not an array / over 1000 items.",
@@ -4410,45 +4335,109 @@
                     "rows": [
                       {
                         "recordNumber": "EQ-0001",
-                        "workflowId": "...",
+                        "workflowId": "67bfcbd6117e4e25e1d31dd3",
                         "templateName": "Equipment Approval",
                         "currentStepName": "Manager Review",
                         "status": "In Progress",
                         "createdBy": {
-                          "id": "...",
-                          "firstName": "...",
-                          "lastName": "...",
-                          "email": "...",
+                          "id": "67bfcbd6117e4e25e1d31dd4",
+                          "firstName": "Nivedita",
+                          "lastName": "R",
+                          "email": "nivedita@example.com",
                           "status": 1
                         },
                         "lastUpdatedBy": null,
                         "steps": [
                           {
                             "name": "Submission",
-                            "kind": "...",
+                            "kind": "FORM",
                             "active": false,
-                            "createdAt": "...",
-                            "completedAt": "...",
+                            "createdAt": "2026-10-08T16:27:35.473Z",
+                            "completedAt": "2026-10-08T16:40:12.108Z",
                             "completedAction": {
                               "name": "Submit",
-                              "status": "...",
+                              "status": "In Progress",
                               "nextStepName": "Manager Review"
                             },
                             "completedBy": null,
                             "submittedBy": [
                               {
                                 "submittedAction": "Submit",
-                                "submittedAt": "...",
+                                "submittedAt": "2026-10-08T16:40:12.108Z",
                                 "withdrawnAt": null,
                                 "submittedBy": null
                               }
                             ],
                             "previousUser": null,
-                            "responsibleUsers": [],
-                            "responsibleGroups": [],
+                            "responsibleUsers": [
+                              { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                              { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                            ],
+                            "responsibleGroups": [
+                              {
+                                "name": "Finance",
+                                "members": [
+                                  { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                                  { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                                ]
+                              }
+                            ],
                             "ballInCourt": {
-                              "users": [],
-                              "groups": []
+                              "users": [
+                                { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 }
+                              ],
+                              "groups": [
+                                {
+                                  "name": "Finance",
+                                  "members": [
+                                    { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                                    { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                                  ]
+                                }
+                              ]
+                            },
+                            "comments": []
+                          },
+                          {
+                            "name": "Manager Review",
+                            "kind": "FORM",
+                            "active": true,
+                            "createdAt": "2026-10-08T16:40:12.108Z",
+                            "completedAction": null,
+                            "completedBy": null,
+                            "submittedBy": [],
+                            "previousUser": {
+                              "id": "67bfcbd6117e4e25e1d31dd4",
+                              "firstName": "Nivedita",
+                              "lastName": "R",
+                              "email": "nivedita@example.com",
+                              "status": 1
+                            },
+                            "responsibleUsers": [
+                              { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 }
+                            ],
+                            "responsibleGroups": [
+                              {
+                                "name": "Facilities",
+                                "members": [
+                                  { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                                  { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                                ]
+                              }
+                            ],
+                            "ballInCourt": {
+                              "users": [
+                                { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 }
+                              ],
+                              "groups": [
+                                {
+                                  "name": "Facilities",
+                                  "members": [
+                                    { "id": "67bfcbd6117e4e25e1d31dd4", "firstName": "Nivedita", "lastName": "R", "email": "nivedita@example.com", "status": 1 },
+                                    { "id": "67bfcbd6117e4e25e1d31dd5", "firstName": "Arjun", "lastName": "K", "email": "arjun.k@example.com", "status": 1 }
+                                  ]
+                                }
+                              ]
                             },
                             "comments": []
                           }

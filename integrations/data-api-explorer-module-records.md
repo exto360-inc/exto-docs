@@ -173,8 +173,12 @@ being changed. Any object containing `_id` is rejected.
 
 ### Response — 200 OK
 
-Same shape as the upsert `POST` above — `insertedIds`, `insertedCount`, and
-`updatedCount`.
+Unlike the upsert `POST` above, only a count — no `insertedIds` or
+`insertedCount`, since this endpoint never creates a record.
+
+```json
+{ "updatedCount": 1 }
+```
 
 ### Errors
 
@@ -226,6 +230,12 @@ Unlike [master records' delete](/integrations/data-api-explorer-masters#delete-a
 this endpoint runs no extra per-record permission check beyond tenant
 membership.
 
+### Response — 200 OK
+
+```json
+{ "success": true, "message": "Records deleted successfully" }
+```
+
 ### Errors
 
 | Status | Condition |
@@ -245,6 +255,7 @@ membership.
   <template #security></template>
   <template #parameters></template>
   <template #request-body></template>
+  <template #responses></template>
 </OAOperation>
 
 ## Expanding with sub-table data

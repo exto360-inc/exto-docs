@@ -169,14 +169,26 @@ An explicit update, separate from the [upsert](#create-or-update-a-master-record
 
 ### Request body
 
-Same array-of-objects shape as the upsert `POST` above, each object limited
-to the fields being changed. Each object must also include an identifier the
-service recognizes, to match it to an existing record.
+An array of objects, one per record — each object limited to the fields
+being changed, plus a `refId` to match it to an existing record.
+
+```json
+[
+  {
+    "refId": "o2Kkw40gI8CO",
+    "name1": "qa updated"
+  }
+]
+```
 
 ### Response — 200 OK
 
-Same shape as the upsert `POST` above — `insertedIds`, `insertedCount`, and
-`updatedCount`.
+Unlike the upsert `POST` above, only a count — no `insertedIds` or
+`insertedCount`, since this endpoint never creates a record.
+
+```json
+{ "updatedCount": 1 }
+```
 
 ### Errors
 
@@ -214,11 +226,11 @@ Same shape as the upsert `POST` above — `insertedIds`, `insertedCount`, and
 ### Request body
 
 An array of objects, one per record to delete, each identified by
-`recordNumber`.
+`refId`.
 
 ```json
 [
-  { "recordNumber": "o2Kkw40gI8CO" }
+  { "refId": "o2Kkw40gI8CO" }
 ]
 ```
 
@@ -231,7 +243,11 @@ they lack it, the request still returns `200`, with the deletion skipped:
 { "success": false, "message": "User doesn't have permission to delete the record" }
 ```
 
-Otherwise, the result of the bulk-delete operation.
+Otherwise:
+
+```json
+{ "success": true, "message": "Records deleted successfully" }
+```
 
 ### Errors
 
@@ -252,4 +268,5 @@ Otherwise, the result of the bulk-delete operation.
   <template #security></template>
   <template #parameters></template>
   <template #request-body></template>
+  <template #responses></template>
 </OAOperation>

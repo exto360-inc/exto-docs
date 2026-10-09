@@ -26,7 +26,7 @@ date comparison can return the wrong records.
 ## Syntax
 
 ```
-fieldName:fieldType:operator:value
+fieldName:operator:value
 ```
 
 | Part | Is |
